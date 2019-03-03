@@ -90,6 +90,7 @@
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.Size = new System.Drawing.Size(889, 338);
             this.dataGridView.TabIndex = 4;
+            this.dataGridView.Sorted += new System.EventHandler(this.dataGridView_Sorted);
             // 
             // btnDeleteStr
             // 

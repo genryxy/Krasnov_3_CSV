@@ -24,36 +24,41 @@ namespace Krasnov_3
         DataTable dt = new DataTable();
         List<Headquarter> lstHeadquarters = new List<Headquarter>();
 
+        /// <summary>
+        /// Загрузить csv файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnOpen_Click(object sender, EventArgs e)
         {
             try
             {
-                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
+                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv|TXT|*.txt", ValidateNames = true })
                 {
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
-                        /*var sr = new StreamReader(new FileStream(ofd.FileName, FileMode.Open));
-                        using (var csvReader = new CsvReader(sr))
-                        {
-                            while (csvReader.Read())
-                                headquarterBindingSource.DataSource = csvReader.GetRecord<Headquarter>().ToString();
-                        }*/
-                        string[] Lines = File.ReadAllLines(ofd.FileName);
+                        // чтобы каждый раз все строки в таблице обновлялись
+                        dt = new DataTable();
+                        lstHeadquarters = new List<Headquarter>();
+                        string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.Unicode);
                         string[] Fields;
                         Fields = Lines[0].Split(new char[] { ';' });
                         DataRow row;
 
+                        // -1 для того чтобы не появлялся в конце пустой столбец
                         //1st row must be column names; force lower case to ensure matching later on.
                         for (int i = 0; i < Fields.GetLength(0); i++)
                         {
-                            if (i == 0)
+                            dt.Columns.Add(Fields[i]);
+                            /*if (i == 0)
                                 dt.Columns.Add(Fields[i].ToLower(), typeof(string));
                             else if (i >= 7 && i <= 9)
                                 dt.Columns.Add(Fields[i].ToLower(), typeof(string));
                             else
-                                dt.Columns.Add(Fields[i].ToLower());
+                                dt.Columns.Add(Fields[i].ToLower());*/
                         }
 
+                        // считываем все строки, кроме первой
                         for (int i = 1; i < Lines.GetLength(0); i++)
                         {
                             Fields = Lines[i].Split(new char[] { ';' });
@@ -77,6 +82,7 @@ namespace Krasnov_3
                                 }
                                 else*/
 
+                                // избавляемся от ненужных кавычек ""
                                 if (Fields[j] == "")
                                     row[j] = null;
                                 else if (Fields[j].Contains("\""))
@@ -93,20 +99,24 @@ namespace Krasnov_3
                         dataGridView.DataSource = dt;
                     }
                 }
-                WriteToCsv();
-                MessageBox.Show("Save");
                 //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error is " + ex.ToString());
+                MessageBox.Show("Error is " + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        public void WriteToCsv()
+        /// <summary>
+        /// Сохранение в csv/txt
+        /// </summary>
+        /// <param name="fileName"></param>
+        public void WriteToCsv(string fileName)
         {
             StringBuilder sb = new StringBuilder();
-            IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column => {
+            // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
+            IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column =>
+            {
                 if (!column.ColumnName.Contains("Column1"))
                     return "\"" + column.ColumnName + "\"";
                 return null;
@@ -115,15 +125,25 @@ namespace Krasnov_3
 
             foreach (DataRow row in dt.Rows)
             {
-                IEnumerable<string> fields = row.ItemArray.Select(field => "\"" + field.ToString() + "\"");
+                // считываем элементы строки
+                IEnumerable<string> fields = row.ItemArray.Select(field =>
+                {  
+                    
+                    return "\"" + field.ToString() + "\"";
+                });
+
                 sb.AppendLine(string.Join(";", fields));
             }
-
-            File.WriteAllText("test.txt", sb.ToString(), Encoding.GetEncoding(1251));
-            File.WriteAllText("test.csv", sb.ToString(), Encoding.GetEncoding(1251));
+            // записываем в файл
+            File.WriteAllText($"{fileName}.txt", sb.ToString(), Encoding.Unicode);
+            File.WriteAllText($"{fileName}.csv", sb.ToString(), Encoding.Unicode);
         }
 
-
+        /// <summary>
+        /// Записывает содержимое таблицы в файл.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnWrite_Click(object sender, EventArgs e)
         {
             using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "CSV|.*.csv", ValidateNames = true })
@@ -132,15 +152,7 @@ namespace Krasnov_3
                 {
                     try
                     {
-                        using (var sw = new StreamWriter(sfd.FileName))
-                        {
-                            var writer = new CsvWriter(sw);
-                            writer.WriteHeader(typeof(Headquarter));
-                            foreach (TableHeader hd in tableHeaderBindingSource.DataSource as List<TableHeader>)
-                            {
-                                writer.WriteRecord(hd);
-                            }
-                        }
+                        WriteToCsv(sfd.FileName);
                         MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -148,9 +160,13 @@ namespace Krasnov_3
             }
         }
 
+        /// <summary>
+        /// Удаляет нулевую строку в datagridview. TODO: номер строки, введенный пользователем.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            MessageBox.Show(tableHeaderBindingSource.Current.ToString());
             if (dt.Rows.Count > 0)
             {
                 lstHeadquarters.RemoveAt(0);
@@ -159,6 +175,11 @@ namespace Krasnov_3
             }
         }
 
+        /// <summary>
+        /// Показывает первые N столбцов. TODO: Число N вводится пользователем через textbox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnShow_Click(object sender, EventArgs e)
         {
             const int n = 10;
@@ -174,10 +195,10 @@ namespace Krasnov_3
                     row = dt.NewRow();
                     for (int j = 0; j < countFieldsInHeadquarter; j++)
                     {
-                        if (j == 0)
-                            row[j] = int.Parse(lstHeadquarters[i][j]);
-                        else
-                            row[j] = lstHeadquarters[i][j];
+                        //if (j == 0)
+                        //   row[j] = int.Parse(lstHeadquarters[i][j]);
+                        //else
+                        row[j] = lstHeadquarters[i][j];
                     }
                     dt.Rows.Add(row);
                 }
@@ -185,33 +206,15 @@ namespace Krasnov_3
             }
         }
 
-        /*
-         private void toCsv(DataGridView dGV, string filename)
+        private void dataGridView_Sorted(object sender, EventArgs e)
         {
-            string stOutput = "";
-            // Export titles:
-            string sHeaders = "";
- 
-            for (int j = 0; j < dGV.Columns.Count; j++)
-                sHeaders = sHeaders.ToString() + Convert.ToString(dGV.Columns[j].HeaderText) + "\t";
-            stOutput += sHeaders + "\r\n";
-            // Export data.
-            for (int i = 0; i < dGV.RowCount - 1; i++)
+            /*MessageBox.Show(dt.Rows.Count.ToString());
+            lstHeadquarters = new List<Headquarter>();
+            for (int i = 1; i < dt.Rows.Count; i++)
             {
-                string stLine = "";
-                for (int j = 0; j < dGV.Rows[i].Cells.Count; j++)
-                    stLine += string.Format("\"{0}\"\t", dGV.Rows[i].Cells[j].Value);
-                stOutput += stLine + "\n";
+                lstHeadquarters.Add(new Headquarter(Array.ConvertAll(dt.Rows[i].ItemArray.ToArray(), y => y.ToString())));
             }
-            Encoding utf16 = Encoding.UTF8;
-            byte[] output = utf16.GetBytes(stOutput);
-            FileStream fs = new FileStream(filename, FileMode.Create);
-            BinaryWriter bw = new BinaryWriter(fs);
-            bw.Write(output, 0, output.Length); //write the encoded file
-            bw.Flush();
-            bw.Close();
-            fs.Close();
-        } 
-         */
+            MessageBox.Show(lstHeadquarters[0].ROWNUM.ToString());*/
+        }
     }
 }
