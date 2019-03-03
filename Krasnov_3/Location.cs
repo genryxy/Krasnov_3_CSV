@@ -17,8 +17,8 @@ namespace Krasnov_3
         public Location(string admArea, string district, string x_WGS, string y_WGS)
         {
             AdmArea = admArea;
-            District = district;
-            listCoord.Add(new Coordinates(x_WGS, y_WGS));
+            //District = district;
+            listCoord.Add(new Coordinates(district, x_WGS, y_WGS));
         }
 
         public List<Coordinates> GetCoodinatesFromOneArea(string nameArea, string x_WGS, string y_WGS)
@@ -30,6 +30,11 @@ namespace Krasnov_3
                     coordFromArea.Add(new Coordinates(listCoord[i].X_WGS, listCoord[i].Y_WGS));
             }
             return coordFromArea;
+        }
+
+        public override string ToString()
+        {
+            return $"   Location: Area:{AdmArea}";
         }
     }
 }

@@ -63,6 +63,7 @@
     <Compile Include="Location.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TableHeader.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
@@ -78,6 +79,7 @@
     <None Include="packages.config" />
     <None Include="Properties\DataSources\Headquarter.datasource" />
     <None Include="Properties\DataSources\Location.datasource" />
+    <None Include="Properties\DataSources\TableHeader.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

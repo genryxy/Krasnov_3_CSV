@@ -10,13 +10,13 @@ namespace Krasnov_3
     {       
         public int ROWNUM { get; set; }
         public string Name { get; set; }
-        public string AdmArea { get; set; }
-        public string District { get; set; }
+        //public string AdmArea { get; set; }
+       // public string District { get; set; }
         public string Address { get; set; }
         public string PublicPhone { get; set; }
         public string ExtraInfo { get; set; }
-        public string X_WGS { get; set; }
-        public string Y_WGS { get; set; }
+        //public string X_WGS { get; set; }
+        //public string Y_WGS { get; set; }
         public string GLOBALID { get; set; }
         private Location GeoLocation { get; set; }
 
@@ -32,6 +32,27 @@ namespace Krasnov_3
             this.GLOBALID = GLOBALID;
             GeoLocation = new Location(AdmArea, District, X_WGS, Y_WGS);
         }*/
+
+        // если будут " " в начале слова и конце
+        /*public Headquarter(params string[] args)
+        {
+            if (args.Length != 11)
+                throw new ArgumentException("Должно быть 11 столбцов!");
+            ROWNUM = int.Parse(args[0]);
+            Name = GetNormalString(args[1]);
+            Address = GetNormalString(args[4]);
+            PublicPhone = GetNormalString(args[5]);
+            ExtraInfo = GetNormalString(args[6]);
+            GLOBALID = GetNormalString(args[9]);
+            GeoLocation = new Location(GetNormalString(args[2]), GetNormalString(args[3]),
+                GetNormalString(args[7]), GetNormalString(args[8]));
+        }
+
+        private string GetNormalString(string str)
+        {
+            return str.Substring(1, str.Length - 2);            
+        }*/
+
         public Headquarter(params string[] args)
         {
             if (args.Length != 11)
@@ -47,7 +68,7 @@ namespace Krasnov_3
 
         public override string ToString()
         {
-            return $"ROWNUM:{ROWNUM}, Name:{Name}";
+            return $"ROWNUM:{ROWNUM}, Name:{Name}, {Address}, {PublicPhone}, {ExtraInfo}, {GLOBALID}, {GeoLocation}";
         }
     }
 }

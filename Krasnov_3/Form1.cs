@@ -47,7 +47,9 @@ namespace Krasnov_3
                         for (int i = 0; i < Fields.GetLength(0); i++)
                         {
                             if (i == 0)
-                                dt.Columns.Add(Fields[i].ToLower(), typeof(int));
+                                dt.Columns.Add(Fields[i].ToLower(), typeof(string));
+                            else if (i >= 7 && i <= 9)
+                                dt.Columns.Add(Fields[i].ToLower(), typeof(string));
                             else
                                 dt.Columns.Add(Fields[i].ToLower());
                         }
@@ -58,7 +60,32 @@ namespace Krasnov_3
                             row = dt.NewRow();
                             for (int j = 0; j < Fields.GetLength(0); j++)
                             {
-                                row[j] = Fields[j];
+                                /*if (j >= 7 && j <= 9)
+                                {
+                                    if (Fields[j] == "")
+                                        row[j] = -1;
+                                    else if (Fields[j].Contains("\""))
+                                    {
+                                        string number = Fields[j].Replace("\"", "");
+                                        if (number.Contains("."))
+                                            row[j] = double.Parse(number.Replace(".", ","));
+                                        else
+                                            row[j] = double.Parse(number);
+                                    }  
+                                    else
+                                        row[j] = double.Parse(Fields[j]);
+                                }
+                                else*/
+
+                                if (Fields[j] == "")
+                                    row[j] = null;
+                                else if (Fields[j].Contains("\""))
+                                {
+                                    Fields[j] = Fields[j].Replace("\"", "");
+                                    row[j] = Fields[j];
+                                }
+                                else
+                                    row[j] = Fields[j];                                
                             }
                             lstHeadquarters.Add(new Headquarter(Fields));
                             dt.Rows.Add(row);
@@ -66,7 +93,7 @@ namespace Krasnov_3
                         dataGridView.DataSource = dt;
                     }
                 }
-                MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count-1]);
+                MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
             catch (Exception ex)
             {
@@ -89,7 +116,7 @@ namespace Krasnov_3
                         {
                             var writer = new CsvWriter(sw);
                             writer.WriteHeader(typeof(Headquarter));
-                            foreach (Headquarter hd in headquarterBindingSource.DataSource as List<Headquarter>)
+                            foreach (TableHeader hd in tableHeaderBindingSource.DataSource as List<TableHeader>)
                             {
                                 writer.WriteRecord(hd);
                             }
@@ -99,23 +126,12 @@ namespace Krasnov_3
                     catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
-        }
+        }       
 
-        private void btnRead_Click(object sender, EventArgs e)
+        private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            /*
-            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
-            {
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    var sr = new StreamReader(new FileStream(ofd.FileName, FileMode.Open));
-                    using (var csvReader = new CsvReader(sr))
-                    {
-                        while (csvReader.Read())
-                            headquarterBindingSource.DataSource = csvReader.GetRecord<Headquarter>().ToString();
-                    }
-                }
-            }*/
+            dt.Rows.RemoveAt(1);
+            dataGrid.DataSource = dt;
         }
 
         /*

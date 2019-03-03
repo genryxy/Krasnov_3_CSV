@@ -17,5 +17,10 @@
         {
             District = district;
         }
+
+        public override string ToString()
+        {
+            return $"   Coord: District:{District}, X:{X_WGS}, Y:{Y_WGS}";
+        }
     }
 }
