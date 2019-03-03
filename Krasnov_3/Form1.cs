@@ -21,36 +21,52 @@ namespace Krasnov_3
         }
 
         DataGridView dataGrid = new DataGridView();
+        DataTable dt = new DataTable();
+        List<Headquarter> lstHeadquarters = new List<Headquarter>();
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
             try
             {
-                string CSVFilePathName = @"D:\HSE\прога\кдз_2\Варианты\Вариант 3\mycsv.csv.csv";
-                string[] Lines = File.ReadAllLines(CSVFilePathName);
-                string[] Fields;
-                Fields = Lines[0].Split(new char[] { ';' });
-                DataTable dt = new DataTable();
-                DataRow row;
-
-                //1st row must be column names; force lower case to ensure matching later on.
-                for (int i = 0; i < Fields.GetLength(0); i++)
+                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
                 {
-                    if (i == 0)
-                        dt.Columns.Add(Fields[i].ToLower(), typeof(int));
-                    else
-                        dt.Columns.Add(Fields[i].ToLower());
-                }
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        /*var sr = new StreamReader(new FileStream(ofd.FileName, FileMode.Open));
+                        using (var csvReader = new CsvReader(sr))
+                        {
+                            while (csvReader.Read())
+                                headquarterBindingSource.DataSource = csvReader.GetRecord<Headquarter>().ToString();
+                        }*/
+                        string[] Lines = File.ReadAllLines(ofd.FileName);
+                        string[] Fields;
+                        Fields = Lines[0].Split(new char[] { ';' });
+                        DataRow row;
 
-                for (int i = 1; i < Lines.GetLength(0); i++)
-                {
-                    Fields = Lines[i].Split(new char[] { ';' });
-                    row = dt.NewRow();
-                    for (int j = 0; j < Fields.GetLength(0); j++)
-                        row[j] = Fields[j];
-                    dt.Rows.Add(row);
+                        //1st row must be column names; force lower case to ensure matching later on.
+                        for (int i = 0; i < Fields.GetLength(0); i++)
+                        {
+                            if (i == 0)
+                                dt.Columns.Add(Fields[i].ToLower(), typeof(int));
+                            else
+                                dt.Columns.Add(Fields[i].ToLower());
+                        }
+
+                        for (int i = 1; i < Lines.GetLength(0); i++)
+                        {
+                            Fields = Lines[i].Split(new char[] { ';' });
+                            row = dt.NewRow();
+                            for (int j = 0; j < Fields.GetLength(0); j++)
+                            {
+                                row[j] = Fields[j];
+                            }
+                            lstHeadquarters.Add(new Headquarter(Fields));
+                            dt.Rows.Add(row);
+                        }
+                        dataGridView.DataSource = dt;
+                    }
                 }
-                dataGridView.DataSource = dt;
+                MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count-1]);
             }
             catch (Exception ex)
             {
@@ -67,31 +83,39 @@ namespace Krasnov_3
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
-                    using (var sw = new StreamWriter(sfd.FileName))
+                    try
                     {
-                        var writer = new CsvWriter(sw);
-                        writer.WriteHeader(typeof(Headquarter));
-                        foreach (Headquarter hd in headquarterBindingSource.DataSource as List<Headquarter>)
+                        using (var sw = new StreamWriter(sfd.FileName))
                         {
-                            writer.WriteRecord(hd);
+                            var writer = new CsvWriter(sw);
+                            writer.WriteHeader(typeof(Headquarter));
+                            foreach (Headquarter hd in headquarterBindingSource.DataSource as List<Headquarter>)
+                            {
+                                writer.WriteRecord(hd);
+                            }
                         }
+                        MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
-                    MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
         }
 
         private void btnRead_Click(object sender, EventArgs e)
         {
-            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|.*.csv|All files(*.*)|*.*", ValidateNames = true })
+            /*
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv", ValidateNames = true })
             {
                 if (ofd.ShowDialog() == DialogResult.OK)
                 {
                     var sr = new StreamReader(new FileStream(ofd.FileName, FileMode.Open));
-                    var csv = new CsvReader(sr);
-                    headquarterBindingSource.DataSource = csv.GetRecord<Headquarter>().ToString();
+                    using (var csvReader = new CsvReader(sr))
+                    {
+                        while (csvReader.Read())
+                            headquarterBindingSource.DataSource = csvReader.GetRecord<Headquarter>().ToString();
+                    }
                 }
-            }
+            }*/
         }
 
         /*
