@@ -33,6 +33,7 @@
             this.btnOpen = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.btnDeleteStr = new System.Windows.Forms.Button();
+            this.btnShow = new System.Windows.Forms.Button();
             this.rOWNUMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -99,6 +100,16 @@
             this.btnDeleteStr.Text = "Удалить строку";
             this.btnDeleteStr.UseVisualStyleBackColor = true;
             this.btnDeleteStr.Click += new System.EventHandler(this.btnDeleteStr_Click);
+            // 
+            // btnShow
+            // 
+            this.btnShow.Location = new System.Drawing.Point(124, 12);
+            this.btnShow.Name = "btnShow";
+            this.btnShow.Size = new System.Drawing.Size(166, 49);
+            this.btnShow.TabIndex = 6;
+            this.btnShow.Text = "Вывести N строк";
+            this.btnShow.UseVisualStyleBackColor = true;
+            this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
             // rOWNUMDataGridViewTextBoxColumn
             // 
@@ -168,7 +179,8 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(960, 450);
+            this.ClientSize = new System.Drawing.Size(960, 465);
+            this.Controls.Add(this.btnShow);
             this.Controls.Add(this.btnDeleteStr);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.btnOpen);
@@ -198,6 +210,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource tableHeaderBindingSource;
+        private System.Windows.Forms.Button btnShow;
     }
 }
 

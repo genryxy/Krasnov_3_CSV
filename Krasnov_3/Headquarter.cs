@@ -66,6 +66,27 @@ namespace Krasnov_3
             GeoLocation = new Location(args[2], args[3], args[7], args[8]);
         }
 
+        public string this[int index]
+        {
+            get
+            {
+                switch(index)
+                {
+                    case 0: return ROWNUM.ToString();
+                    case 1: return Name;
+                    case 2: return GeoLocation.AdmArea;
+                    case 3: return GeoLocation.listCoord[0].District;
+                    case 4: return Address;
+                    case 5: return PublicPhone;
+                    case 6: return ExtraInfo;
+                    case 7: return GeoLocation.listCoord[0].X_WGS;
+                    case 8: return GeoLocation.listCoord[0].Y_WGS;
+                    case 9: return GLOBALID;
+                    default: return "-1";
+                }
+
+            }
+        }
         public override string ToString()
         {
             return $"ROWNUM:{ROWNUM}, Name:{Name}, {Address}, {PublicPhone}, {ExtraInfo}, {GLOBALID}, {GeoLocation}";

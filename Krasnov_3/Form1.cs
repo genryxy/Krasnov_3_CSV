@@ -85,7 +85,7 @@ namespace Krasnov_3
                                     row[j] = Fields[j];
                                 }
                                 else
-                                    row[j] = Fields[j];                                
+                                    row[j] = Fields[j];
                             }
                             lstHeadquarters.Add(new Headquarter(Fields));
                             dt.Rows.Add(row);
@@ -93,7 +93,9 @@ namespace Krasnov_3
                         dataGridView.DataSource = dt;
                     }
                 }
-                MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
+                WriteToCsv();
+                MessageBox.Show("Save");
+                //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
             catch (Exception ex)
             {
@@ -101,7 +103,25 @@ namespace Krasnov_3
             }
         }
 
+        public void WriteToCsv()
+        {
+            StringBuilder sb = new StringBuilder();
+            IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column => {
+                if (!column.ColumnName.Contains("Column1"))
+                    return "\"" + column.ColumnName + "\"";
+                return null;
+            });
+            sb.AppendLine(string.Join(";", columnNames));
 
+            foreach (DataRow row in dt.Rows)
+            {
+                IEnumerable<string> fields = row.ItemArray.Select(field => "\"" + field.ToString() + "\"");
+                sb.AppendLine(string.Join(";", fields));
+            }
+
+            File.WriteAllText("test.txt", sb.ToString(), Encoding.GetEncoding(1251));
+            File.WriteAllText("test.csv", sb.ToString(), Encoding.GetEncoding(1251));
+        }
 
 
         private void btnWrite_Click(object sender, EventArgs e)
@@ -126,12 +146,43 @@ namespace Krasnov_3
                     catch (Exception ex) { MessageBox.Show(ex.Message); }
                 }
             }
-        }       
+        }
 
         private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            dt.Rows.RemoveAt(1);
-            dataGrid.DataSource = dt;
+            MessageBox.Show(tableHeaderBindingSource.Current.ToString());
+            if (dt.Rows.Count > 0)
+            {
+                lstHeadquarters.RemoveAt(0);
+                dt.Rows.RemoveAt(0);
+                dataGrid.DataSource = dt;
+            }
+        }
+
+        private void btnShow_Click(object sender, EventArgs e)
+        {
+            const int n = 10;
+            const int countFieldsInHeadquarter = 10;
+            DataRow row;
+
+            if (n <= lstHeadquarters.Count && n >= 1)
+            {
+                dt.Clear();
+                dataGrid.DataSource = dt;
+                for (int i = 0; i < n; i++)
+                {
+                    row = dt.NewRow();
+                    for (int j = 0; j < countFieldsInHeadquarter; j++)
+                    {
+                        if (j == 0)
+                            row[j] = int.Parse(lstHeadquarters[i][j]);
+                        else
+                            row[j] = lstHeadquarters[i][j];
+                    }
+                    dt.Rows.Add(row);
+                }
+                dataGrid.DataSource = dt;
+            }
         }
 
         /*
