@@ -1,14 +1,9 @@
-﻿using CsvHelper;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Data.OleDb;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Krasnov_3
@@ -25,7 +20,15 @@ namespace Krasnov_3
         List<Headquarter> lstHeadquarters = new List<Headquarter>();
 
         /// <summary>
-        /// Загрузить csv файл
+        /// Режим записи в csv-файл.
+        /// </summary>
+        enum ModeWriteToCsv
+        {
+            New,
+            Edit
+        }
+        /// <summary>
+        /// Загрузить csv файл в datagridview.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -37,52 +40,31 @@ namespace Krasnov_3
                 {
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
-                        // чтобы каждый раз все строки в таблице обновлялись
+                        // для обновления всех строк в таблице после каждого нажатия на кнопку
                         dt = new DataTable();
+                        dataGrid.DataSource = dt;
                         lstHeadquarters = new List<Headquarter>();
-                        string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.Unicode);
+                        DataRow row;
+                        string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.GetEncoding(1251));
                         string[] Fields;
                         Fields = Lines[0].Split(new char[] { ';' });
-                        DataRow row;
 
-                        // -1 для того чтобы не появлялся в конце пустой столбец
-                        //1st row must be column names; force lower case to ensure matching later on.
+                        // считываем названия столбцов
                         for (int i = 0; i < Fields.GetLength(0); i++)
                         {
-                            dt.Columns.Add(Fields[i]);
-                            /*if (i == 0)
-                                dt.Columns.Add(Fields[i].ToLower(), typeof(string));
-                            else if (i >= 7 && i <= 9)
-                                dt.Columns.Add(Fields[i].ToLower(), typeof(string));
-                            else
-                                dt.Columns.Add(Fields[i].ToLower());*/
+                            // чтобы не учитывать последний пустой столбец
+                            if (i < 10)
+                                dt.Columns.Add(Fields[i]);
                         }
 
-                        // считываем все строки, кроме первой
+                        // считываем все строки, кроме первой, так как в ней находятся названия столбцов
                         for (int i = 1; i < Lines.GetLength(0); i++)
                         {
                             Fields = Lines[i].Split(new char[] { ';' });
                             row = dt.NewRow();
-                            for (int j = 0; j < Fields.GetLength(0); j++)
+                            for (int j = 0; j < Fields.GetLength(0) - 1; j++)
                             {
-                                /*if (j >= 7 && j <= 9)
-                                {
-                                    if (Fields[j] == "")
-                                        row[j] = -1;
-                                    else if (Fields[j].Contains("\""))
-                                    {
-                                        string number = Fields[j].Replace("\"", "");
-                                        if (number.Contains("."))
-                                            row[j] = double.Parse(number.Replace(".", ","));
-                                        else
-                                            row[j] = double.Parse(number);
-                                    }  
-                                    else
-                                        row[j] = double.Parse(Fields[j]);
-                                }
-                                else*/
-
-                                // избавляемся от ненужных кавычек ""
+                                // избавляемся от ненужных при отображении в datagridview кавычек ""
                                 if (Fields[j] == "")
                                     row[j] = null;
                                 else if (Fields[j].Contains("\""))
@@ -92,11 +74,14 @@ namespace Krasnov_3
                                 }
                                 else
                                     row[j] = Fields[j];
+
                             }
                             lstHeadquarters.Add(new Headquarter(Fields));
                             dt.Rows.Add(row);
+                            //MessageBox.Show($"{dt.Rows[i-1].ItemArray[0]}");
                         }
                         dataGridView.DataSource = dt;
+                        //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
                 //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
@@ -108,51 +93,118 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Сохранение в csv/txt
+        /// Сохранение в csv/txt формате.
         /// </summary>
         /// <param name="fileName"></param>
-        public void WriteToCsv(string fileName)
+        private void WriteToCsv(string fileName, ModeWriteToCsv mode)
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder strBuild = new StringBuilder();
+
             // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
-            IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column =>
+            // в случае выбора режима создания нового файла при записи
+            if (mode == ModeWriteToCsv.New)
             {
-                if (!column.ColumnName.Contains("Column1"))
-                    return "\"" + column.ColumnName + "\"";
-                return null;
-            });
-            sb.AppendLine(string.Join(";", columnNames));
+                IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column =>
+                {
+                    if (!column.ColumnName.Contains("Column1"))
+                        return "\"" + column.ColumnName + "\"";
+                    return null;
+                });
+                strBuild.AppendLine(string.Join(";", columnNames) + "\"Column1\"");
+            }
 
             foreach (DataRow row in dt.Rows)
             {
                 // считываем элементы строки
                 IEnumerable<string> fields = row.ItemArray.Select(field =>
-                {  
-                    
+                {
                     return "\"" + field.ToString() + "\"";
                 });
 
-                sb.AppendLine(string.Join(";", fields));
+                strBuild.AppendLine(string.Join(";", fields) + ";\"\"");
             }
-            // записываем в файл
-            File.WriteAllText($"{fileName}.txt", sb.ToString(), Encoding.Unicode);
-            File.WriteAllText($"{fileName}.csv", sb.ToString(), Encoding.Unicode);
+
+            if (mode == ModeWriteToCsv.New)
+            {
+                // создаем новый файл и записываем (названия столбцов учитываются)
+                File.WriteAllText($"{fileName}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                File.WriteAllText($"{fileName}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+            }
+            else
+            {
+                // получаем имя файла, в который будет записана информация
+                string name = string.Empty;
+                int lengthName = fileName.Split('.').Length;
+                if (lengthName >= 2)
+                {
+                    for (int i = 0; i < lengthName - 1; i++)
+                    {
+                        if (i < lengthName - 2)
+                        {
+                            name += fileName.Split('.')[i] + ".";
+                        }
+                        else
+                        {
+                            name += fileName.Split('.')[i];
+                        }
+                    }
+                }
+                else
+                {
+                    name = fileName;
+                }
+                // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
+                File.AppendAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                File.AppendAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+
+            }
         }
 
         /// <summary>
-        /// Записывает содержимое таблицы в файл.
+        /// Записывает содержимое таблицы из datagridview в файл.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnWrite_Click(object sender, EventArgs e)
         {
-            using (SaveFileDialog sfd = new SaveFileDialog() { Filter = "CSV|.*.csv", ValidateNames = true })
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv",
+                ValidateNames = true
+            })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
                     try
                     {
-                        WriteToCsv(sfd.FileName);
+                        WriteToCsv(sfd.FileName, ModeWriteToCsv.New);
+                        MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Дозаписывает содержимое таблицы из datagridview в существующий файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnEdit_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv|ALL FILES|*.*",
+                ValidateNames = true,
+                CheckFileExists = true,
+                Title = "Запись в существующий файл"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        WriteToCsv(sfd.FileName, ModeWriteToCsv.Edit);
                         MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex) { MessageBox.Show(ex.Message); }
@@ -186,7 +238,9 @@ namespace Krasnov_3
             const int countFieldsInHeadquarter = 10;
             DataRow row;
 
-            if (n <= lstHeadquarters.Count && n >= 1)
+            // проверка числа на корректность (положительное число не должно превышать 
+            // количество элементов в списке)
+            if (n >= 1 && n <= lstHeadquarters.Count)
             {
                 dt.Clear();
                 dataGrid.DataSource = dt;
@@ -195,9 +249,6 @@ namespace Krasnov_3
                     row = dt.NewRow();
                     for (int j = 0; j < countFieldsInHeadquarter; j++)
                     {
-                        //if (j == 0)
-                        //   row[j] = int.Parse(lstHeadquarters[i][j]);
-                        //else
                         row[j] = lstHeadquarters[i][j];
                     }
                     dt.Rows.Add(row);

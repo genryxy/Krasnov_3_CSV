@@ -51,8 +51,8 @@ namespace Krasnov_3
 
         public Headquarter(params string[] args)
         {
-            if (args.Length != 10)
-                throw new ArgumentException("Должно быть 10 столбцов!");
+            if (args.Length != 11)
+                throw new ArgumentException("Должно быть 11 столбцов!");
             ROWNUM = int.Parse(args[0]);
             Name = args[1];
             Address = args[4];
