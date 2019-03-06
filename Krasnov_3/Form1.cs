@@ -81,6 +81,7 @@ namespace Krasnov_3
                             //MessageBox.Show($"{dt.Rows[i-1].ItemArray[0]}");
                         }
                         dataGridView.DataSource = dt;
+                        MessageBox.Show(dataGrid.ColumnCount.ToString());
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
@@ -266,6 +267,11 @@ namespace Krasnov_3
                 lstHeadquarters.Add(new Headquarter(Array.ConvertAll(dt.Rows[i].ItemArray.ToArray(), y => y.ToString())));
             }
             MessageBox.Show(lstHeadquarters[0].ROWNUM.ToString());*/
+        }
+
+        private void dataGridView_CellLeave(object sender, DataGridViewCellEventArgs e)
+        {
+            
         }
     }
 }

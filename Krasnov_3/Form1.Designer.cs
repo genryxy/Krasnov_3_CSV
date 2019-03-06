@@ -32,6 +32,9 @@
             this.btnWrite = new System.Windows.Forms.Button();
             this.btnOpen = new System.Windows.Forms.Button();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.btnDeleteStr = new System.Windows.Forms.Button();
+            this.btnShow = new System.Windows.Forms.Button();
+            this.btnEdit = new System.Windows.Forms.Button();
             this.rOWNUMDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -43,9 +46,6 @@
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.btnDeleteStr = new System.Windows.Forms.Button();
-            this.btnShow = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -91,7 +91,38 @@
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.Size = new System.Drawing.Size(889, 338);
             this.dataGridView.TabIndex = 4;
+            this.dataGridView.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellLeave);
             this.dataGridView.Sorted += new System.EventHandler(this.dataGridView_Sorted);
+            // 
+            // btnDeleteStr
+            // 
+            this.btnDeleteStr.Location = new System.Drawing.Point(549, 12);
+            this.btnDeleteStr.Name = "btnDeleteStr";
+            this.btnDeleteStr.Size = new System.Drawing.Size(166, 49);
+            this.btnDeleteStr.TabIndex = 5;
+            this.btnDeleteStr.Text = "Удалить строку";
+            this.btnDeleteStr.UseVisualStyleBackColor = true;
+            this.btnDeleteStr.Click += new System.EventHandler(this.btnDeleteStr_Click);
+            // 
+            // btnShow
+            // 
+            this.btnShow.Location = new System.Drawing.Point(33, 12);
+            this.btnShow.Name = "btnShow";
+            this.btnShow.Size = new System.Drawing.Size(166, 49);
+            this.btnShow.TabIndex = 6;
+            this.btnShow.Text = "Вывести N строк";
+            this.btnShow.UseVisualStyleBackColor = true;
+            this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.Location = new System.Drawing.Point(721, 12);
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(166, 49);
+            this.btnEdit.TabIndex = 7;
+            this.btnEdit.Text = "Дозаписать";
+            this.btnEdit.UseVisualStyleBackColor = true;
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // rOWNUMDataGridViewTextBoxColumn
             // 
@@ -156,36 +187,6 @@
             // tableHeaderBindingSource
             // 
             this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
-            // 
-            // btnDeleteStr
-            // 
-            this.btnDeleteStr.Location = new System.Drawing.Point(549, 12);
-            this.btnDeleteStr.Name = "btnDeleteStr";
-            this.btnDeleteStr.Size = new System.Drawing.Size(166, 49);
-            this.btnDeleteStr.TabIndex = 5;
-            this.btnDeleteStr.Text = "Удалить строку";
-            this.btnDeleteStr.UseVisualStyleBackColor = true;
-            this.btnDeleteStr.Click += new System.EventHandler(this.btnDeleteStr_Click);
-            // 
-            // btnShow
-            // 
-            this.btnShow.Location = new System.Drawing.Point(33, 12);
-            this.btnShow.Name = "btnShow";
-            this.btnShow.Size = new System.Drawing.Size(166, 49);
-            this.btnShow.TabIndex = 6;
-            this.btnShow.Text = "Вывести N строк";
-            this.btnShow.UseVisualStyleBackColor = true;
-            this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.Location = new System.Drawing.Point(721, 12);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(166, 49);
-            this.btnEdit.TabIndex = 7;
-            this.btnEdit.Text = "Дозаписать";
-            this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // Form1
             // 
