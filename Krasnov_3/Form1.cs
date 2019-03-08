@@ -15,6 +15,10 @@ namespace Krasnov_3
             InitializeComponent();
         }
         const int indexDistr = 2;
+
+        bool checkChanges = false;
+        int countSelectedRows = 2;
+        int indexDeleteRow = 0;
         DataGridView dataGrid = new DataGridView();
         DataTable dt = new DataTable();
         List<Headquarter> lstHeadquarters = new List<Headquarter>();
@@ -27,14 +31,21 @@ namespace Krasnov_3
         enum ModeWriteToCsv
         {
             New,
-            Edit
+            Edit,
+            Rewrite
         }
+        /// <summary>
+        /// Режим вывода сообщения
+        /// </summary>
         enum ModePrintMessage
         {
             Success,
             Error,
-            Delete
+            Delete,
+            CountError,
+            IndexError
         }
+
         /// <summary>
         /// Загрузить csv файл в datagridview.
         /// </summary>
@@ -102,6 +113,7 @@ namespace Krasnov_3
                             dataGridView.DataSource = dt;
                         }
                         SetItemsComboBox();
+                        comboBox.SelectedItem = comboBox.Items[0];
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
@@ -112,12 +124,28 @@ namespace Krasnov_3
 
         /// <summary> 
         /// Устанавливает значения элементов comboBox.
-        /// Отслеживает соответствие размеров списка штабов lstActiveHeads
-        /// и таблицы dt.
         /// </summary>
         private void SetItemsComboBox()
         {
-            if (dt.Rows.Count != lstActiveHeads.Count)
+            CheckArraySize();
+            comboBox.Items.Clear();
+            districtsItemsCombo.Clear();
+            foreach (var head in lstActiveHeads)
+            {
+                districtsItemsCombo.Add(head.GeoLocation.District);
+            }
+            comboBox.Items.AddRange(districtsItemsCombo.ToArray());
+            // заодно меняем label о количестве строк в таблице
+            lblCountRows.Text = dt.Rows.Count.ToString();
+        }
+
+        /// <summary>
+        /// Отслеживает соответствие размеров списка штабов lstActiveHeads
+        /// и таблицы dt.
+        /// </summary>
+        private void CheckArraySize()
+        {
+            if (dt.Rows.Count != lstActiveHeads.Count || checkChanges)
             {
                 lstActiveHeads.Clear();
                 LocationClass.listCoord.Clear();
@@ -134,23 +162,14 @@ namespace Krasnov_3
                     }
                     tempArr[dt.Columns.Count + 1] = null;
                     lstActiveHeads.Add(new Headquarter(tempArr));
-                    lstHeadquarters.Add(lstActiveHeads[lstActiveHeads.Count - 1]);
                     /*lstActiveHeads.Add(new Headquarter((dt.Rows.Count + i).ToString(),
                     Array.ConvertAll(dt.Rows[i].ItemArray, y => y.ToString()), null));*/
                 }
+                //if (!checkChanges)
+                //lstHeadquarters.Add(lstActiveHeads[lstActiveHeads.Count - 1]);
+                checkChanges = false;
                 //MessageBox.Show("Success");
             }
-            comboBox.Items.Clear();
-            districtsItemsCombo.Clear();
-            foreach (var head in lstActiveHeads)
-            {
-                if (!districtsItemsCombo.Contains(head.GeoLocation.District))
-                    districtsItemsCombo.Add(head.GeoLocation.District);
-            }
-            comboBox.Items.AddRange(districtsItemsCombo.ToArray());
-            comboBox.SelectedItem = comboBox.Items[0];
-            // заодно меняем label о количестве строк в таблице
-            lblCountRows.Text = dt.Rows.Count.ToString();
         }
 
         /// <summary>
@@ -163,7 +182,7 @@ namespace Krasnov_3
 
             // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
             // в случае выбора режима создания нового файла при записи
-            if (mode == ModeWriteToCsv.New)
+            if (mode == ModeWriteToCsv.New || mode == ModeWriteToCsv.Rewrite)
             {
                 IEnumerable<string> columnNames =
                     dt.Columns.Cast<DataColumn>().Select(column =>
@@ -225,15 +244,24 @@ namespace Krasnov_3
                 {
                     name = fileName;
                 }
-                // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
-                File.AppendAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
-                File.AppendAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+                if (ModeWriteToCsv.Edit == mode)
+                {
+                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
+                    File.AppendAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                    File.AppendAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+                }
+                if (ModeWriteToCsv.Rewrite == mode)
+                {
+                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
+                    File.WriteAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                    File.WriteAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+                }
 
             }
         }
 
         /// <summary>
-        /// Записывает содержимое таблицы из datagridview в файл.
+        /// Записывает содержимое таблицы из datagridview в новый файл.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -243,7 +271,8 @@ namespace Krasnov_3
             {
                 Filter = "CSV|*.csv",
                 ValidateNames = true,
-                Title = "Запись в новый файл"
+                Title = "Запись в новый файл",
+                OverwritePrompt = false
             })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -259,7 +288,7 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Дозаписывает содержимое таблицы из datagridview в существующий файл
+        /// Дописывает содержимое таблицы из datagridview в существующий файл
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -267,7 +296,7 @@ namespace Krasnov_3
         {
             using (SaveFileDialog sfd = new SaveFileDialog()
             {
-                Filter = "CSV|*.csv|ALL FILES|*.*",
+                Filter = "CSV|*.csv",
                 ValidateNames = true,
                 CheckFileExists = true,
                 Title = "Запись в существующий файл"
@@ -286,40 +315,86 @@ namespace Krasnov_3
         }
 
         /// <summary>
+        /// Записывает содержимое таблицы из datagridview в существующий файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnRewrite_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv",
+                ValidateNames = true,
+                CheckFileExists = true,
+                Title = "Изменение в существующем файл"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        WriteToCsv(sfd.FileName, ModeWriteToCsv.Rewrite);
+                        PrintMessageBox(ModePrintMessage.Success, null);
+                    }
+                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+                }
+            }
+        }
+
+        /// <summary>
         /// Удаляет нулевую строку в datagridview. TODO: номер строки, введенный пользователем.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            if (dt.Rows.Count > 1)
+            if (!int.TryParse(textBoxIndexDeleteRow.Text, out indexDeleteRow)
+               || indexDeleteRow < 1 || indexDeleteRow > lstActiveHeads.Count)
             {
-                lstActiveHeads.RemoveAt(0);
-                dt.Rows.RemoveAt(0);
-                dataGrid.DataSource = dt;
-                SetItemsComboBox();
+                PrintMessageBox(ModePrintMessage.IndexError, null);
+                textBoxIndexDeleteRow.Focus();
+            }
+            else
+            {
+                if (dt.Rows.Count > 1)
+                {
+                    lstHeadquarters.RemoveAt(indexDeleteRow - 1);
+                    lstActiveHeads.RemoveAt(indexDeleteRow - 1);
+                    dt.Rows.RemoveAt(indexDeleteRow - 1);
+                    dataGrid.DataSource = dt;
+                    SetItemsComboBox();
+                }
+                else
+                {
+                    PrintMessageBox(ModePrintMessage.IndexError, null);
+                }
             }
         }
 
         /// <summary>
-        /// Показывает первые N столбцов. TODO: Число N вводится пользователем через textbox.
+        /// Показывает первые N столбцов. 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnShow_Click(object sender, EventArgs e)
         {
-            const int n = 10;
-            const int countFieldsInHeadquarter = 10;
-            DataRow row;
-
             // проверка числа на корректность (положительное число не должно превышать 
             // количество элементов в списке)
-            if (n >= 1 && n <= lstHeadquarters.Count)
+            if (!int.TryParse(textBoxCountSelectedRows.Text, out countSelectedRows)
+                || countSelectedRows < 2 || countSelectedRows > lstHeadquarters.Count)
             {
+                PrintMessageBox(ModePrintMessage.CountError, null);
+                textBoxCountSelectedRows.Focus();
+            }
+            else
+            {
+                const int countFieldsInHeadquarter = 10;
+                DataRow row;
                 dt.Clear();
                 lstActiveHeads.Clear();
                 dataGrid.DataSource = dt;
-                for (int i = 0; i < n; i++)
+
+                for (int i = 0; i < countSelectedRows; i++)
                 {
                     row = dt.NewRow();
                     for (int j = 1; j < countFieldsInHeadquarter; j++)
@@ -335,16 +410,76 @@ namespace Krasnov_3
             }
         }
 
+        /// <summary>
+        /// Выводит пользователю сообщение
+        /// </summary>
+        /// <param name="mode">режим вывода сообщения</param>
+        /// <param name="exception">иформация о возникшем исключении</param>
         private void PrintMessageBox(ModePrintMessage mode, Exception exception)
         {
             if (ModePrintMessage.Success == mode)
                 MessageBox.Show("Запись прошла успешно", "Сообщение",
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
+
             if (ModePrintMessage.Error == mode)
-                MessageBox.Show(exception.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(exception.ToString(), "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             if (ModePrintMessage.Delete == mode)
                 MessageBox.Show("В ячейке были удалены вхождения символа \";\"", "Удаление",
                                 MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+            if (ModePrintMessage.CountError == mode)
+            {
+                if (lstHeadquarters.Count == 0)
+                {
+                    MessageBox.Show($"Необходимо загрузить csv-файл",
+                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                    MessageBox.Show($"Необходимо ввести целое число > 1 и меньшее {lstHeadquarters.Count + 1}",
+                        "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+
+            if (ModePrintMessage.IndexError == mode)
+            {
+                if (lstActiveHeads.Count == 0)
+                {
+                    MessageBox.Show($"Необходимо загрузить csv-файл",
+                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else if (lstActiveHeads.Count == 1)
+                {
+                    MessageBox.Show($"Удаление невозможно, так как в таблице осталась только 1 строка.",
+                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+                else
+                    MessageBox.Show($"Необходимо ввести целое число > 0 и меньшее {lstActiveHeads.Count}",
+                        "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        /// <summary>
+        /// Фиксируются изменения, происходящие при добавлении пользователем строки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            lblCountRows.Text = $"{dt.Rows.Count + 1}";
+        }
+
+        /// <summary>
+        /// Фиксируются изменения, происходящие при удалении пользователем строки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            lblCountRows.Text = $"{dt.Rows.Count}";
+            MessageBox.Show(e.Row.Index.ToString());
+            lstHeadquarters.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
+            lstActiveHeads.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
+            SetItemsComboBox();
         }
 
         /// <summary>
@@ -353,7 +488,7 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnGetCoordOneDistrict_Click(object sender, EventArgs e)
+        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (comboBox.SelectedIndex >= 0)
             {
@@ -375,32 +510,24 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Фиксируются изменения, происходящие при добавлении пользователем строки
+        /// Обновляем предлагаемый список элементов перед открытием списка
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dataGridView_UserAddedRow(object sender, DataGridViewRowEventArgs e)
+        private void comboBox_MouseClick(object sender, MouseEventArgs e)
         {
-            lblCountRows.Text = $"{dt.Rows.Count + 1}";
-
-        }
-
-        /// <summary>
-        /// Фиксируются изменения, происходящие при удалении пользователем строки
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            lblCountRows.Text = $"{dt.Rows.Count}";
-            MessageBox.Show(e.Row.Index.ToString());
-            lstHeadquarters.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
             SetItemsComboBox();
         }
 
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Позволяет следить за изменениями в ячейках
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            btnGetCoordOneDistrict_Click(sender, e);
+            checkChanges = true;
         }
+
     }
 }

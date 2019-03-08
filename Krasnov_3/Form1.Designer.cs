@@ -40,6 +40,11 @@
             this.lblInfoRows = new System.Windows.Forms.Label();
             this.lblCountRows = new System.Windows.Forms.Label();
             this.comboBox = new System.Windows.Forms.ComboBox();
+            this.labelInfoSelected = new System.Windows.Forms.Label();
+            this.textBoxCountSelectedRows = new System.Windows.Forms.TextBox();
+            this.btnRewrite = new System.Windows.Forms.Button();
+            this.textBoxIndexDeleteRow = new System.Windows.Forms.TextBox();
+            this.labelInfoDelete = new System.Windows.Forms.Label();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -60,7 +65,7 @@
             this.btnWrite.Name = "btnWrite";
             this.btnWrite.Size = new System.Drawing.Size(166, 49);
             this.btnWrite.TabIndex = 2;
-            this.btnWrite.Text = "Сохранить";
+            this.btnWrite.Text = "Сохранить в новый файл";
             this.btnWrite.UseVisualStyleBackColor = true;
             this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
             // 
@@ -94,12 +99,13 @@
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.Size = new System.Drawing.Size(1187, 518);
             this.dataGridView.TabIndex = 4;
+            this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserAddedRow);
             this.dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
             // 
             // btnDeleteStr
             // 
-            this.btnDeleteStr.Location = new System.Drawing.Point(549, 12);
+            this.btnDeleteStr.Location = new System.Drawing.Point(1243, 469);
             this.btnDeleteStr.Name = "btnDeleteStr";
             this.btnDeleteStr.Size = new System.Drawing.Size(166, 49);
             this.btnDeleteStr.TabIndex = 5;
@@ -109,11 +115,11 @@
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(33, 12);
+            this.btnShow.Location = new System.Drawing.Point(1243, 344);
             this.btnShow.Name = "btnShow";
-            this.btnShow.Size = new System.Drawing.Size(166, 49);
+            this.btnShow.Size = new System.Drawing.Size(176, 42);
             this.btnShow.TabIndex = 6;
-            this.btnShow.Text = "Вывести N строк";
+            this.btnShow.Text = "Вывести нужное количество строк";
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
             // 
@@ -123,7 +129,7 @@
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(166, 49);
             this.btnEdit.TabIndex = 7;
-            this.btnEdit.Text = "Дозаписать";
+            this.btnEdit.Text = "Дописать";
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
@@ -135,31 +141,30 @@
             this.btnGetCoordOneDistrict.TabIndex = 8;
             this.btnGetCoordOneDistrict.Text = "Координаты одного района";
             this.btnGetCoordOneDistrict.UseVisualStyleBackColor = true;
-            this.btnGetCoordOneDistrict.Click += new System.EventHandler(this.btnGetCoordOneDistrict_Click);
             // 
             // textBoxCoord
             // 
-            this.textBoxCoord.Location = new System.Drawing.Point(1261, 229);
+            this.textBoxCoord.Location = new System.Drawing.Point(1243, 86);
             this.textBoxCoord.Multiline = true;
             this.textBoxCoord.Name = "textBoxCoord";
             this.textBoxCoord.ReadOnly = true;
-            this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCoord.Size = new System.Drawing.Size(219, 95);
             this.textBoxCoord.TabIndex = 9;
             // 
             // lblInfoRows
             // 
             this.lblInfoRows.AutoSize = true;
-            this.lblInfoRows.Location = new System.Drawing.Point(1260, 342);
+            this.lblInfoRows.Location = new System.Drawing.Point(1226, 246);
             this.lblInfoRows.Name = "lblInfoRows";
-            this.lblInfoRows.Size = new System.Drawing.Size(131, 17);
+            this.lblInfoRows.Size = new System.Drawing.Size(201, 17);
             this.lblInfoRows.TabIndex = 10;
-            this.lblInfoRows.Text = "Количество строк:";
+            this.lblInfoRows.Text = "Количество строк в таблице:";
             // 
             // lblCountRows
             // 
             this.lblCountRows.AutoSize = true;
-            this.lblCountRows.Location = new System.Drawing.Point(1407, 342);
+            this.lblCountRows.Location = new System.Drawing.Point(1433, 246);
             this.lblCountRows.Name = "lblCountRows";
             this.lblCountRows.Size = new System.Drawing.Size(16, 17);
             this.lblCountRows.TabIndex = 11;
@@ -169,11 +174,56 @@
             // 
             this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox.FormattingEnabled = true;
-            this.comboBox.Location = new System.Drawing.Point(1261, 387);
+            this.comboBox.Location = new System.Drawing.Point(1243, 196);
             this.comboBox.Name = "comboBox";
             this.comboBox.Size = new System.Drawing.Size(219, 24);
             this.comboBox.TabIndex = 12;
             this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
+            this.comboBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.comboBox_MouseClick);
+            // 
+            // labelInfoSelected
+            // 
+            this.labelInfoSelected.AutoSize = true;
+            this.labelInfoSelected.Location = new System.Drawing.Point(1226, 286);
+            this.labelInfoSelected.Name = "labelInfoSelected";
+            this.labelInfoSelected.Size = new System.Drawing.Size(208, 17);
+            this.labelInfoSelected.TabIndex = 13;
+            this.labelInfoSelected.Text = "Количество выводимых строк:";
+            // 
+            // textBoxCountSelectedRows
+            // 
+            this.textBoxCountSelectedRows.Location = new System.Drawing.Point(1226, 316);
+            this.textBoxCountSelectedRows.Name = "textBoxCountSelectedRows";
+            this.textBoxCountSelectedRows.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCountSelectedRows.Size = new System.Drawing.Size(219, 22);
+            this.textBoxCountSelectedRows.TabIndex = 14;
+            // 
+            // btnRewrite
+            // 
+            this.btnRewrite.Location = new System.Drawing.Point(1065, 12);
+            this.btnRewrite.Name = "btnRewrite";
+            this.btnRewrite.Size = new System.Drawing.Size(166, 49);
+            this.btnRewrite.TabIndex = 15;
+            this.btnRewrite.Text = "Переписать";
+            this.btnRewrite.UseVisualStyleBackColor = true;
+            this.btnRewrite.Click += new System.EventHandler(this.btnRewrite_Click);
+            // 
+            // textBoxIndexDeleteRow
+            // 
+            this.textBoxIndexDeleteRow.Location = new System.Drawing.Point(1226, 441);
+            this.textBoxIndexDeleteRow.Name = "textBoxIndexDeleteRow";
+            this.textBoxIndexDeleteRow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxIndexDeleteRow.Size = new System.Drawing.Size(219, 22);
+            this.textBoxIndexDeleteRow.TabIndex = 16;
+            // 
+            // labelInfoDelete
+            // 
+            this.labelInfoDelete.AutoSize = true;
+            this.labelInfoDelete.Location = new System.Drawing.Point(1226, 421);
+            this.labelInfoDelete.Name = "labelInfoDelete";
+            this.labelInfoDelete.Size = new System.Drawing.Size(185, 17);
+            this.labelInfoDelete.TabIndex = 17;
+            this.labelInfoDelete.Text = "Индекс удаляемой строки:";
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -238,6 +288,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1492, 610);
+            this.Controls.Add(this.labelInfoDelete);
+            this.Controls.Add(this.textBoxIndexDeleteRow);
+            this.Controls.Add(this.btnRewrite);
+            this.Controls.Add(this.textBoxCountSelectedRows);
+            this.Controls.Add(this.labelInfoSelected);
             this.Controls.Add(this.comboBox);
             this.Controls.Add(this.lblCountRows);
             this.Controls.Add(this.lblInfoRows);
@@ -282,6 +337,11 @@
         private System.Windows.Forms.Label lblInfoRows;
         private System.Windows.Forms.Label lblCountRows;
         private System.Windows.Forms.ComboBox comboBox;
+        private System.Windows.Forms.Label labelInfoSelected;
+        private System.Windows.Forms.TextBox textBoxCountSelectedRows;
+        private System.Windows.Forms.Button btnRewrite;
+        private System.Windows.Forms.TextBox textBoxIndexDeleteRow;
+        private System.Windows.Forms.Label labelInfoDelete;
     }
 }
 

@@ -47,7 +47,22 @@ namespace Krasnov_3
                     case 9: return GLOBALID;
                     default: return "-1";
                 }
-
+            }
+            set
+            {
+                switch (index)
+                {
+                    //case 0: return ROWNUM.ToString();
+                    case 1: Name = value; break;
+                    //case 2:  GeoLocation.AdmArea = value; break;
+                    //case 3:  GeoLocation.District = value; break;
+                    case 4:  Address = value; break;
+                    case 5:  PublicPhone = value; break;
+                    case 6:  ExtraInfo = value; break;
+                    //case 7:  GeoLocation.X_WGS = value; break;
+                    //case 8:  GeoLocation.Y_WGS = value; break;
+                    case 9:  GLOBALID = value; break;
+                }
             }
         }
         public override string ToString()
