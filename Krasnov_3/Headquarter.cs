@@ -10,7 +10,7 @@ namespace Krasnov_3
         public string PublicPhone { get; set; }
         public string ExtraInfo { get; set; }
         public string GLOBALID { get; set; }
-        private Location GeoLocation { get; set; }
+        public LocationClass GeoLocation { get; set; }
 
         // в отношении композиции с классом Location
         public Headquarter(params string[] args)
@@ -23,7 +23,7 @@ namespace Krasnov_3
             PublicPhone = args[5];
             ExtraInfo = args[6];
             GLOBALID = args[9];
-            GeoLocation = new Location(args[2], args[3], args[7], args[8]);
+            GeoLocation = new LocationClass(args[2], args[3], args[7], args[8]);
         }
 
         public string this[int index]
@@ -35,12 +35,15 @@ namespace Krasnov_3
                     //case 0: return ROWNUM.ToString();
                     case 1: return Name;
                     case 2: return GeoLocation.AdmArea;
-                    case 3: return GeoLocation.listCoord[0].District;
+                    //case 3: return GeoLocation.listCoord[0].District;
+                    case 3: return GeoLocation.District;
                     case 4: return Address;
                     case 5: return PublicPhone;
                     case 6: return ExtraInfo;
-                    case 7: return GeoLocation.listCoord[0].X_WGS;
-                    case 8: return GeoLocation.listCoord[0].Y_WGS;
+                    //case 7: return GeoLocation.listCoord[0].X_WGS;
+                    case 7: return GeoLocation.X_WGS;
+                    //case 8: return GeoLocation.listCoord[0].Y_WGS;
+                    case 8: return GeoLocation.Y_WGS;
                     case 9: return GLOBALID;
                     default: return "-1";
                 }

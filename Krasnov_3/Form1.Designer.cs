@@ -35,6 +35,11 @@
             this.btnDeleteStr = new System.Windows.Forms.Button();
             this.btnShow = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
+            this.btnGetCoordOneDistrict = new System.Windows.Forms.Button();
+            this.textBoxCoord = new System.Windows.Forms.TextBox();
+            this.lblInfoRows = new System.Windows.Forms.Label();
+            this.lblCountRows = new System.Windows.Forms.Label();
+            this.comboBox = new System.Windows.Forms.ComboBox();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -87,10 +92,10 @@
             this.dataGridView.Location = new System.Drawing.Point(33, 67);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(1221, 518);
+            this.dataGridView.Size = new System.Drawing.Size(1187, 518);
             this.dataGridView.TabIndex = 4;
-            this.dataGridView.CellLeave += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellLeave);
-            this.dataGridView.Sorted += new System.EventHandler(this.dataGridView_Sorted);
+            this.dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserAddedRow);
+            this.dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
             // 
             // btnDeleteStr
             // 
@@ -121,6 +126,54 @@
             this.btnEdit.Text = "Дозаписать";
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnGetCoordOneDistrict
+            // 
+            this.btnGetCoordOneDistrict.Location = new System.Drawing.Point(893, 12);
+            this.btnGetCoordOneDistrict.Name = "btnGetCoordOneDistrict";
+            this.btnGetCoordOneDistrict.Size = new System.Drawing.Size(166, 49);
+            this.btnGetCoordOneDistrict.TabIndex = 8;
+            this.btnGetCoordOneDistrict.Text = "Координаты одного района";
+            this.btnGetCoordOneDistrict.UseVisualStyleBackColor = true;
+            this.btnGetCoordOneDistrict.Click += new System.EventHandler(this.btnGetCoordOneDistrict_Click);
+            // 
+            // textBoxCoord
+            // 
+            this.textBoxCoord.Location = new System.Drawing.Point(1261, 229);
+            this.textBoxCoord.Multiline = true;
+            this.textBoxCoord.Name = "textBoxCoord";
+            this.textBoxCoord.ReadOnly = true;
+            this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Horizontal;
+            this.textBoxCoord.Size = new System.Drawing.Size(219, 95);
+            this.textBoxCoord.TabIndex = 9;
+            // 
+            // lblInfoRows
+            // 
+            this.lblInfoRows.AutoSize = true;
+            this.lblInfoRows.Location = new System.Drawing.Point(1260, 342);
+            this.lblInfoRows.Name = "lblInfoRows";
+            this.lblInfoRows.Size = new System.Drawing.Size(131, 17);
+            this.lblInfoRows.TabIndex = 10;
+            this.lblInfoRows.Text = "Количество строк:";
+            // 
+            // lblCountRows
+            // 
+            this.lblCountRows.AutoSize = true;
+            this.lblCountRows.Location = new System.Drawing.Point(1407, 342);
+            this.lblCountRows.Name = "lblCountRows";
+            this.lblCountRows.Size = new System.Drawing.Size(16, 17);
+            this.lblCountRows.TabIndex = 11;
+            this.lblCountRows.Text = "0";
+            // 
+            // comboBox
+            // 
+            this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox.FormattingEnabled = true;
+            this.comboBox.Location = new System.Drawing.Point(1261, 387);
+            this.comboBox.Name = "comboBox";
+            this.comboBox.Size = new System.Drawing.Size(219, 24);
+            this.comboBox.TabIndex = 12;
+            this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -184,7 +237,12 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1346, 610);
+            this.ClientSize = new System.Drawing.Size(1492, 610);
+            this.Controls.Add(this.comboBox);
+            this.Controls.Add(this.lblCountRows);
+            this.Controls.Add(this.lblInfoRows);
+            this.Controls.Add(this.textBoxCoord);
+            this.Controls.Add(this.btnGetCoordOneDistrict);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.btnDeleteStr);
@@ -197,6 +255,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -218,6 +277,11 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn xWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.Button btnGetCoordOneDistrict;
+        private System.Windows.Forms.TextBox textBoxCoord;
+        private System.Windows.Forms.Label lblInfoRows;
+        private System.Windows.Forms.Label lblCountRows;
+        private System.Windows.Forms.ComboBox comboBox;
     }
 }
 

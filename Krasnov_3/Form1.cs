@@ -14,10 +14,12 @@ namespace Krasnov_3
         {
             InitializeComponent();
         }
-
+        const int indexDistr = 2;
         DataGridView dataGrid = new DataGridView();
         DataTable dt = new DataTable();
         List<Headquarter> lstHeadquarters = new List<Headquarter>();
+        List<Headquarter> lstActiveHeads = new List<Headquarter>();
+        List<string> districtsItemsCombo = new List<string>();
 
         /// <summary>
         /// Режим записи в csv-файл.
@@ -30,7 +32,8 @@ namespace Krasnov_3
         enum ModePrintMessage
         {
             Success,
-            Error
+            Error,
+            Delete
         }
         /// <summary>
         /// Загрузить csv файл в datagridview.
@@ -52,6 +55,7 @@ namespace Krasnov_3
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
                         // для обновления всех строк в таблице после каждого нажатия на кнопку
+                        LocationClass.listCoord.Clear();
                         dt = new DataTable();
                         lstHeadquarters = new List<Headquarter>();
                         DataRow row;
@@ -93,15 +97,60 @@ namespace Krasnov_3
                                 }
                             }
                             lstHeadquarters.Add(new Headquarter(Fields));
+                            lstActiveHeads.Add(lstHeadquarters[i - 1]);
                             dt.Rows.Add(row);
                             dataGridView.DataSource = dt;
                         }
+                        SetItemsComboBox();
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
                 //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
             catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+        }
+
+        /// <summary> 
+        /// Устанавливает значения элементов comboBox.
+        /// Отслеживает соответствие размеров списка штабов lstActiveHeads
+        /// и таблицы dt.
+        /// </summary>
+        private void SetItemsComboBox()
+        {
+            if (dt.Rows.Count != lstActiveHeads.Count)
+            {
+                lstActiveHeads.Clear();
+                LocationClass.listCoord.Clear();
+                string[] tempArr = new string[dt.Columns.Count + 2];
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    tempArr[0] = (dt.Rows.Count + i).ToString();
+                    for (int j = 0; j < dt.Columns.Count; j++)
+                    {
+                        if (dt.Rows[i].ItemArray[j] == null)
+                            tempArr[j + 1] = string.Empty;
+                        else
+                            tempArr[j + 1] = dt.Rows[i].ItemArray[j].ToString();
+                    }
+                    tempArr[dt.Columns.Count + 1] = null;
+                    lstActiveHeads.Add(new Headquarter(tempArr));
+                    lstHeadquarters.Add(lstActiveHeads[lstActiveHeads.Count - 1]);
+                    /*lstActiveHeads.Add(new Headquarter((dt.Rows.Count + i).ToString(),
+                    Array.ConvertAll(dt.Rows[i].ItemArray, y => y.ToString()), null));*/
+                }
+                //MessageBox.Show("Success");
+            }
+            comboBox.Items.Clear();
+            districtsItemsCombo.Clear();
+            foreach (var head in lstActiveHeads)
+            {
+                if (!districtsItemsCombo.Contains(head.GeoLocation.District))
+                    districtsItemsCombo.Add(head.GeoLocation.District);
+            }
+            comboBox.Items.AddRange(districtsItemsCombo.ToArray());
+            comboBox.SelectedItem = comboBox.Items[0];
+            // заодно меняем label о количестве строк в таблице
+            lblCountRows.Text = dt.Rows.Count.ToString();
         }
 
         /// <summary>
@@ -117,7 +166,15 @@ namespace Krasnov_3
             if (mode == ModeWriteToCsv.New)
             {
                 IEnumerable<string> columnNames =
-                    dt.Columns.Cast<DataColumn>().Select(column => column.ColumnName);
+                    dt.Columns.Cast<DataColumn>().Select(column =>
+                    {
+                        if (column.ColumnName.Contains(";"))
+                        {
+                            PrintMessageBox(ModePrintMessage.Delete, null);
+                            return column.ColumnName.Replace(";", "");
+                        }
+                        return column.ColumnName;
+                    });
 
                 strBuild.AppendLine("ROWNUM;" + string.Join(";", columnNames) + ";");
             }
@@ -126,7 +183,15 @@ namespace Krasnov_3
             {
                 // считываем элементы строки
                 IEnumerable<string> fields =
-                    dt.Rows[i].ItemArray.Select(field => "\"" + field.ToString() + "\"");
+                    dt.Rows[i].ItemArray.Select(field =>
+                    {
+                        if (field.ToString().Contains(";"))
+                        {
+                            PrintMessageBox(ModePrintMessage.Delete, null);
+                            return "\"" + field.ToString().Replace(";", "") + "\"";
+                        }
+                        return "\"" + field.ToString() + "\"";
+                    });
 
                 strBuild.AppendLine($"{i + 1};" + string.Join(";", fields) + ";");
             }
@@ -227,11 +292,12 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            if (dt.Rows.Count > 0)
+            if (dt.Rows.Count > 1)
             {
-                lstHeadquarters.RemoveAt(0);
+                lstActiveHeads.RemoveAt(0);
                 dt.Rows.RemoveAt(0);
                 dataGrid.DataSource = dt;
+                SetItemsComboBox();
             }
         }
 
@@ -251,18 +317,21 @@ namespace Krasnov_3
             if (n >= 1 && n <= lstHeadquarters.Count)
             {
                 dt.Clear();
+                lstActiveHeads.Clear();
                 dataGrid.DataSource = dt;
                 for (int i = 0; i < n; i++)
                 {
                     row = dt.NewRow();
                     for (int j = 1; j < countFieldsInHeadquarter; j++)
                     {
-                        // с (j-1) аналогично
+                        // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
                         row[j - 1] = lstHeadquarters[i][j];
                     }
+                    lstActiveHeads.Add(lstHeadquarters[i]);
                     dt.Rows.Add(row);
                 }
                 dataGrid.DataSource = dt;
+                SetItemsComboBox();
             }
         }
 
@@ -273,21 +342,65 @@ namespace Krasnov_3
                                 MessageBoxButtons.OK, MessageBoxIcon.Information);
             if (ModePrintMessage.Error == mode)
                 MessageBox.Show(exception.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            if (ModePrintMessage.Delete == mode)
+                MessageBox.Show("В ячейке были удалены вхождения символа \";\"", "Удаление",
+                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
-        private void dataGridView_Sorted(object sender, EventArgs e)
+
+        /// <summary>
+        /// Возвращает наборы координат (x, y), принадлежащих одному району.
+        /// Индекс района берется из comboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGetCoordOneDistrict_Click(object sender, EventArgs e)
         {
-            /*MessageBox.Show(dt.Rows.Count.ToString());
-            lstHeadquarters = new List<Headquarter>();
-            for (int i = 1; i < dt.Rows.Count; i++)
+            if (comboBox.SelectedIndex >= 0)
             {
-                lstHeadquarters.Add(new Headquarter(Array.ConvertAll(dt.Rows[i].ItemArray.ToArray(), y => y.ToString())));
+                List<Coordinates> coords =
+                    LocationClass.GetCoodinatesFromOneArea(dt.Rows[comboBox.SelectedIndex].ItemArray[indexDistr].ToString());
+                var arr = coords.ToArray();
+                //MessageBox.Show(arr.Length.ToString());
+                if (coords.Count > 0)
+                {
+                    string[] res = new string[coords.Count + 1];
+                    res[0] = $"{coords[0].District} ";
+                    for (int i = 0; i < coords.Count; i++)
+                    {
+                        res[i + 1] = $"X:{coords[i].X_WGS} Y:{coords[i].Y_WGS}\n";
+                    }
+                    textBoxCoord.Lines = res;
+                }
             }
-            MessageBox.Show(lstHeadquarters[0].ROWNUM.ToString());*/
         }
 
-        private void dataGridView_CellLeave(object sender, DataGridViewCellEventArgs e)
+        /// <summary>
+        /// Фиксируются изменения, происходящие при добавлении пользователем строки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_UserAddedRow(object sender, DataGridViewRowEventArgs e)
         {
+            lblCountRows.Text = $"{dt.Rows.Count + 1}";
 
+        }
+
+        /// <summary>
+        /// Фиксируются изменения, происходящие при удалении пользователем строки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
+        {
+            lblCountRows.Text = $"{dt.Rows.Count}";
+            MessageBox.Show(e.Row.Index.ToString());
+            lstHeadquarters.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
+            SetItemsComboBox();
+        }
+
+        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnGetCoordOneDistrict_Click(sender, e);
         }
     }
 }
