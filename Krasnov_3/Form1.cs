@@ -27,6 +27,11 @@ namespace Krasnov_3
             New,
             Edit
         }
+        enum ModePrintMessage
+        {
+            Success,
+            Error
+        }
         /// <summary>
         /// Загрузить csv файл в datagridview.
         /// </summary>
@@ -36,13 +41,18 @@ namespace Krasnov_3
         {
             try
             {
-                using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "CSV|*.csv|TXT|*.txt", ValidateNames = true })
+                using (OpenFileDialog ofd = new OpenFileDialog()
+                {
+                    Filter = "CSV|*.csv|TXT|*.txt",
+                    ValidateNames = true,
+                    Title = "Открытие файла"
+
+                })
                 {
                     if (ofd.ShowDialog() == DialogResult.OK)
                     {
                         // для обновления всех строк в таблице после каждого нажатия на кнопку
                         dt = new DataTable();
-                        dataGrid.DataSource = dt;
                         lstHeadquarters = new List<Headquarter>();
                         DataRow row;
                         string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.GetEncoding(1251));
@@ -50,47 +60,48 @@ namespace Krasnov_3
                         Fields = Lines[0].Split(new char[] { ';' });
 
                         // считываем названия столбцов
-                        for (int i = 0; i < Fields.GetLength(0); i++)
+                        for (int i = 1; i < Fields.GetLength(0); i++)
                         {
                             // чтобы не учитывать последний пустой столбец
                             if (i < 10)
+                            {
                                 dt.Columns.Add(Fields[i]);
+                            }
                         }
+
 
                         // считываем все строки, кроме первой, так как в ней находятся названия столбцов
                         for (int i = 1; i < Lines.GetLength(0); i++)
                         {
                             Fields = Lines[i].Split(new char[] { ';' });
                             row = dt.NewRow();
-                            for (int j = 0; j < Fields.GetLength(0) - 1; j++)
+                            for (int j = 1; j < Fields.GetLength(0); j++)
                             {
-                                // избавляемся от ненужных при отображении в datagridview кавычек ""
-                                if (Fields[j] == "")
-                                    row[j] = null;
-                                else if (Fields[j].Contains("\""))
+                                if (j < 10)
                                 {
-                                    Fields[j] = Fields[j].Replace("\"", "");
-                                    row[j] = Fields[j];
+                                    // избавляемся от ненужных при отображении в datagridview кавычек ""
+                                    if (Fields[j] == "")
+                                        row[j - 1] = null; // (j - 1) потому что начинаем считывать поля не с первого символа, 
+                                                           //но в datatable нужно записывать с первого столбца, индекс которого 0
+                                    else if (Fields[j].Contains("\""))
+                                    {
+                                        Fields[j] = Fields[j].Replace("\"", "");
+                                        row[j - 1] = Fields[j];
+                                    }
+                                    else
+                                        row[j - 1] = Fields[j];
                                 }
-                                else
-                                    row[j] = Fields[j];
-
                             }
                             lstHeadquarters.Add(new Headquarter(Fields));
                             dt.Rows.Add(row);
-                            //MessageBox.Show($"{dt.Rows[i-1].ItemArray[0]}");
+                            dataGridView.DataSource = dt;
                         }
-                        dataGridView.DataSource = dt;
-                        MessageBox.Show(dataGrid.ColumnCount.ToString());
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
                 //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error is " + ex.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
         }
 
         /// <summary>
@@ -105,24 +116,19 @@ namespace Krasnov_3
             // в случае выбора режима создания нового файла при записи
             if (mode == ModeWriteToCsv.New)
             {
-                IEnumerable<string> columnNames = dt.Columns.Cast<DataColumn>().Select(column =>
-                {
-                    if (!column.ColumnName.Contains("Column1"))
-                        return "\"" + column.ColumnName + "\"";
-                    return null;
-                });
-                strBuild.AppendLine(string.Join(";", columnNames) + "\"Column1\"");
+                IEnumerable<string> columnNames =
+                    dt.Columns.Cast<DataColumn>().Select(column => column.ColumnName);
+
+                strBuild.AppendLine("ROWNUM;" + string.Join(";", columnNames) + ";");
             }
 
-            foreach (DataRow row in dt.Rows)
+            for (int i = 0; i < dt.Rows.Count; i++)
             {
                 // считываем элементы строки
-                IEnumerable<string> fields = row.ItemArray.Select(field =>
-                {
-                    return "\"" + field.ToString() + "\"";
-                });
+                IEnumerable<string> fields =
+                    dt.Rows[i].ItemArray.Select(field => "\"" + field.ToString() + "\"");
 
-                strBuild.AppendLine(string.Join(";", fields) + ";\"\"");
+                strBuild.AppendLine($"{i + 1};" + string.Join(";", fields) + ";");
             }
 
             if (mode == ModeWriteToCsv.New)
@@ -171,7 +177,8 @@ namespace Krasnov_3
             using (SaveFileDialog sfd = new SaveFileDialog()
             {
                 Filter = "CSV|*.csv",
-                ValidateNames = true
+                ValidateNames = true,
+                Title = "Запись в новый файл"
             })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -179,9 +186,9 @@ namespace Krasnov_3
                     try
                     {
                         WriteToCsv(sfd.FileName, ModeWriteToCsv.New);
-                        MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        PrintMessageBox(ModePrintMessage.Success, null);
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
                 }
             }
         }
@@ -206,9 +213,9 @@ namespace Krasnov_3
                     try
                     {
                         WriteToCsv(sfd.FileName, ModeWriteToCsv.Edit);
-                        MessageBox.Show("Записали", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        PrintMessageBox(ModePrintMessage.Success, null);
                     }
-                    catch (Exception ex) { MessageBox.Show(ex.Message); }
+                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
                 }
             }
         }
@@ -248,9 +255,10 @@ namespace Krasnov_3
                 for (int i = 0; i < n; i++)
                 {
                     row = dt.NewRow();
-                    for (int j = 0; j < countFieldsInHeadquarter; j++)
+                    for (int j = 1; j < countFieldsInHeadquarter; j++)
                     {
-                        row[j] = lstHeadquarters[i][j];
+                        // с (j-1) аналогично
+                        row[j - 1] = lstHeadquarters[i][j];
                     }
                     dt.Rows.Add(row);
                 }
@@ -258,6 +266,14 @@ namespace Krasnov_3
             }
         }
 
+        private void PrintMessageBox(ModePrintMessage mode, Exception exception)
+        {
+            if (ModePrintMessage.Success == mode)
+                MessageBox.Show("Запись прошла успешно", "Сообщение",
+                                MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (ModePrintMessage.Error == mode)
+                MessageBox.Show(exception.ToString(), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
         private void dataGridView_Sorted(object sender, EventArgs e)
         {
             /*MessageBox.Show(dt.Rows.Count.ToString());
@@ -271,7 +287,7 @@ namespace Krasnov_3
 
         private void dataGridView_CellLeave(object sender, DataGridViewCellEventArgs e)
         {
-            
+
         }
     }
 }

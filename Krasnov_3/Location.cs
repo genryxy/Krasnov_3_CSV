@@ -16,6 +16,7 @@ namespace Krasnov_3
 
         public Location(string admArea, string district, string x_WGS, string y_WGS)
         {
+
             AdmArea = admArea;
             //District = district;
             listCoord.Add(new Coordinates(district, x_WGS, y_WGS));
