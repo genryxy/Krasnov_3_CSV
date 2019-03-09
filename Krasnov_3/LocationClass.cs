@@ -39,7 +39,7 @@ namespace Krasnov_3
 
         public override string ToString()
         {
-            return $"   Location: Area:{AdmArea}";
+            return $"{AdmArea}; {District}; {X_WGS}; {Y_WGS};";
         }
     }
 }

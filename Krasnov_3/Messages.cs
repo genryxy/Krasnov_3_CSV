@@ -15,7 +15,8 @@ namespace Krasnov_3
             Error,
             Delete,
             CountError,
-            IndexError
+            IndexError,
+            CoordError
         }
 
         /// <summary>
@@ -65,6 +66,12 @@ namespace Krasnov_3
                     MessageBox.Show($"Необходимо ввести целое число > 0 и меньшее {lst.Count}",
                         "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+            if (ModePrint.CoordError == mode)
+            {
+                MessageBox.Show($"Необходимо ввести x из [-180, 180], y из [-90, 90]. " +
+                    $"Разделителем является запятая.",
+                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
         }
 
         /// <summary>
@@ -72,28 +79,19 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="mode">режим вывода сообщения</param>
         /// <param name="lst">список штабов</param>
-        public static void PrintMessBox(ModePrint mode, List<Headquarter> lst)
-        {
-            PrintMessBox(mode, lst, null);
-        }
-
+        public static void PrintMessBox(ModePrint mode, List<Headquarter> lst) => PrintMessBox(mode, lst, null);
+        
         /// <summary>
         /// Перегруженный метод вывода сообщения пользователю
         /// </summary>
         /// <param name="mode">режим вывода сообщения</param>
         /// <param name="ex"></param>
-        public static void PrintMessBox(ModePrint mode, Exception ex)
-        {
-            PrintMessBox(mode, null, ex);
-        }
-
+        public static void PrintMessBox(ModePrint mode, Exception ex) => PrintMessBox(mode, null, ex);
+        
         /// <summary>
         /// Перегруженный метод вывода сообщения пользователю
         /// </summary>
         /// <param name="mode">режим вывода сообщения</param>
-        public static void PrintMessBox(ModePrint mode)
-        {
-            PrintMessBox(mode, null, null);
-        }
+        public static void PrintMessBox(ModePrint mode) => PrintMessBox(mode, null, null);       
     }
 }

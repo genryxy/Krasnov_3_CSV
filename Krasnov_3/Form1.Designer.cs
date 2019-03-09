@@ -68,9 +68,9 @@
             // 
             // btnWrite
             // 
-            this.btnWrite.Location = new System.Drawing.Point(549, 12);
+            this.btnWrite.Location = new System.Drawing.Point(1339, 7);
             this.btnWrite.Name = "btnWrite";
-            this.btnWrite.Size = new System.Drawing.Size(166, 49);
+            this.btnWrite.Size = new System.Drawing.Size(123, 58);
             this.btnWrite.TabIndex = 2;
             this.btnWrite.Text = "Сохранить в новый файл";
             this.btnWrite.UseVisualStyleBackColor = true;
@@ -78,11 +78,11 @@
             // 
             // btnOpen
             // 
-            this.btnOpen.Location = new System.Drawing.Point(377, 12);
+            this.btnOpen.Location = new System.Drawing.Point(1209, 7);
             this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(166, 49);
+            this.btnOpen.Size = new System.Drawing.Size(115, 58);
             this.btnOpen.TabIndex = 3;
-            this.btnOpen.Text = "Открыть";
+            this.btnOpen.Text = "Загрузить";
             this.btnOpen.UseVisualStyleBackColor = true;
             this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
@@ -102,19 +102,20 @@
             this.yWGSDataGridViewTextBoxColumn,
             this.gLOBALIDDataGridViewTextBoxColumn});
             this.dataGridView.DataSource = this.tableHeaderBindingSource;
-            this.dataGridView.Location = new System.Drawing.Point(33, 67);
+            this.dataGridView.Location = new System.Drawing.Point(12, 7);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(1187, 518);
+            this.dataGridView.Size = new System.Drawing.Size(1173, 578);
             this.dataGridView.TabIndex = 4;
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserAddedRow);
             // 
             // btnDeleteStr
             // 
-            this.btnDeleteStr.Location = new System.Drawing.Point(1243, 469);
+            this.btnDeleteStr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDeleteStr.Location = new System.Drawing.Point(1286, 487);
             this.btnDeleteStr.Name = "btnDeleteStr";
-            this.btnDeleteStr.Size = new System.Drawing.Size(166, 49);
+            this.btnDeleteStr.Size = new System.Drawing.Size(128, 34);
             this.btnDeleteStr.TabIndex = 5;
             this.btnDeleteStr.Text = "Удалить строку";
             this.btnDeleteStr.UseVisualStyleBackColor = true;
@@ -122,7 +123,8 @@
             // 
             // btnShow
             // 
-            this.btnShow.Location = new System.Drawing.Point(1243, 344);
+            this.btnShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnShow.Location = new System.Drawing.Point(1260, 405);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(176, 42);
             this.btnShow.TabIndex = 6;
@@ -132,9 +134,9 @@
             // 
             // btnEdit
             // 
-            this.btnEdit.Location = new System.Drawing.Point(721, 12);
+            this.btnEdit.Location = new System.Drawing.Point(1209, 68);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(166, 49);
+            this.btnEdit.Size = new System.Drawing.Size(117, 39);
             this.btnEdit.TabIndex = 7;
             this.btnEdit.Text = "Дописать";
             this.btnEdit.UseVisualStyleBackColor = true;
@@ -142,18 +144,21 @@
             // 
             // textBoxCoord
             // 
-            this.textBoxCoord.Location = new System.Drawing.Point(1243, 129);
+            this.textBoxCoord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCoord.Location = new System.Drawing.Point(1216, 203);
             this.textBoxCoord.Multiline = true;
             this.textBoxCoord.Name = "textBoxCoord";
             this.textBoxCoord.ReadOnly = true;
             this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCoord.Size = new System.Drawing.Size(219, 61);
+            this.textBoxCoord.Size = new System.Drawing.Size(271, 96);
             this.textBoxCoord.TabIndex = 9;
             // 
             // lblInfoRows
             // 
+            this.lblInfoRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInfoRows.AutoSize = true;
-            this.lblInfoRows.Location = new System.Drawing.Point(1226, 246);
+            this.lblInfoRows.BackColor = System.Drawing.SystemColors.Info;
+            this.lblInfoRows.Location = new System.Drawing.Point(1206, 344);
             this.lblInfoRows.Name = "lblInfoRows";
             this.lblInfoRows.Size = new System.Drawing.Size(201, 17);
             this.lblInfoRows.TabIndex = 10;
@@ -161,8 +166,10 @@
             // 
             // lblCountRows
             // 
+            this.lblCountRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCountRows.AutoSize = true;
-            this.lblCountRows.Location = new System.Drawing.Point(1433, 246);
+            this.lblCountRows.BackColor = System.Drawing.SystemColors.Info;
+            this.lblCountRows.Location = new System.Drawing.Point(1420, 344);
             this.lblCountRows.Name = "lblCountRows";
             this.lblCountRows.Size = new System.Drawing.Size(16, 17);
             this.lblCountRows.TabIndex = 11;
@@ -170,19 +177,22 @@
             // 
             // comboBoxDistrict
             // 
+            this.comboBoxDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDistrict.FormattingEnabled = true;
-            this.comboBoxDistrict.Location = new System.Drawing.Point(1243, 196);
+            this.comboBoxDistrict.Location = new System.Drawing.Point(1216, 305);
             this.comboBoxDistrict.Name = "comboBoxDistrict";
-            this.comboBoxDistrict.Size = new System.Drawing.Size(219, 24);
+            this.comboBoxDistrict.Size = new System.Drawing.Size(243, 24);
             this.comboBoxDistrict.TabIndex = 12;
             this.comboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.comboBoxDistrict_SelectedIndexChanged);
             this.comboBoxDistrict.MouseClick += new System.Windows.Forms.MouseEventHandler(this.comboBoxDistrict_MouseClick);
             // 
             // labelInfoSelected
             // 
+            this.labelInfoSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInfoSelected.AutoSize = true;
-            this.labelInfoSelected.Location = new System.Drawing.Point(1226, 286);
+            this.labelInfoSelected.BackColor = System.Drawing.SystemColors.Info;
+            this.labelInfoSelected.Location = new System.Drawing.Point(1206, 377);
             this.labelInfoSelected.Name = "labelInfoSelected";
             this.labelInfoSelected.Size = new System.Drawing.Size(208, 17);
             this.labelInfoSelected.TabIndex = 13;
@@ -190,17 +200,18 @@
             // 
             // textBoxCountSelectedRows
             // 
-            this.textBoxCountSelectedRows.Location = new System.Drawing.Point(1226, 316);
+            this.textBoxCountSelectedRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCountSelectedRows.Location = new System.Drawing.Point(1423, 373);
             this.textBoxCountSelectedRows.Name = "textBoxCountSelectedRows";
             this.textBoxCountSelectedRows.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCountSelectedRows.Size = new System.Drawing.Size(219, 22);
+            this.textBoxCountSelectedRows.Size = new System.Drawing.Size(64, 22);
             this.textBoxCountSelectedRows.TabIndex = 14;
             // 
             // btnRewrite
             // 
-            this.btnRewrite.Location = new System.Drawing.Point(893, 12);
+            this.btnRewrite.Location = new System.Drawing.Point(1341, 67);
             this.btnRewrite.Name = "btnRewrite";
-            this.btnRewrite.Size = new System.Drawing.Size(166, 49);
+            this.btnRewrite.Size = new System.Drawing.Size(121, 40);
             this.btnRewrite.TabIndex = 15;
             this.btnRewrite.Text = "Переписать";
             this.btnRewrite.UseVisualStyleBackColor = true;
@@ -208,16 +219,19 @@
             // 
             // textBoxIndexDeleteRow
             // 
-            this.textBoxIndexDeleteRow.Location = new System.Drawing.Point(1226, 441);
+            this.textBoxIndexDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIndexDeleteRow.Location = new System.Drawing.Point(1404, 459);
             this.textBoxIndexDeleteRow.Name = "textBoxIndexDeleteRow";
             this.textBoxIndexDeleteRow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxIndexDeleteRow.Size = new System.Drawing.Size(219, 22);
+            this.textBoxIndexDeleteRow.Size = new System.Drawing.Size(83, 22);
             this.textBoxIndexDeleteRow.TabIndex = 16;
             // 
             // labelInfoDelete
             // 
+            this.labelInfoDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInfoDelete.AutoSize = true;
-            this.labelInfoDelete.Location = new System.Drawing.Point(1226, 421);
+            this.labelInfoDelete.BackColor = System.Drawing.SystemColors.Info;
+            this.labelInfoDelete.Location = new System.Drawing.Point(1206, 464);
             this.labelInfoDelete.Name = "labelInfoDelete";
             this.labelInfoDelete.Size = new System.Drawing.Size(185, 17);
             this.labelInfoDelete.TabIndex = 17;
@@ -225,8 +239,10 @@
             // 
             // lblInfoColumnSort
             // 
+            this.lblInfoColumnSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInfoColumnSort.AutoSize = true;
-            this.lblInfoColumnSort.Location = new System.Drawing.Point(1240, 532);
+            this.lblInfoColumnSort.BackColor = System.Drawing.SystemColors.Info;
+            this.lblInfoColumnSort.Location = new System.Drawing.Point(1226, 535);
             this.lblInfoColumnSort.Name = "lblInfoColumnSort";
             this.lblInfoColumnSort.Size = new System.Drawing.Size(174, 17);
             this.lblInfoColumnSort.TabIndex = 18;
@@ -234,9 +250,10 @@
             // 
             // btnSortedName
             // 
-            this.btnSortedName.Location = new System.Drawing.Point(1229, 552);
+            this.btnSortedName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSortedName.Location = new System.Drawing.Point(1216, 555);
             this.btnSortedName.Name = "btnSortedName";
-            this.btnSortedName.Size = new System.Drawing.Size(110, 46);
+            this.btnSortedName.Size = new System.Drawing.Size(90, 30);
             this.btnSortedName.TabIndex = 19;
             this.btnSortedName.Text = "Name";
             this.btnSortedName.UseVisualStyleBackColor = true;
@@ -244,9 +261,10 @@
             // 
             // btnSortedAdmArea
             // 
-            this.btnSortedAdmArea.Location = new System.Drawing.Point(1352, 552);
+            this.btnSortedAdmArea.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSortedAdmArea.Location = new System.Drawing.Point(1346, 555);
             this.btnSortedAdmArea.Name = "btnSortedAdmArea";
-            this.btnSortedAdmArea.Size = new System.Drawing.Size(110, 46);
+            this.btnSortedAdmArea.Size = new System.Drawing.Size(90, 30);
             this.btnSortedAdmArea.TabIndex = 20;
             this.btnSortedAdmArea.Text = "AdmArea";
             this.btnSortedAdmArea.UseVisualStyleBackColor = true;
@@ -254,7 +272,8 @@
             // 
             // textBoxCoordX
             // 
-            this.textBoxCoordX.Location = new System.Drawing.Point(1226, 57);
+            this.textBoxCoordX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCoordX.Location = new System.Drawing.Point(1209, 130);
             this.textBoxCoordX.Name = "textBoxCoordX";
             this.textBoxCoordX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCoordX.Size = new System.Drawing.Size(118, 22);
@@ -262,7 +281,8 @@
             // 
             // textBoxCoordY
             // 
-            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 57);
+            this.textBoxCoordY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 130);
             this.textBoxCoordY.Name = "textBoxCoordY";
             this.textBoxCoordY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCoordY.Size = new System.Drawing.Size(118, 22);
@@ -270,8 +290,10 @@
             // 
             // lblCoordX
             // 
+            this.lblCoordX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCoordX.AutoSize = true;
-            this.lblCoordX.Location = new System.Drawing.Point(1226, 37);
+            this.lblCoordX.BackColor = System.Drawing.SystemColors.Info;
+            this.lblCoordX.Location = new System.Drawing.Point(1212, 110);
             this.lblCoordX.Name = "lblCoordX";
             this.lblCoordX.Size = new System.Drawing.Size(105, 17);
             this.lblCoordX.TabIndex = 23;
@@ -279,8 +301,10 @@
             // 
             // lblCoordY
             // 
+            this.lblCoordY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCoordY.AutoSize = true;
-            this.lblCoordY.Location = new System.Drawing.Point(1349, 37);
+            this.lblCoordY.BackColor = System.Drawing.SystemColors.Info;
+            this.lblCoordY.Location = new System.Drawing.Point(1349, 110);
             this.lblCoordY.Name = "lblCoordY";
             this.lblCoordY.Size = new System.Drawing.Size(105, 17);
             this.lblCoordY.TabIndex = 24;
@@ -288,7 +312,8 @@
             // 
             // btnGetNearHead
             // 
-            this.btnGetNearHead.Location = new System.Drawing.Point(1251, 81);
+            this.btnGetNearHead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnGetNearHead.Location = new System.Drawing.Point(1251, 157);
             this.btnGetNearHead.Name = "btnGetNearHead";
             this.btnGetNearHead.Size = new System.Drawing.Size(198, 42);
             this.btnGetNearHead.TabIndex = 25;

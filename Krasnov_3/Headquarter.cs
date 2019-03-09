@@ -51,7 +51,7 @@ namespace Krasnov_3
         }
         public override string ToString()
         {
-            return $"Name:{Name}, {Address}, {PublicPhone}, {ExtraInfo}, {GLOBALID}, {GeoLocation}";
+            return $"{Name}; {Address}; {PublicPhone}; {ExtraInfo}, {GLOBALID}; {GeoLocation}";
         }
     }
 }

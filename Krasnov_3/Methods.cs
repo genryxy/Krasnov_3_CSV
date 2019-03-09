@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
 
@@ -34,7 +35,7 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="dt">таблица, отображаемая в DataGridView</param>
         /// <param name="lstActiveHeads">список активных штабов</param>
-        /// <param name="dataGrid">экземпляр класса DataGridView</param>
+        /// <param name="dataGrid">экземпляр DataGridView</param>
         public static void UpdateDataTable(DataTable dt, List<Headquarter> lstActiveHeads, DataGridView dataGrid)
         {
             dt.Rows.Clear();
@@ -80,6 +81,33 @@ namespace Krasnov_3
                 }
                 checkChanges = false;
             }
+        }
+
+        public static string GetNearHead(double coordX, double coordY, List<Headquarter> lstActiveHeads)
+        {
+            if (LocationClass.listCoord.Count == 0)
+            {
+                Messages.PrintMessBox(Messages.ModePrint.CountError);
+                return null;
+            }
+            double x, y;
+            double minDistance = double.MaxValue;
+            int indexRow = 0;
+            for (int i = 0; i < LocationClass.listCoord.Count; i++)
+            {
+                if (double.TryParse(LocationClass.listCoord[i].X_WGS.Replace(".",","), out x) &&
+                    double.TryParse(LocationClass.listCoord[i].Y_WGS.Replace(".", ","), out y))
+                {
+                    double temp = Math.Sqrt(Math.Pow(x - coordX, 2) + Math.Pow(y - coordY, 2));
+                    if (minDistance > temp)
+                    {
+                        minDistance = temp;
+                        indexRow = i;
+                    }
+                }
+            }
+            //MessageBox.Show(double.TryParse(null, out minDistance).ToString());         
+            return lstActiveHeads[indexRow].ToString();
         }
     }
 }

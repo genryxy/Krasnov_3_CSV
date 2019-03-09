@@ -6,6 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
+/*
+ * Важно!
+ * При добавлении новой строки в исходный список lstHeadquarters добавляется созданная 
+ * строка. Но удаляется строка только из списка активных штабов lstActiveHeads (тех, что
+ * выведены в таблице). Таким образом, всегда можно получить информацию о штабах 
+ * изначально загруженных и добавленных. Изменения, внесенные пользователем, видны только
+ * в таблице, то есть, если нажать на кнопку "Вывести нужное количество строк", то будут
+ * выведены исходные строки с начальными значениями + добавленные строки.
+ * */
 namespace Krasnov_3
 {
     public partial class Form1 : Form
@@ -20,6 +29,8 @@ namespace Krasnov_3
         bool checkChanges = false;
         int countSelectedRows = 2;
         int indexDeleteRow = 0;
+        double coordX, coordY;
+
         DataGridView dataGrid = new DataGridView();
         DataTable dt = new DataTable();
         List<Headquarter> lstHeadquarters = new List<Headquarter>();
@@ -314,13 +325,23 @@ namespace Krasnov_3
         private void btnShow_Click(object sender, EventArgs e)
         {
             const int countFieldsInHeadquarter = 10;
+
+            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
+            if (lstHeadquarters.Count < lstActiveHeads.Count)
+            {
+                for (int i = lstHeadquarters.Count; i < lstActiveHeads.Count; i++)
+                {
+                    lstHeadquarters.Add(lstActiveHeads[i]);
+                }
+            }
+
             // проверка числа на корректность (положительное число не должно превышать 
             // количество элементов в списке)
             if (!int.TryParse(textBoxCountSelectedRows.Text, out countSelectedRows)
                 || countSelectedRows < 2 || countSelectedRows > lstHeadquarters.Count)
             {
                 if ((countSelectedRows == 1) || (lstHeadquarters != null && lstHeadquarters.Count > 1))
-                { Messages.PrintMessBox(Messages.ModePrint.CountError, lstHeadquarters); }      
+                { Messages.PrintMessBox(Messages.ModePrint.CountError, lstHeadquarters); }
                 else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
                 textBoxCountSelectedRows.Focus();
             }
@@ -346,7 +367,6 @@ namespace Krasnov_3
                 SetItemsComboBoxDistrict();
             }
         }
-
 
         /// <summary>
         /// Фиксируются изменения, происходящие при добавлении пользователем строки
@@ -456,7 +476,18 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnGetNearHead_Click(object sender, EventArgs e)
         {
-
+            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
+            if (!double.TryParse(textBoxCoordX.Text, out coordX) ||
+                !double.TryParse(textBoxCoordY.Text, out coordY) ||
+                coordX < -180 || coordY < -90 || coordY > 90 || coordX > 180)
+            { Messages.PrintMessBox(Messages.ModePrint.CoordError); }
+            else
+            {                
+                textBoxCoord.Text = Methods.GetNearHead(coordX, coordY, lstActiveHeads);
+                MessageBox.Show($"{coordX:f3}, {coordY:f3}");
+            }
         }
+
+       
     }
 }
