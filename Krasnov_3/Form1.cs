@@ -484,7 +484,7 @@ namespace Krasnov_3
             else
             {                
                 textBoxCoord.Text = Methods.GetNearHead(coordX, coordY, lstActiveHeads);
-                MessageBox.Show($"{coordX:f3}, {coordY:f3}");
+                //MessageBox.Show($"{coordX:f3}, {coordY:f3}");
             }
         }
 

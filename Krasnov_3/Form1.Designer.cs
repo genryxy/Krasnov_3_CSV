@@ -52,6 +52,7 @@
             this.lblCoordX = new System.Windows.Forms.Label();
             this.lblCoordY = new System.Windows.Forms.Label();
             this.btnGetNearHead = new System.Windows.Forms.Button();
+            this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -61,13 +62,13 @@
             this.xWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnWrite
             // 
+            this.btnWrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnWrite.Location = new System.Drawing.Point(1339, 7);
             this.btnWrite.Name = "btnWrite";
             this.btnWrite.Size = new System.Drawing.Size(123, 58);
@@ -78,6 +79,7 @@
             // 
             // btnOpen
             // 
+            this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOpen.Location = new System.Drawing.Point(1209, 7);
             this.btnOpen.Name = "btnOpen";
             this.btnOpen.Size = new System.Drawing.Size(115, 58);
@@ -134,6 +136,7 @@
             // 
             // btnEdit
             // 
+            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnEdit.Location = new System.Drawing.Point(1209, 68);
             this.btnEdit.Name = "btnEdit";
             this.btnEdit.Size = new System.Drawing.Size(117, 39);
@@ -209,6 +212,7 @@
             // 
             // btnRewrite
             // 
+            this.btnRewrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnRewrite.Location = new System.Drawing.Point(1341, 67);
             this.btnRewrite.Name = "btnRewrite";
             this.btnRewrite.Size = new System.Drawing.Size(121, 40);
@@ -321,63 +325,81 @@
             this.btnGetNearHead.UseVisualStyleBackColor = true;
             this.btnGetNearHead.Click += new System.EventHandler(this.btnGetNearHead_Click);
             // 
+            // tableHeaderBindingSource
+            // 
+            this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
             this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.nameDataGridViewTextBoxColumn.Width = 74;
             // 
             // admAreaDataGridViewTextBoxColumn
             // 
             this.admAreaDataGridViewTextBoxColumn.DataPropertyName = "AdmArea";
             this.admAreaDataGridViewTextBoxColumn.HeaderText = "AdmArea";
             this.admAreaDataGridViewTextBoxColumn.Name = "admAreaDataGridViewTextBoxColumn";
+            this.admAreaDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.admAreaDataGridViewTextBoxColumn.Width = 95;
             // 
             // districtDataGridViewTextBoxColumn
             // 
             this.districtDataGridViewTextBoxColumn.DataPropertyName = "District";
             this.districtDataGridViewTextBoxColumn.HeaderText = "District";
             this.districtDataGridViewTextBoxColumn.Name = "districtDataGridViewTextBoxColumn";
+            this.districtDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.districtDataGridViewTextBoxColumn.Width = 80;
             // 
             // addressDataGridViewTextBoxColumn
             // 
             this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
             this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
             this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            this.addressDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.addressDataGridViewTextBoxColumn.Width = 89;
             // 
             // publicPhoneDataGridViewTextBoxColumn
             // 
             this.publicPhoneDataGridViewTextBoxColumn.DataPropertyName = "PublicPhone";
             this.publicPhoneDataGridViewTextBoxColumn.HeaderText = "PublicPhone";
             this.publicPhoneDataGridViewTextBoxColumn.Name = "publicPhoneDataGridViewTextBoxColumn";
+            this.publicPhoneDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.publicPhoneDataGridViewTextBoxColumn.Width = 116;
             // 
             // extraInfoDataGridViewTextBoxColumn
             // 
             this.extraInfoDataGridViewTextBoxColumn.DataPropertyName = "ExtraInfo";
             this.extraInfoDataGridViewTextBoxColumn.HeaderText = "ExtraInfo";
             this.extraInfoDataGridViewTextBoxColumn.Name = "extraInfoDataGridViewTextBoxColumn";
+            this.extraInfoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.extraInfoDataGridViewTextBoxColumn.Width = 92;
             // 
             // xWGSDataGridViewTextBoxColumn
             // 
             this.xWGSDataGridViewTextBoxColumn.DataPropertyName = "X_WGS";
             this.xWGSDataGridViewTextBoxColumn.HeaderText = "X_WGS";
             this.xWGSDataGridViewTextBoxColumn.Name = "xWGSDataGridViewTextBoxColumn";
+            this.xWGSDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.xWGSDataGridViewTextBoxColumn.Width = 87;
             // 
             // yWGSDataGridViewTextBoxColumn
             // 
             this.yWGSDataGridViewTextBoxColumn.DataPropertyName = "Y_WGS";
             this.yWGSDataGridViewTextBoxColumn.HeaderText = "Y_WGS";
             this.yWGSDataGridViewTextBoxColumn.Name = "yWGSDataGridViewTextBoxColumn";
+            this.yWGSDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.yWGSDataGridViewTextBoxColumn.Width = 87;
             // 
             // gLOBALIDDataGridViewTextBoxColumn
             // 
             this.gLOBALIDDataGridViewTextBoxColumn.DataPropertyName = "GLOBALID";
             this.gLOBALIDDataGridViewTextBoxColumn.HeaderText = "GLOBALID";
             this.gLOBALIDDataGridViewTextBoxColumn.Name = "gLOBALIDDataGridViewTextBoxColumn";
-            // 
-            // tableHeaderBindingSource
-            // 
-            this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
+            this.gLOBALIDDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.gLOBALIDDataGridViewTextBoxColumn.Width = 106;
             // 
             // Form1
             // 
@@ -426,15 +448,6 @@
         private System.Windows.Forms.BindingSource tableHeaderBindingSource;
         private System.Windows.Forms.Button btnShow;
         private System.Windows.Forms.Button btnEdit;
-        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn admAreaDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn districtDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn publicPhoneDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn extraInfoDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn xWGSDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.TextBox textBoxCoord;
         private System.Windows.Forms.Label lblInfoRows;
         private System.Windows.Forms.Label lblCountRows;
@@ -452,6 +465,15 @@
         private System.Windows.Forms.Label lblCoordX;
         private System.Windows.Forms.Label lblCoordY;
         private System.Windows.Forms.Button btnGetNearHead;
+        private System.Windows.Forms.DataGridViewTextBoxColumn nameDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn admAreaDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn districtDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn addressDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn publicPhoneDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn extraInfoDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn xWGSDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
     }
 }
 
