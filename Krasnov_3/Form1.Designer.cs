@@ -47,6 +47,11 @@
             this.lblInfoColumnSort = new System.Windows.Forms.Label();
             this.btnSortedName = new System.Windows.Forms.Button();
             this.btnSortedAdmArea = new System.Windows.Forms.Button();
+            this.textBoxCoordX = new System.Windows.Forms.TextBox();
+            this.textBoxCoordY = new System.Windows.Forms.TextBox();
+            this.lblCoordX = new System.Windows.Forms.Label();
+            this.lblCoordY = new System.Windows.Forms.Label();
+            this.btnGetNearHead = new System.Windows.Forms.Button();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,10 +62,6 @@
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.textBoxCoordX = new System.Windows.Forms.TextBox();
-            this.textBoxCoordY = new System.Windows.Forms.TextBox();
-            this.lblCoordX = new System.Windows.Forms.Label();
-            this.lblCoordY = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).BeginInit();
             this.SuspendLayout();
@@ -87,6 +88,7 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -107,7 +109,6 @@
             this.dataGridView.TabIndex = 4;
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserAddedRow);
-            this.dataGridView.UserDeletedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserDeletedRow);
             // 
             // btnDeleteStr
             // 
@@ -141,12 +142,12 @@
             // 
             // textBoxCoord
             // 
-            this.textBoxCoord.Location = new System.Drawing.Point(1243, 109);
+            this.textBoxCoord.Location = new System.Drawing.Point(1243, 129);
             this.textBoxCoord.Multiline = true;
             this.textBoxCoord.Name = "textBoxCoord";
             this.textBoxCoord.ReadOnly = true;
             this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCoord.Size = new System.Drawing.Size(219, 72);
+            this.textBoxCoord.Size = new System.Drawing.Size(219, 61);
             this.textBoxCoord.TabIndex = 9;
             // 
             // lblInfoRows
@@ -251,6 +252,50 @@
             this.btnSortedAdmArea.UseVisualStyleBackColor = true;
             this.btnSortedAdmArea.Click += new System.EventHandler(this.btnSortedAdmArea_Click);
             // 
+            // textBoxCoordX
+            // 
+            this.textBoxCoordX.Location = new System.Drawing.Point(1226, 57);
+            this.textBoxCoordX.Name = "textBoxCoordX";
+            this.textBoxCoordX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCoordX.Size = new System.Drawing.Size(118, 22);
+            this.textBoxCoordX.TabIndex = 21;
+            // 
+            // textBoxCoordY
+            // 
+            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 57);
+            this.textBoxCoordY.Name = "textBoxCoordY";
+            this.textBoxCoordY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCoordY.Size = new System.Drawing.Size(118, 22);
+            this.textBoxCoordY.TabIndex = 22;
+            // 
+            // lblCoordX
+            // 
+            this.lblCoordX.AutoSize = true;
+            this.lblCoordX.Location = new System.Drawing.Point(1226, 37);
+            this.lblCoordX.Name = "lblCoordX";
+            this.lblCoordX.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordX.TabIndex = 23;
+            this.lblCoordX.Text = "Координата Х:";
+            // 
+            // lblCoordY
+            // 
+            this.lblCoordY.AutoSize = true;
+            this.lblCoordY.Location = new System.Drawing.Point(1349, 37);
+            this.lblCoordY.Name = "lblCoordY";
+            this.lblCoordY.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordY.TabIndex = 24;
+            this.lblCoordY.Text = "Координата Y:";
+            // 
+            // btnGetNearHead
+            // 
+            this.btnGetNearHead.Location = new System.Drawing.Point(1251, 81);
+            this.btnGetNearHead.Name = "btnGetNearHead";
+            this.btnGetNearHead.Size = new System.Drawing.Size(198, 42);
+            this.btnGetNearHead.TabIndex = 25;
+            this.btnGetNearHead.Text = "Найти ближайший штаб";
+            this.btnGetNearHead.UseVisualStyleBackColor = true;
+            this.btnGetNearHead.Click += new System.EventHandler(this.btnGetNearHead_Click);
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
@@ -309,45 +354,12 @@
             // 
             this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
             // 
-            // textBoxCoordX
-            // 
-            this.textBoxCoordX.Location = new System.Drawing.Point(1226, 57);
-            this.textBoxCoordX.Name = "textBoxCoordX";
-            this.textBoxCoordX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCoordX.Size = new System.Drawing.Size(118, 22);
-            this.textBoxCoordX.TabIndex = 21;
-            // 
-            // textBoxCoordY
-            // 
-            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 57);
-            this.textBoxCoordY.Name = "textBoxCoordY";
-            this.textBoxCoordY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCoordY.Size = new System.Drawing.Size(118, 22);
-            this.textBoxCoordY.TabIndex = 22;
-            // 
-            // lblCoordX
-            // 
-            this.lblCoordX.AutoSize = true;
-            this.lblCoordX.Location = new System.Drawing.Point(1226, 37);
-            this.lblCoordX.Name = "lblCoordX";
-            this.lblCoordX.Size = new System.Drawing.Size(105, 17);
-            this.lblCoordX.TabIndex = 23;
-            this.lblCoordX.Text = "Координата Х:";
-            // 
-            // lblCoordY
-            // 
-            this.lblCoordY.AutoSize = true;
-            this.lblCoordY.Location = new System.Drawing.Point(1349, 37);
-            this.lblCoordY.Name = "lblCoordY";
-            this.lblCoordY.Size = new System.Drawing.Size(105, 17);
-            this.lblCoordY.TabIndex = 24;
-            this.lblCoordY.Text = "Координата Y:";
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1492, 610);
+            this.Controls.Add(this.btnGetNearHead);
             this.Controls.Add(this.lblCoordY);
             this.Controls.Add(this.lblCoordX);
             this.Controls.Add(this.textBoxCoordY);
@@ -414,6 +426,7 @@
         private System.Windows.Forms.TextBox textBoxCoordY;
         private System.Windows.Forms.Label lblCoordX;
         private System.Windows.Forms.Label lblCoordY;
+        private System.Windows.Forms.Button btnGetNearHead;
     }
 }
 

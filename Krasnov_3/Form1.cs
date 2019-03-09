@@ -14,6 +14,7 @@ namespace Krasnov_3
         {
             InitializeComponent();
         }
+
         const int indexDistr = 2;
 
         bool checkChanges = false;
@@ -35,17 +36,7 @@ namespace Krasnov_3
             Edit,
             Rewrite
         }
-        /// <summary>
-        /// Режим вывода сообщения
-        /// </summary>
-        enum ModePrintMessage
-        {
-            Success,
-            Error,
-            Delete,
-            CountError,
-            IndexError
-        }
+
 
         /// <summary>
         /// Загрузить csv файл в datagridview.
@@ -118,9 +109,8 @@ namespace Krasnov_3
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
-                //MessageBox.Show(lstHeadquarters.Count.ToString() + " " + lstHeadquarters[lstHeadquarters.Count - 1]);
             }
-            catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+            catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
         }
 
         /// <summary> 
@@ -128,7 +118,7 @@ namespace Krasnov_3
         /// </summary>
         private void SetItemsComboBoxDistrict()
         {
-            CheckArraySize();
+            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
             comboBoxDistrict.Items.Clear();
             districtsItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
@@ -138,38 +128,6 @@ namespace Krasnov_3
             comboBoxDistrict.Items.AddRange(districtsItemsCombo.ToArray());
             // заодно меняем label о количестве строк в таблице
             lblCountRows.Text = dt.Rows.Count.ToString();
-        }      
-
-        /// <summary>
-        /// Отслеживает соответствие размеров списка штабов lstActiveHeads и таблицы dt.
-        /// </summary>
-        private void CheckArraySize()
-        {
-            if (dt.Rows.Count != lstActiveHeads.Count || checkChanges)
-            {
-                lstActiveHeads.Clear();
-                LocationClass.listCoord.Clear();
-                string[] tempArr = new string[dt.Columns.Count + 2];
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    tempArr[0] = (dt.Rows.Count + i).ToString();
-                    for (int j = 0; j < dt.Columns.Count; j++)
-                    {
-                        if (dt.Rows[i].ItemArray[j] == null)
-                            tempArr[j + 1] = string.Empty;
-                        else
-                            tempArr[j + 1] = dt.Rows[i].ItemArray[j].ToString();
-                    }
-                    tempArr[dt.Columns.Count + 1] = null;
-                    lstActiveHeads.Add(new Headquarter(tempArr));
-                    /*lstActiveHeads.Add(new Headquarter((dt.Rows.Count + i).ToString(),
-                    Array.ConvertAll(dt.Rows[i].ItemArray, y => y.ToString()), null));*/
-                }
-                //if (!checkChanges)
-                //lstHeadquarters.Add(lstActiveHeads[lstActiveHeads.Count - 1]);
-                checkChanges = false;
-                //MessageBox.Show("Success");
-            }
         }
 
         /// <summary>
@@ -181,7 +139,7 @@ namespace Krasnov_3
             StringBuilder strBuild = new StringBuilder();
 
             // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
-            // в случае выбора режима создания нового файла при записи
+            // в случае выбора режима New или Rewrite
             if (mode == ModeWriteToCsv.New || mode == ModeWriteToCsv.Rewrite)
             {
                 IEnumerable<string> columnNames =
@@ -189,12 +147,11 @@ namespace Krasnov_3
                     {
                         if (column.ColumnName.Contains(";"))
                         {
-                            PrintMessageBox(ModePrintMessage.Delete, null);
+                            Messages.PrintMessBox(Messages.ModePrint.Delete);
                             return column.ColumnName.Replace(";", "");
                         }
                         return column.ColumnName;
                     });
-
                 strBuild.AppendLine("ROWNUM;" + string.Join(";", columnNames) + ";");
             }
 
@@ -206,12 +163,11 @@ namespace Krasnov_3
                     {
                         if (field.ToString().Contains(";"))
                         {
-                            PrintMessageBox(ModePrintMessage.Delete, null);
+                            Messages.PrintMessBox(Messages.ModePrint.Delete);
                             return "\"" + field.ToString().Replace(";", "") + "\"";
                         }
                         return "\"" + field.ToString() + "\"";
                     });
-
                 strBuild.AppendLine($"{i + 1};" + string.Join(";", fields) + ";");
             }
 
@@ -224,26 +180,7 @@ namespace Krasnov_3
             else
             {
                 // получаем имя файла, в который будет записана информация
-                string name = string.Empty;
-                int lengthName = fileName.Split('.').Length;
-                if (lengthName >= 2)
-                {
-                    for (int i = 0; i < lengthName - 1; i++)
-                    {
-                        if (i < lengthName - 2)
-                        {
-                            name += fileName.Split('.')[i] + ".";
-                        }
-                        else
-                        {
-                            name += fileName.Split('.')[i];
-                        }
-                    }
-                }
-                else
-                {
-                    name = fileName;
-                }
+                string name = Methods.GetExistingName(fileName);
                 if (ModeWriteToCsv.Edit == mode)
                 {
                     // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
@@ -256,7 +193,6 @@ namespace Krasnov_3
                     File.WriteAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
                     File.WriteAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
                 }
-
             }
         }
 
@@ -280,9 +216,9 @@ namespace Krasnov_3
                     try
                     {
                         WriteToCsv(sfd.FileName, ModeWriteToCsv.New);
-                        PrintMessageBox(ModePrintMessage.Success, null);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
                     }
-                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
                 }
             }
         }
@@ -307,9 +243,9 @@ namespace Krasnov_3
                     try
                     {
                         WriteToCsv(sfd.FileName, ModeWriteToCsv.Edit);
-                        PrintMessageBox(ModePrintMessage.Success, null);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
                     }
-                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
                 }
             }
         }
@@ -326,7 +262,7 @@ namespace Krasnov_3
                 Filter = "CSV|*.csv",
                 ValidateNames = true,
                 CheckFileExists = true,
-                Title = "Изменение в существующем файл"
+                Title = "Изменение в существующем файле"
             })
             {
                 if (sfd.ShowDialog() == DialogResult.OK)
@@ -334,9 +270,9 @@ namespace Krasnov_3
                     try
                     {
                         WriteToCsv(sfd.FileName, ModeWriteToCsv.Rewrite);
-                        PrintMessageBox(ModePrintMessage.Success, null);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
                     }
-                    catch (Exception ex) { PrintMessageBox(ModePrintMessage.Error, ex); }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
                 }
             }
         }
@@ -351,23 +287,22 @@ namespace Krasnov_3
             if (!int.TryParse(textBoxIndexDeleteRow.Text, out indexDeleteRow)
                || indexDeleteRow < 1 || indexDeleteRow > lstActiveHeads.Count)
             {
-                PrintMessageBox(ModePrintMessage.IndexError, null);
+                Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads);
                 textBoxIndexDeleteRow.Focus();
             }
             else
             {
                 if (dt.Rows.Count > 1)
                 {
-                    lstHeadquarters.RemoveAt(indexDeleteRow - 1);
+                    // из первоначального списка ничего не удаляем
+                    // если удалять, то нужно и сортировать
+                    //lstHeadquarters.RemoveAt(indexDeleteRow - 1);
                     lstActiveHeads.RemoveAt(indexDeleteRow - 1);
                     dt.Rows.RemoveAt(indexDeleteRow - 1);
                     dataGrid.DataSource = dt;
                     SetItemsComboBoxDistrict();
                 }
-                else
-                {
-                    PrintMessageBox(ModePrintMessage.IndexError, null);
-                }
+                else { Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads); }
             }
         }
 
@@ -378,17 +313,19 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnShow_Click(object sender, EventArgs e)
         {
+            const int countFieldsInHeadquarter = 10;
             // проверка числа на корректность (положительное число не должно превышать 
             // количество элементов в списке)
             if (!int.TryParse(textBoxCountSelectedRows.Text, out countSelectedRows)
                 || countSelectedRows < 2 || countSelectedRows > lstHeadquarters.Count)
             {
-                PrintMessageBox(ModePrintMessage.CountError, null);
+                if ((countSelectedRows == 1) || (lstHeadquarters != null && lstHeadquarters.Count > 1))
+                { Messages.PrintMessBox(Messages.ModePrint.CountError, lstHeadquarters); }      
+                else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
                 textBoxCountSelectedRows.Focus();
             }
             else
             {
-                const int countFieldsInHeadquarter = 10;
                 DataRow row;
                 dt.Clear();
                 lstActiveHeads.Clear();
@@ -410,53 +347,6 @@ namespace Krasnov_3
             }
         }
 
-        /// <summary>
-        /// Выводит пользователю сообщение
-        /// </summary>
-        /// <param name="mode">режим вывода сообщения</param>
-        /// <param name="exception">иформация о возникшем исключении</param>
-        private void PrintMessageBox(ModePrintMessage mode, Exception exception)
-        {
-            if (ModePrintMessage.Success == mode)
-                MessageBox.Show("Запись прошла успешно", "Сообщение",
-                                MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            if (ModePrintMessage.Error == mode)
-                MessageBox.Show(exception.ToString(), "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            if (ModePrintMessage.Delete == mode)
-                MessageBox.Show("В ячейке были удалены вхождения символа \";\"", "Удаление",
-                                MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-            if (ModePrintMessage.CountError == mode)
-            {
-                if (lstHeadquarters.Count == 0)
-                {
-                    MessageBox.Show($"Необходимо загрузить csv-файл",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                    MessageBox.Show($"Необходимо ввести целое число > 1 и меньшее {lstHeadquarters.Count + 1}",
-                        "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-
-            if (ModePrintMessage.IndexError == mode)
-            {
-                if (lstActiveHeads.Count == 0)
-                {
-                    MessageBox.Show($"Необходимо загрузить csv-файл",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else if (lstActiveHeads.Count == 1)
-                {
-                    MessageBox.Show($"Удаление невозможно, так как в таблице осталась только 1 строка.",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                    MessageBox.Show($"Необходимо ввести целое число > 0 и меньшее {lstActiveHeads.Count}",
-                        "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-        }
 
         /// <summary>
         /// Фиксируются изменения, происходящие при добавлении пользователем строки
@@ -469,20 +359,6 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Фиксируются изменения, происходящие при удалении пользователем строки
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView_UserDeletedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            lblCountRows.Text = $"{dt.Rows.Count}";
-            MessageBox.Show(e.Row.Index.ToString());
-            lstHeadquarters.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
-            lstActiveHeads.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
-            SetItemsComboBoxDistrict();
-        }
-
-        /// <summary>
         /// Позволяет следить за изменениями в ячейках
         /// </summary>
         /// <param name="sender"></param>
@@ -491,7 +367,7 @@ namespace Krasnov_3
         {
             checkChanges = true;
         }
-               
+
         /// <summary>
         /// Обновляем предлагаемый список элементов перед открытием списка
         /// </summary>
@@ -515,7 +391,6 @@ namespace Krasnov_3
                 List<Coordinates> coords =
                     LocationClass.GetCoodinatesFromOneArea(dt.Rows[comboBoxDistrict.SelectedIndex].ItemArray[indexDistr].ToString());
                 var arr = coords.ToArray();
-                //MessageBox.Show(arr.Length.ToString());
                 if (coords.Count > 0)
                 {
                     string[] res = new string[coords.Count + 1];
@@ -536,29 +411,19 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnSortedName_Click(object sender, EventArgs e)
         {
-            List<string> lstName = new List<string>();
-            for (int i = 0; i < lstActiveHeads.Count; i++)
-            {                
-                lstName.Add(lstActiveHeads[i].Name);
-            }
-            lstActiveHeads = lstActiveHeads.OrderBy(x => x.Name).ToList();
-            //lstHeadquarters = lstHeadquarters.OrderBy(x => x.Name).ToList();
-            lstHeadquarters.Clear();
-            lstHeadquarters = new List<Headquarter>(lstActiveHeads);
-            dt.Rows.Clear();
-
-            DataRow row;
-            for (int i = 0; i < lstActiveHeads.Count; i++)
+            if (lstActiveHeads.Count > 0)
             {
-                row = dt.NewRow();
-                for (int j = 1; j < row.ItemArray.Length + 1; j++)
+                List<string> lstName = new List<string>();
+                for (int i = 0; i < lstActiveHeads.Count; i++)
                 {
-                    // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
-                    row[j - 1] = lstActiveHeads[i][j];
+                    lstName.Add(lstActiveHeads[i].Name);
                 }
-                dt.Rows.Add(row);
+                // сортирует только активные штабы
+                lstActiveHeads = lstActiveHeads.OrderBy(x => x.Name).ToList();
+                //lstHeadquarters = lstHeadquarters.OrderBy(x => x.Name).ToList();
+                Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
             }
-            dataGrid.DataSource = dt;
+            else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
         }
 
         /// <summary>
@@ -568,29 +433,29 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnSortedAdmArea_Click(object sender, EventArgs e)
         {
-            List<string> lstAdmArea = new List<string>();
-            for (int i = 0; i < lstActiveHeads.Count; i++)
+            if (lstActiveHeads.Count > 0)
             {
-                lstAdmArea.Add(lstActiveHeads[i].GeoLocation.AdmArea);
-            }
-            lstActiveHeads = lstActiveHeads.OrderBy(x => x.GeoLocation.AdmArea).ToList();
-            lstHeadquarters.Clear();
-            lstHeadquarters = new List<Headquarter>(lstActiveHeads);
-            //lstHeadquarters = lstHeadquarters.OrderBy(x => x.GeoLocation.AdmArea).ToList();
-            dt.Rows.Clear();
-
-            DataRow row;
-            for (int i = 0; i < lstActiveHeads.Count; i++)
-            {
-                row = dt.NewRow();
-                for (int j = 1; j < row.ItemArray.Length + 1; j++)
+                List<string> lstAdmArea = new List<string>();
+                for (int i = 0; i < lstActiveHeads.Count; i++)
                 {
-                    // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
-                    row[j - 1] = lstActiveHeads[i][j];
+                    lstAdmArea.Add(lstActiveHeads[i].GeoLocation.AdmArea);
                 }
-                dt.Rows.Add(row);
+                // сортирует только активные штабы
+                lstActiveHeads = lstActiveHeads.OrderBy(x => x.GeoLocation.AdmArea).ToList();
+                //lstHeadquarters = lstHeadquarters.OrderBy(x => x.GeoLocation.AdmArea).ToList();
+                Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
             }
-            dataGrid.DataSource = dt;
+            else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
+        }
+
+        /// <summary>
+        /// Возвращает ближайший к пользователю штаб на основе
+        /// координат, введенных пользователем.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnGetNearHead_Click(object sender, EventArgs e)
+        {
 
         }
     }
