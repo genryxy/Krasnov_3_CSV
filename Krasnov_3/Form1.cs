@@ -25,6 +25,7 @@ namespace Krasnov_3
         List<Headquarter> lstActiveHeads = new List<Headquarter>();
         List<string> districtsItemsCombo = new List<string>();
 
+
         /// <summary>
         /// Режим записи в csv-файл.
         /// </summary>
@@ -112,8 +113,8 @@ namespace Krasnov_3
                             dt.Rows.Add(row);
                             dataGridView.DataSource = dt;
                         }
-                        SetItemsComboBox();
-                        comboBox.SelectedItem = comboBox.Items[0];
+                        SetItemsComboBoxDistrict();
+                        comboBoxDistrict.SelectedItem = comboBoxDistrict.Items[0];
                         //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
                     }
                 }
@@ -123,25 +124,24 @@ namespace Krasnov_3
         }
 
         /// <summary> 
-        /// Устанавливает значения элементов comboBox.
+        /// Устанавливает значения элементов comboBoxDistrict.
         /// </summary>
-        private void SetItemsComboBox()
+        private void SetItemsComboBoxDistrict()
         {
             CheckArraySize();
-            comboBox.Items.Clear();
+            comboBoxDistrict.Items.Clear();
             districtsItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
             {
                 districtsItemsCombo.Add(head.GeoLocation.District);
             }
-            comboBox.Items.AddRange(districtsItemsCombo.ToArray());
+            comboBoxDistrict.Items.AddRange(districtsItemsCombo.ToArray());
             // заодно меняем label о количестве строк в таблице
             lblCountRows.Text = dt.Rows.Count.ToString();
-        }
+        }      
 
         /// <summary>
-        /// Отслеживает соответствие размеров списка штабов lstActiveHeads
-        /// и таблицы dt.
+        /// Отслеживает соответствие размеров списка штабов lstActiveHeads и таблицы dt.
         /// </summary>
         private void CheckArraySize()
         {
@@ -342,7 +342,7 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Удаляет нулевую строку в datagridview. TODO: номер строки, введенный пользователем.
+        /// Удаляет строку с индексом N из datagridview.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -362,7 +362,7 @@ namespace Krasnov_3
                     lstActiveHeads.RemoveAt(indexDeleteRow - 1);
                     dt.Rows.RemoveAt(indexDeleteRow - 1);
                     dataGrid.DataSource = dt;
-                    SetItemsComboBox();
+                    SetItemsComboBoxDistrict();
                 }
                 else
                 {
@@ -406,7 +406,7 @@ namespace Krasnov_3
                     dt.Rows.Add(row);
                 }
                 dataGrid.DataSource = dt;
-                SetItemsComboBox();
+                SetItemsComboBoxDistrict();
             }
         }
 
@@ -479,7 +479,27 @@ namespace Krasnov_3
             MessageBox.Show(e.Row.Index.ToString());
             lstHeadquarters.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
             lstActiveHeads.RemoveAll(field => field.GeoLocation.District == e.Row.Cells[indexDistr].Value.ToString());
-            SetItemsComboBox();
+            SetItemsComboBoxDistrict();
+        }
+
+        /// <summary>
+        /// Позволяет следить за изменениями в ячейках
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        {
+            checkChanges = true;
+        }
+               
+        /// <summary>
+        /// Обновляем предлагаемый список элементов перед открытием списка
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void comboBoxDistrict_MouseClick(object sender, MouseEventArgs e)
+        {
+            SetItemsComboBoxDistrict();
         }
 
         /// <summary>
@@ -488,12 +508,12 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBox_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxDistrict_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBox.SelectedIndex >= 0)
+            if (comboBoxDistrict.SelectedIndex >= 0)
             {
                 List<Coordinates> coords =
-                    LocationClass.GetCoodinatesFromOneArea(dt.Rows[comboBox.SelectedIndex].ItemArray[indexDistr].ToString());
+                    LocationClass.GetCoodinatesFromOneArea(dt.Rows[comboBoxDistrict.SelectedIndex].ItemArray[indexDistr].ToString());
                 var arr = coords.ToArray();
                 //MessageBox.Show(arr.Length.ToString());
                 if (coords.Count > 0)
@@ -510,24 +530,68 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Обновляем предлагаемый список элементов перед открытием списка
+        /// Сортировать по столбцу "Name"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBox_MouseClick(object sender, MouseEventArgs e)
+        private void btnSortedName_Click(object sender, EventArgs e)
         {
-            SetItemsComboBox();
+            List<string> lstName = new List<string>();
+            for (int i = 0; i < lstActiveHeads.Count; i++)
+            {                
+                lstName.Add(lstActiveHeads[i].Name);
+            }
+            lstActiveHeads = lstActiveHeads.OrderBy(x => x.Name).ToList();
+            //lstHeadquarters = lstHeadquarters.OrderBy(x => x.Name).ToList();
+            lstHeadquarters.Clear();
+            lstHeadquarters = new List<Headquarter>(lstActiveHeads);
+            dt.Rows.Clear();
+
+            DataRow row;
+            for (int i = 0; i < lstActiveHeads.Count; i++)
+            {
+                row = dt.NewRow();
+                for (int j = 1; j < row.ItemArray.Length + 1; j++)
+                {
+                    // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
+                    row[j - 1] = lstActiveHeads[i][j];
+                }
+                dt.Rows.Add(row);
+            }
+            dataGrid.DataSource = dt;
         }
 
         /// <summary>
-        /// Позволяет следить за изменениями в ячейках
+        /// Сортировать по столбцу "AdmArea"
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
+        private void btnSortedAdmArea_Click(object sender, EventArgs e)
         {
-            checkChanges = true;
-        }
+            List<string> lstAdmArea = new List<string>();
+            for (int i = 0; i < lstActiveHeads.Count; i++)
+            {
+                lstAdmArea.Add(lstActiveHeads[i].GeoLocation.AdmArea);
+            }
+            lstActiveHeads = lstActiveHeads.OrderBy(x => x.GeoLocation.AdmArea).ToList();
+            lstHeadquarters.Clear();
+            lstHeadquarters = new List<Headquarter>(lstActiveHeads);
+            //lstHeadquarters = lstHeadquarters.OrderBy(x => x.GeoLocation.AdmArea).ToList();
+            dt.Rows.Clear();
 
+            DataRow row;
+            for (int i = 0; i < lstActiveHeads.Count; i++)
+            {
+                row = dt.NewRow();
+                for (int j = 1; j < row.ItemArray.Length + 1; j++)
+                {
+                    // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
+                    row[j - 1] = lstActiveHeads[i][j];
+                }
+                dt.Rows.Add(row);
+            }
+            dataGrid.DataSource = dt;
+
+        }
     }
 }

@@ -35,16 +35,18 @@
             this.btnDeleteStr = new System.Windows.Forms.Button();
             this.btnShow = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
-            this.btnGetCoordOneDistrict = new System.Windows.Forms.Button();
             this.textBoxCoord = new System.Windows.Forms.TextBox();
             this.lblInfoRows = new System.Windows.Forms.Label();
             this.lblCountRows = new System.Windows.Forms.Label();
-            this.comboBox = new System.Windows.Forms.ComboBox();
+            this.comboBoxDistrict = new System.Windows.Forms.ComboBox();
             this.labelInfoSelected = new System.Windows.Forms.Label();
             this.textBoxCountSelectedRows = new System.Windows.Forms.TextBox();
             this.btnRewrite = new System.Windows.Forms.Button();
             this.textBoxIndexDeleteRow = new System.Windows.Forms.TextBox();
             this.labelInfoDelete = new System.Windows.Forms.Label();
+            this.lblInfoColumnSort = new System.Windows.Forms.Label();
+            this.btnSortedName = new System.Windows.Forms.Button();
+            this.btnSortedAdmArea = new System.Windows.Forms.Button();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,13 +57,17 @@
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.textBoxCoordX = new System.Windows.Forms.TextBox();
+            this.textBoxCoordY = new System.Windows.Forms.TextBox();
+            this.lblCoordX = new System.Windows.Forms.Label();
+            this.lblCoordY = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // btnWrite
             // 
-            this.btnWrite.Location = new System.Drawing.Point(205, 12);
+            this.btnWrite.Location = new System.Drawing.Point(549, 12);
             this.btnWrite.Name = "btnWrite";
             this.btnWrite.Size = new System.Drawing.Size(166, 49);
             this.btnWrite.TabIndex = 2;
@@ -133,23 +139,14 @@
             this.btnEdit.UseVisualStyleBackColor = true;
             this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
-            // btnGetCoordOneDistrict
-            // 
-            this.btnGetCoordOneDistrict.Location = new System.Drawing.Point(893, 12);
-            this.btnGetCoordOneDistrict.Name = "btnGetCoordOneDistrict";
-            this.btnGetCoordOneDistrict.Size = new System.Drawing.Size(166, 49);
-            this.btnGetCoordOneDistrict.TabIndex = 8;
-            this.btnGetCoordOneDistrict.Text = "Координаты одного района";
-            this.btnGetCoordOneDistrict.UseVisualStyleBackColor = true;
-            // 
             // textBoxCoord
             // 
-            this.textBoxCoord.Location = new System.Drawing.Point(1243, 86);
+            this.textBoxCoord.Location = new System.Drawing.Point(1243, 109);
             this.textBoxCoord.Multiline = true;
             this.textBoxCoord.Name = "textBoxCoord";
             this.textBoxCoord.ReadOnly = true;
             this.textBoxCoord.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxCoord.Size = new System.Drawing.Size(219, 95);
+            this.textBoxCoord.Size = new System.Drawing.Size(219, 72);
             this.textBoxCoord.TabIndex = 9;
             // 
             // lblInfoRows
@@ -170,16 +167,16 @@
             this.lblCountRows.TabIndex = 11;
             this.lblCountRows.Text = "0";
             // 
-            // comboBox
+            // comboBoxDistrict
             // 
-            this.comboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox.FormattingEnabled = true;
-            this.comboBox.Location = new System.Drawing.Point(1243, 196);
-            this.comboBox.Name = "comboBox";
-            this.comboBox.Size = new System.Drawing.Size(219, 24);
-            this.comboBox.TabIndex = 12;
-            this.comboBox.SelectedIndexChanged += new System.EventHandler(this.comboBox_SelectedIndexChanged);
-            this.comboBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.comboBox_MouseClick);
+            this.comboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDistrict.FormattingEnabled = true;
+            this.comboBoxDistrict.Location = new System.Drawing.Point(1243, 196);
+            this.comboBoxDistrict.Name = "comboBoxDistrict";
+            this.comboBoxDistrict.Size = new System.Drawing.Size(219, 24);
+            this.comboBoxDistrict.TabIndex = 12;
+            this.comboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.comboBoxDistrict_SelectedIndexChanged);
+            this.comboBoxDistrict.MouseClick += new System.Windows.Forms.MouseEventHandler(this.comboBoxDistrict_MouseClick);
             // 
             // labelInfoSelected
             // 
@@ -200,7 +197,7 @@
             // 
             // btnRewrite
             // 
-            this.btnRewrite.Location = new System.Drawing.Point(1065, 12);
+            this.btnRewrite.Location = new System.Drawing.Point(893, 12);
             this.btnRewrite.Name = "btnRewrite";
             this.btnRewrite.Size = new System.Drawing.Size(166, 49);
             this.btnRewrite.TabIndex = 15;
@@ -224,6 +221,35 @@
             this.labelInfoDelete.Size = new System.Drawing.Size(185, 17);
             this.labelInfoDelete.TabIndex = 17;
             this.labelInfoDelete.Text = "Индекс удаляемой строки:";
+            // 
+            // lblInfoColumnSort
+            // 
+            this.lblInfoColumnSort.AutoSize = true;
+            this.lblInfoColumnSort.Location = new System.Drawing.Point(1240, 532);
+            this.lblInfoColumnSort.Name = "lblInfoColumnSort";
+            this.lblInfoColumnSort.Size = new System.Drawing.Size(174, 17);
+            this.lblInfoColumnSort.TabIndex = 18;
+            this.lblInfoColumnSort.Text = "Сортировать по столбцу:";
+            // 
+            // btnSortedName
+            // 
+            this.btnSortedName.Location = new System.Drawing.Point(1229, 552);
+            this.btnSortedName.Name = "btnSortedName";
+            this.btnSortedName.Size = new System.Drawing.Size(110, 46);
+            this.btnSortedName.TabIndex = 19;
+            this.btnSortedName.Text = "Name";
+            this.btnSortedName.UseVisualStyleBackColor = true;
+            this.btnSortedName.Click += new System.EventHandler(this.btnSortedName_Click);
+            // 
+            // btnSortedAdmArea
+            // 
+            this.btnSortedAdmArea.Location = new System.Drawing.Point(1352, 552);
+            this.btnSortedAdmArea.Name = "btnSortedAdmArea";
+            this.btnSortedAdmArea.Size = new System.Drawing.Size(110, 46);
+            this.btnSortedAdmArea.TabIndex = 20;
+            this.btnSortedAdmArea.Text = "AdmArea";
+            this.btnSortedAdmArea.UseVisualStyleBackColor = true;
+            this.btnSortedAdmArea.Click += new System.EventHandler(this.btnSortedAdmArea_Click);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -283,21 +309,61 @@
             // 
             this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
             // 
+            // textBoxCoordX
+            // 
+            this.textBoxCoordX.Location = new System.Drawing.Point(1226, 57);
+            this.textBoxCoordX.Name = "textBoxCoordX";
+            this.textBoxCoordX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCoordX.Size = new System.Drawing.Size(118, 22);
+            this.textBoxCoordX.TabIndex = 21;
+            // 
+            // textBoxCoordY
+            // 
+            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 57);
+            this.textBoxCoordY.Name = "textBoxCoordY";
+            this.textBoxCoordY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.textBoxCoordY.Size = new System.Drawing.Size(118, 22);
+            this.textBoxCoordY.TabIndex = 22;
+            // 
+            // lblCoordX
+            // 
+            this.lblCoordX.AutoSize = true;
+            this.lblCoordX.Location = new System.Drawing.Point(1226, 37);
+            this.lblCoordX.Name = "lblCoordX";
+            this.lblCoordX.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordX.TabIndex = 23;
+            this.lblCoordX.Text = "Координата Х:";
+            // 
+            // lblCoordY
+            // 
+            this.lblCoordY.AutoSize = true;
+            this.lblCoordY.Location = new System.Drawing.Point(1349, 37);
+            this.lblCoordY.Name = "lblCoordY";
+            this.lblCoordY.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordY.TabIndex = 24;
+            this.lblCoordY.Text = "Координата Y:";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1492, 610);
+            this.Controls.Add(this.lblCoordY);
+            this.Controls.Add(this.lblCoordX);
+            this.Controls.Add(this.textBoxCoordY);
+            this.Controls.Add(this.textBoxCoordX);
+            this.Controls.Add(this.btnSortedAdmArea);
+            this.Controls.Add(this.btnSortedName);
+            this.Controls.Add(this.lblInfoColumnSort);
             this.Controls.Add(this.labelInfoDelete);
             this.Controls.Add(this.textBoxIndexDeleteRow);
             this.Controls.Add(this.btnRewrite);
             this.Controls.Add(this.textBoxCountSelectedRows);
             this.Controls.Add(this.labelInfoSelected);
-            this.Controls.Add(this.comboBox);
+            this.Controls.Add(this.comboBoxDistrict);
             this.Controls.Add(this.lblCountRows);
             this.Controls.Add(this.lblInfoRows);
             this.Controls.Add(this.textBoxCoord);
-            this.Controls.Add(this.btnGetCoordOneDistrict);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.btnDeleteStr);
@@ -332,16 +398,22 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn xWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
-        private System.Windows.Forms.Button btnGetCoordOneDistrict;
         private System.Windows.Forms.TextBox textBoxCoord;
         private System.Windows.Forms.Label lblInfoRows;
         private System.Windows.Forms.Label lblCountRows;
-        private System.Windows.Forms.ComboBox comboBox;
+        private System.Windows.Forms.ComboBox comboBoxDistrict;
         private System.Windows.Forms.Label labelInfoSelected;
         private System.Windows.Forms.TextBox textBoxCountSelectedRows;
         private System.Windows.Forms.Button btnRewrite;
         private System.Windows.Forms.TextBox textBoxIndexDeleteRow;
         private System.Windows.Forms.Label labelInfoDelete;
+        private System.Windows.Forms.Label lblInfoColumnSort;
+        private System.Windows.Forms.Button btnSortedName;
+        private System.Windows.Forms.Button btnSortedAdmArea;
+        private System.Windows.Forms.TextBox textBoxCoordX;
+        private System.Windows.Forms.TextBox textBoxCoordY;
+        private System.Windows.Forms.Label lblCoordX;
+        private System.Windows.Forms.Label lblCoordY;
     }
 }
 
