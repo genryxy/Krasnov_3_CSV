@@ -52,7 +52,7 @@ namespace Krasnov_3
 
             if (ModePrint.IndexError == mode)
             {
-                if (lst == null)
+                if (lst == null || lst.Count == 0)
                 {
                     MessageBox.Show($"Необходимо загрузить csv-файл",
                     "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);

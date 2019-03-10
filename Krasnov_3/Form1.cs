@@ -17,9 +17,9 @@ using System.Windows.Forms;
  * */
 namespace Krasnov_3
 {
-    public partial class Form1 : Form
+    public partial class Form : System.Windows.Forms.Form
     {
-        public Form1()
+        public Form()
         {
             InitializeComponent();
         }
@@ -37,255 +37,21 @@ namespace Krasnov_3
         List<Headquarter> lstActiveHeads = new List<Headquarter>();
         List<string> districtsItemsCombo = new List<string>();
 
-
-        /// <summary>
-        /// Режим записи в csv-файл.
-        /// </summary>
-        enum ModeWriteToCsv
-        {
-            New,
-            Edit,
-            Rewrite
-        }
-
-
-        /// <summary>
-        /// Загрузить csv файл в datagridview.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnOpen_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (OpenFileDialog ofd = new OpenFileDialog()
-                {
-                    Filter = "CSV|*.csv|TXT|*.txt",
-                    ValidateNames = true,
-                    Title = "Открытие файла"
-
-                })
-                {
-                    if (ofd.ShowDialog() == DialogResult.OK)
-                    {
-                        // для обновления всех строк в таблице после каждого нажатия на кнопку
-                        LocationClass.listCoord.Clear();
-                        dt = new DataTable();
-                        lstHeadquarters = new List<Headquarter>();
-                        DataRow row;
-                        string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.GetEncoding(1251));
-                        string[] Fields;
-                        Fields = Lines[0].Split(new char[] { ';' });
-
-                        // считываем названия столбцов
-                        for (int i = 1; i < Fields.GetLength(0); i++)
-                        {
-                            // чтобы не учитывать последний пустой столбец
-                            if (i < 10)
-                            {
-                                dt.Columns.Add(Fields[i]);
-                            }
-                        }
-
-
-                        // считываем все строки, кроме первой, так как в ней находятся названия столбцов
-                        for (int i = 1; i < Lines.GetLength(0); i++)
-                        {
-                            Fields = Lines[i].Split(new char[] { ';' });
-                            row = dt.NewRow();
-                            for (int j = 1; j < Fields.GetLength(0); j++)
-                            {
-                                if (j < 10)
-                                {
-                                    // избавляемся от ненужных при отображении в datagridview кавычек ""
-                                    if (Fields[j] == "")
-                                        row[j - 1] = null; // (j - 1) потому что начинаем считывать поля не с первого символа, 
-                                                           //но в datatable нужно записывать с первого столбца, индекс которого 0
-                                    else if (Fields[j].Contains("\""))
-                                    {
-                                        Fields[j] = Fields[j].Replace("\"", "");
-                                        row[j - 1] = Fields[j];
-                                    }
-                                    else
-                                        row[j - 1] = Fields[j];
-                                }
-                            }
-                            lstHeadquarters.Add(new Headquarter(Fields));
-                            lstActiveHeads.Add(lstHeadquarters[i - 1]);
-                            dt.Rows.Add(row);
-                            dataGridView.DataSource = dt;
-                        }
-                        SetItemsComboBoxDistrict();
-                        comboBoxDistrict.SelectedItem = comboBoxDistrict.Items[0];
-                        //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
-                    }
-                }
-            }
-            catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
-        }
-
         /// <summary> 
         /// Устанавливает значения элементов comboBoxDistrict.
         /// </summary>
         private void SetItemsComboBoxDistrict()
         {
             Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
-            comboBoxDistrict.Items.Clear();
+            toolComboBoxDistrict.Items.Clear();
             districtsItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
             {
                 districtsItemsCombo.Add(head.GeoLocation.District);
             }
-            comboBoxDistrict.Items.AddRange(districtsItemsCombo.ToArray());
+            toolComboBoxDistrict.Items.AddRange(districtsItemsCombo.ToArray());
             // заодно меняем label о количестве строк в таблице
             lblCountRows.Text = dt.Rows.Count.ToString();
-        }
-
-        /// <summary>
-        /// Сохранение в csv/txt формате.
-        /// </summary>
-        /// <param name="fileName"></param>
-        private void WriteToCsv(string fileName, ModeWriteToCsv mode)
-        {
-            StringBuilder strBuild = new StringBuilder();
-
-            // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
-            // в случае выбора режима New или Rewrite
-            if (mode == ModeWriteToCsv.New || mode == ModeWriteToCsv.Rewrite)
-            {
-                IEnumerable<string> columnNames =
-                    dt.Columns.Cast<DataColumn>().Select(column =>
-                    {
-                        if (column.ColumnName.Contains(";"))
-                        {
-                            Messages.PrintMessBox(Messages.ModePrint.Delete);
-                            return column.ColumnName.Replace(";", "");
-                        }
-                        return column.ColumnName;
-                    });
-                strBuild.AppendLine("ROWNUM;" + string.Join(";", columnNames) + ";");
-            }
-
-            for (int i = 0; i < dt.Rows.Count; i++)
-            {
-                // считываем элементы строки
-                IEnumerable<string> fields =
-                    dt.Rows[i].ItemArray.Select(field =>
-                    {
-                        if (field.ToString().Contains(";"))
-                        {
-                            Messages.PrintMessBox(Messages.ModePrint.Delete);
-                            return "\"" + field.ToString().Replace(";", "") + "\"";
-                        }
-                        return "\"" + field.ToString() + "\"";
-                    });
-                strBuild.AppendLine($"{i + 1};" + string.Join(";", fields) + ";");
-            }
-
-            if (mode == ModeWriteToCsv.New)
-            {
-                // создаем новый файл и записываем (названия столбцов учитываются)
-                File.WriteAllText($"{fileName}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
-                File.WriteAllText($"{fileName}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
-            }
-            else
-            {
-                // получаем имя файла, в который будет записана информация
-                string name = Methods.GetExistingName(fileName);
-                if (ModeWriteToCsv.Edit == mode)
-                {
-                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
-                    File.AppendAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
-                    File.AppendAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
-                }
-                if (ModeWriteToCsv.Rewrite == mode)
-                {
-                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
-                    File.WriteAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
-                    File.WriteAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Записывает содержимое таблицы из datagridview в новый файл.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnWrite_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "CSV|*.csv",
-                ValidateNames = true,
-                Title = "Запись в новый файл",
-                OverwritePrompt = false
-            })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        WriteToCsv(sfd.FileName, ModeWriteToCsv.New);
-                        Messages.PrintMessBox(Messages.ModePrint.Success);
-                    }
-                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Дописывает содержимое таблицы из datagridview в существующий файл
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnEdit_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "CSV|*.csv",
-                ValidateNames = true,
-                CheckFileExists = true,
-                Title = "Запись в существующий файл"
-            })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        WriteToCsv(sfd.FileName, ModeWriteToCsv.Edit);
-                        Messages.PrintMessBox(Messages.ModePrint.Success);
-                    }
-                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Записывает содержимое таблицы из datagridview в существующий файл
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnRewrite_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog sfd = new SaveFileDialog()
-            {
-                Filter = "CSV|*.csv",
-                ValidateNames = true,
-                CheckFileExists = true,
-                Title = "Изменение в существующем файле"
-            })
-            {
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    try
-                    {
-                        WriteToCsv(sfd.FileName, ModeWriteToCsv.Rewrite);
-                        Messages.PrintMessBox(Messages.ModePrint.Success);
-                    }
-                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
-                }
-            }
         }
 
         /// <summary>
@@ -389,11 +155,169 @@ namespace Krasnov_3
         }
 
         /// <summary>
+        /// Записывает содержимое таблицы из datagridview в новый файл.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void newFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv",
+                ValidateNames = true,
+                Title = "Запись в новый файл",
+                OverwritePrompt = false
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        Methods.WriteToCsv(sfd.FileName, Methods.ModeWrite.New, dt);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
+                    }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Дописывает содержимое таблицы из datagridview в существующий файл
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void addToExistingFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv",
+                ValidateNames = true,
+                CheckFileExists = true,
+                OverwritePrompt = false,
+                Title = "Запись в существующий файл"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        Methods.WriteToCsv(sfd.FileName, Methods.ModeWrite.Edit, dt);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
+                    }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Записывает содержимое таблицы из datagridview в существующий файл.
+        /// Старые данные удаляются.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void overwriteFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog()
+            {
+                Filter = "CSV|*.csv",
+                ValidateNames = true,
+                CheckFileExists = true,
+                Title = "Изменение в существующем файле"
+            })
+            {
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        Methods.WriteToCsv(sfd.FileName, Methods.ModeWrite.Overwrite, dt);
+                        Messages.PrintMessBox(Messages.ModePrint.Success);
+                    }
+                    catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Загрузить csv файл в datagridview.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolBtnDownload_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (OpenFileDialog ofd = new OpenFileDialog()
+                {
+                    Filter = "CSV|*.csv|TXT|*.txt",
+                    ValidateNames = true,
+                    Title = "Открытие файла"
+
+                })
+                {
+                    if (ofd.ShowDialog() == DialogResult.OK)
+                    {
+                        // для обновления всех строк в таблице после каждого нажатия на кнопку
+                        LocationClass.listCoord.Clear();
+                        dt = new DataTable();
+                        lstHeadquarters = new List<Headquarter>();
+                        DataRow row;
+                        string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.GetEncoding(1251));
+                        string[] Fields;
+                        Fields = Lines[0].Split(new char[] { ';' });
+
+                        // считываем названия столбцов
+                        for (int i = 1; i < Fields.GetLength(0); i++)
+                        {
+                            // чтобы не учитывать последний пустой столбец
+                            if (i < 10)
+                            {
+                                dt.Columns.Add(Fields[i]);
+                            }
+                        }
+
+
+                        // считываем все строки, кроме первой, так как в ней находятся названия столбцов
+                        for (int i = 1; i < Lines.GetLength(0); i++)
+                        {
+                            Fields = Lines[i].Split(new char[] { ';' });
+                            row = dt.NewRow();
+                            for (int j = 1; j < Fields.GetLength(0); j++)
+                            {
+                                if (j < 10)
+                                {
+                                    // избавляемся от ненужных при отображении в datagridview кавычек ""
+                                    if (Fields[j] == "")
+                                        row[j - 1] = null; // (j - 1) потому что начинаем считывать поля не с первого символа, 
+                                                           //но в datatable нужно записывать с первого столбца, индекс которого 0
+                                    else if (Fields[j].Contains("\""))
+                                    {
+                                        Fields[j] = Fields[j].Replace("\"", "");
+                                        row[j - 1] = Fields[j];
+                                    }
+                                    else
+                                        row[j - 1] = Fields[j];
+                                }
+                            }
+                            lstHeadquarters.Add(new Headquarter(Fields));
+                            lstActiveHeads.Add(lstHeadquarters[i - 1]);
+                            dt.Rows.Add(row);
+                            dataGridView.DataSource = dt;
+                        }
+                        SetItemsComboBoxDistrict();
+                        toolComboBoxDistrict.SelectedItem = toolComboBoxDistrict.Items[0];
+                        //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
+                    }
+                }
+            }
+            catch (Exception ex) { Messages.PrintMessBox(Messages.ModePrint.Error, ex); }
+        }
+
+        /// <summary>
         /// Обновляем предлагаемый список элементов перед открытием списка
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxDistrict_MouseClick(object sender, MouseEventArgs e)
+        private void toolComboBoxDistrict_Click(object sender, EventArgs e)
         {
             SetItemsComboBoxDistrict();
         }
@@ -404,12 +328,12 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void comboBoxDistrict_SelectedIndexChanged(object sender, EventArgs e)
+        private void toolComboBoxDistrict_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (comboBoxDistrict.SelectedIndex >= 0)
+            if (toolComboBoxDistrict.SelectedIndex >= 0)
             {
-                List<Coordinates> coords =
-                    LocationClass.GetCoodinatesFromOneArea(dt.Rows[comboBoxDistrict.SelectedIndex].ItemArray[indexDistr].ToString());
+                List<Coordinates> coords = LocationClass.GetCoodinatesFromOneArea(
+                    dt.Rows[toolComboBoxDistrict.SelectedIndex].ItemArray[indexDistr].ToString());
                 var arr = coords.ToArray();
                 if (coords.Count > 0)
                 {
@@ -429,7 +353,7 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnSortedName_Click(object sender, EventArgs e)
+        private void nameToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (lstActiveHeads.Count > 0)
             {
@@ -451,7 +375,7 @@ namespace Krasnov_3
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnSortedAdmArea_Click(object sender, EventArgs e)
+        private void admAreaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (lstActiveHeads.Count > 0)
             {
@@ -466,6 +390,13 @@ namespace Krasnov_3
                 Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
             }
             else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
+        }
+
+        private void Form_Load(object sender, EventArgs e)
+        {
+            toolTip.SetToolTip(btnDeleteStr, "If you click, the row with the entered index will be deleted.");
+            toolTip.SetToolTip(textBoxCoordX, "Please, enter X_WGS.");
+            toolTip.SetToolTip(textBoxCoordY, "Please, enter Y_WGS.");
         }
 
         /// <summary>
@@ -486,8 +417,6 @@ namespace Krasnov_3
                 textBoxCoord.Text = Methods.GetNearHead(coordX, coordY, lstActiveHeads);
                 //MessageBox.Show($"{coordX:f3}, {coordY:f3}");
             }
-        }
-
-       
+        }       
     }
 }

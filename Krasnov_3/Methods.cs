@@ -1,12 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Krasnov_3
 {
     public static class Methods
     {
+
+        /// <summary>
+        /// Режим записи в csv-файл.
+        /// </summary>
+        public enum ModeWrite
+        {
+            New,
+            Edit,
+            Overwrite
+        }
+
         /// <summary>
         /// Возвращает имя существующего файла в нужном формате.
         /// </summary>
@@ -83,6 +97,14 @@ namespace Krasnov_3
             }
         }
 
+        /// <summary>
+        /// Возвращает ближайший к пользователю штаб на основе введенных
+        /// координат.
+        /// </summary>
+        /// <param name="coordX">координата X</param>
+        /// <param name="coordY">координата  Y</param>
+        /// <param name="lstActiveHeads">список отображаемых штабов</param>
+        /// <returns></returns>
         public static string GetNearHead(double coordX, double coordY, List<Headquarter> lstActiveHeads)
         {
             if (LocationClass.listCoord.Count == 0)
@@ -106,8 +128,75 @@ namespace Krasnov_3
                     }
                 }
             }
-            //MessageBox.Show(double.TryParse(null, out minDistance).ToString());         
             return lstActiveHeads[indexRow].ToString();
+        }
+
+        /// <summary>
+        /// Сохранение в csv/txt формате.
+        /// </summary>
+        /// <param name="fileName">имя сохраняемого файла</param>
+        /// <param name="mode">режим записи</param>
+        /// <param name="dt">таблица из DataGridView</param>
+        public static void WriteToCsv(string fileName, ModeWrite mode, DataTable dt)
+        {
+            StringBuilder strBuild = new StringBuilder();
+
+            // считываем названия столбцов при помощи расширений интерфейса и linq-запроса
+            // в случае выбора режима New или Rewrite
+            if (mode == ModeWrite.New || mode == ModeWrite.Overwrite)
+            {
+                IEnumerable<string> columnNames =
+                    dt.Columns.Cast<DataColumn>().Select(column =>
+                    {
+                        if (column.ColumnName.Contains(";"))
+                        {
+                            Messages.PrintMessBox(Messages.ModePrint.Delete);
+                            return column.ColumnName.Replace(";", "");
+                        }
+                        return column.ColumnName;
+                    });
+                strBuild.AppendLine("ROWNUM;" + string.Join(";", columnNames) + ";");
+            }
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                // считываем элементы строки
+                IEnumerable<string> fields =
+                    dt.Rows[i].ItemArray.Select(field =>
+                    {
+                        if (field.ToString().Contains(";"))
+                        {
+                            Messages.PrintMessBox(Messages.ModePrint.Delete);
+                            return "\"" + field.ToString().Replace(";", "") + "\"";
+                        }
+                        return "\"" + field.ToString() + "\"";
+                    });
+                strBuild.AppendLine($"{i + 1};" + string.Join(";", fields) + ";");
+            }
+
+            if (mode == ModeWrite.New)
+            {
+                // создаем новый файл и записываем (названия столбцов учитываются)
+                File.WriteAllText($"{fileName}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                File.WriteAllText($"{fileName}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+            }
+            else
+            {
+                // получаем имя файла, в который будет записана информация
+                string name = Methods.GetExistingName(fileName);
+                if (ModeWrite.Edit == mode)
+                {
+                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
+                    File.AppendAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                    File.AppendAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+                }
+                if (ModeWrite.Overwrite == mode)
+                {
+                    // дозаписываем в существующие файлы (названия столбцов повторно не записываются)
+                    File.WriteAllText($"{name}.txt", strBuild.ToString(), Encoding.GetEncoding(1251));
+                    File.WriteAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
+                }
+            }
         }
     }
 }

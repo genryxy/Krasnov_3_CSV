@@ -1,6 +1,6 @@
 ﻿namespace Krasnov_3
 {
-    partial class Form1
+    partial class Form
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,30 +29,36 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnWrite = new System.Windows.Forms.Button();
-            this.btnOpen = new System.Windows.Forms.Button();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.btnDeleteStr = new System.Windows.Forms.Button();
             this.btnShow = new System.Windows.Forms.Button();
-            this.btnEdit = new System.Windows.Forms.Button();
             this.textBoxCoord = new System.Windows.Forms.TextBox();
             this.lblInfoRows = new System.Windows.Forms.Label();
             this.lblCountRows = new System.Windows.Forms.Label();
-            this.comboBoxDistrict = new System.Windows.Forms.ComboBox();
             this.labelInfoSelected = new System.Windows.Forms.Label();
             this.textBoxCountSelectedRows = new System.Windows.Forms.TextBox();
-            this.btnRewrite = new System.Windows.Forms.Button();
             this.textBoxIndexDeleteRow = new System.Windows.Forms.TextBox();
             this.labelInfoDelete = new System.Windows.Forms.Label();
-            this.lblInfoColumnSort = new System.Windows.Forms.Label();
-            this.btnSortedName = new System.Windows.Forms.Button();
-            this.btnSortedAdmArea = new System.Windows.Forms.Button();
             this.textBoxCoordX = new System.Windows.Forms.TextBox();
             this.textBoxCoordY = new System.Windows.Forms.TextBox();
             this.lblCoordX = new System.Windows.Forms.Label();
             this.lblCoordY = new System.Windows.Forms.Label();
             this.btnGetNearHead = new System.Windows.Forms.Button();
-            this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
+            this.toolBtnDownload = new System.Windows.Forms.ToolStripButton();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
+            this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.newFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.addToExistingFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.overwriteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolComboBoxDistrict = new System.Windows.Forms.ToolStripComboBox();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabel = new System.Windows.Forms.ToolStripLabel();
+            this.sortedByColumnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.admAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -62,31 +68,12 @@
             this.xWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.toolStrip.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).BeginInit();
             this.SuspendLayout();
-            // 
-            // btnWrite
-            // 
-            this.btnWrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnWrite.Location = new System.Drawing.Point(1339, 7);
-            this.btnWrite.Name = "btnWrite";
-            this.btnWrite.Size = new System.Drawing.Size(123, 58);
-            this.btnWrite.TabIndex = 2;
-            this.btnWrite.Text = "Сохранить в новый файл";
-            this.btnWrite.UseVisualStyleBackColor = true;
-            this.btnWrite.Click += new System.EventHandler(this.btnWrite_Click);
-            // 
-            // btnOpen
-            // 
-            this.btnOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOpen.Location = new System.Drawing.Point(1209, 7);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(115, 58);
-            this.btnOpen.TabIndex = 3;
-            this.btnOpen.Text = "Загрузить";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
             // 
             // dataGridView
             // 
@@ -104,10 +91,10 @@
             this.yWGSDataGridViewTextBoxColumn,
             this.gLOBALIDDataGridViewTextBoxColumn});
             this.dataGridView.DataSource = this.tableHeaderBindingSource;
-            this.dataGridView.Location = new System.Drawing.Point(12, 7);
+            this.dataGridView.Location = new System.Drawing.Point(415, 69);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(1173, 578);
+            this.dataGridView.Size = new System.Drawing.Size(1104, 478);
             this.dataGridView.TabIndex = 4;
             this.dataGridView.CellEndEdit += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellEndEdit);
             this.dataGridView.UserAddedRow += new System.Windows.Forms.DataGridViewRowEventHandler(this.dataGridView_UserAddedRow);
@@ -115,40 +102,29 @@
             // btnDeleteStr
             // 
             this.btnDeleteStr.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnDeleteStr.Location = new System.Drawing.Point(1286, 487);
+            this.btnDeleteStr.Location = new System.Drawing.Point(127, 474);
             this.btnDeleteStr.Name = "btnDeleteStr";
             this.btnDeleteStr.Size = new System.Drawing.Size(128, 34);
             this.btnDeleteStr.TabIndex = 5;
-            this.btnDeleteStr.Text = "Удалить строку";
+            this.btnDeleteStr.Text = "Delete row";
             this.btnDeleteStr.UseVisualStyleBackColor = true;
             this.btnDeleteStr.Click += new System.EventHandler(this.btnDeleteStr_Click);
             // 
             // btnShow
             // 
             this.btnShow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnShow.Location = new System.Drawing.Point(1260, 405);
+            this.btnShow.Location = new System.Drawing.Point(99, 385);
             this.btnShow.Name = "btnShow";
             this.btnShow.Size = new System.Drawing.Size(176, 42);
             this.btnShow.TabIndex = 6;
-            this.btnShow.Text = "Вывести нужное количество строк";
+            this.btnShow.Text = "Show the required number of rows";
             this.btnShow.UseVisualStyleBackColor = true;
             this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
-            // 
-            // btnEdit
-            // 
-            this.btnEdit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnEdit.Location = new System.Drawing.Point(1209, 68);
-            this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(117, 39);
-            this.btnEdit.TabIndex = 7;
-            this.btnEdit.Text = "Дописать";
-            this.btnEdit.UseVisualStyleBackColor = true;
-            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
             // 
             // textBoxCoord
             // 
             this.textBoxCoord.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCoord.Location = new System.Drawing.Point(1216, 203);
+            this.textBoxCoord.Location = new System.Drawing.Point(64, 201);
             this.textBoxCoord.Multiline = true;
             this.textBoxCoord.Name = "textBoxCoord";
             this.textBoxCoord.ReadOnly = true;
@@ -161,70 +137,47 @@
             this.lblInfoRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblInfoRows.AutoSize = true;
             this.lblInfoRows.BackColor = System.Drawing.SystemColors.Info;
-            this.lblInfoRows.Location = new System.Drawing.Point(1206, 344);
+            this.lblInfoRows.Location = new System.Drawing.Point(54, 329);
             this.lblInfoRows.Name = "lblInfoRows";
-            this.lblInfoRows.Size = new System.Drawing.Size(201, 17);
+            this.lblInfoRows.Size = new System.Drawing.Size(212, 17);
             this.lblInfoRows.TabIndex = 10;
-            this.lblInfoRows.Text = "Количество строк в таблице:";
+            this.lblInfoRows.Text = "The number of rows in the table:";
             // 
             // lblCountRows
             // 
             this.lblCountRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCountRows.AutoSize = true;
             this.lblCountRows.BackColor = System.Drawing.SystemColors.Info;
-            this.lblCountRows.Location = new System.Drawing.Point(1420, 344);
+            this.lblCountRows.Location = new System.Drawing.Point(272, 329);
             this.lblCountRows.Name = "lblCountRows";
             this.lblCountRows.Size = new System.Drawing.Size(16, 17);
             this.lblCountRows.TabIndex = 11;
             this.lblCountRows.Text = "0";
-            // 
-            // comboBoxDistrict
-            // 
-            this.comboBoxDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDistrict.FormattingEnabled = true;
-            this.comboBoxDistrict.Location = new System.Drawing.Point(1216, 305);
-            this.comboBoxDistrict.Name = "comboBoxDistrict";
-            this.comboBoxDistrict.Size = new System.Drawing.Size(243, 24);
-            this.comboBoxDistrict.TabIndex = 12;
-            this.comboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.comboBoxDistrict_SelectedIndexChanged);
-            this.comboBoxDistrict.MouseClick += new System.Windows.Forms.MouseEventHandler(this.comboBoxDistrict_MouseClick);
             // 
             // labelInfoSelected
             // 
             this.labelInfoSelected.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInfoSelected.AutoSize = true;
             this.labelInfoSelected.BackColor = System.Drawing.SystemColors.Info;
-            this.labelInfoSelected.Location = new System.Drawing.Point(1206, 377);
+            this.labelInfoSelected.Location = new System.Drawing.Point(54, 362);
             this.labelInfoSelected.Name = "labelInfoSelected";
-            this.labelInfoSelected.Size = new System.Drawing.Size(208, 17);
+            this.labelInfoSelected.Size = new System.Drawing.Size(175, 17);
             this.labelInfoSelected.TabIndex = 13;
-            this.labelInfoSelected.Text = "Количество выводимых строк:";
+            this.labelInfoSelected.Text = "Number of rows displayed:";
             // 
             // textBoxCountSelectedRows
             // 
             this.textBoxCountSelectedRows.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCountSelectedRows.Location = new System.Drawing.Point(1423, 373);
+            this.textBoxCountSelectedRows.Location = new System.Drawing.Point(243, 359);
             this.textBoxCountSelectedRows.Name = "textBoxCountSelectedRows";
             this.textBoxCountSelectedRows.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCountSelectedRows.Size = new System.Drawing.Size(64, 22);
             this.textBoxCountSelectedRows.TabIndex = 14;
             // 
-            // btnRewrite
-            // 
-            this.btnRewrite.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRewrite.Location = new System.Drawing.Point(1341, 67);
-            this.btnRewrite.Name = "btnRewrite";
-            this.btnRewrite.Size = new System.Drawing.Size(121, 40);
-            this.btnRewrite.TabIndex = 15;
-            this.btnRewrite.Text = "Переписать";
-            this.btnRewrite.UseVisualStyleBackColor = true;
-            this.btnRewrite.Click += new System.EventHandler(this.btnRewrite_Click);
-            // 
             // textBoxIndexDeleteRow
             // 
             this.textBoxIndexDeleteRow.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxIndexDeleteRow.Location = new System.Drawing.Point(1404, 459);
+            this.textBoxIndexDeleteRow.Location = new System.Drawing.Point(226, 446);
             this.textBoxIndexDeleteRow.Name = "textBoxIndexDeleteRow";
             this.textBoxIndexDeleteRow.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxIndexDeleteRow.Size = new System.Drawing.Size(83, 22);
@@ -235,49 +188,16 @@
             this.labelInfoDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.labelInfoDelete.AutoSize = true;
             this.labelInfoDelete.BackColor = System.Drawing.SystemColors.Info;
-            this.labelInfoDelete.Location = new System.Drawing.Point(1206, 464);
+            this.labelInfoDelete.Location = new System.Drawing.Point(54, 449);
             this.labelInfoDelete.Name = "labelInfoDelete";
-            this.labelInfoDelete.Size = new System.Drawing.Size(185, 17);
+            this.labelInfoDelete.Size = new System.Drawing.Size(166, 17);
             this.labelInfoDelete.TabIndex = 17;
-            this.labelInfoDelete.Text = "Индекс удаляемой строки:";
-            // 
-            // lblInfoColumnSort
-            // 
-            this.lblInfoColumnSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblInfoColumnSort.AutoSize = true;
-            this.lblInfoColumnSort.BackColor = System.Drawing.SystemColors.Info;
-            this.lblInfoColumnSort.Location = new System.Drawing.Point(1226, 535);
-            this.lblInfoColumnSort.Name = "lblInfoColumnSort";
-            this.lblInfoColumnSort.Size = new System.Drawing.Size(174, 17);
-            this.lblInfoColumnSort.TabIndex = 18;
-            this.lblInfoColumnSort.Text = "Сортировать по столбцу:";
-            // 
-            // btnSortedName
-            // 
-            this.btnSortedName.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSortedName.Location = new System.Drawing.Point(1216, 555);
-            this.btnSortedName.Name = "btnSortedName";
-            this.btnSortedName.Size = new System.Drawing.Size(90, 30);
-            this.btnSortedName.TabIndex = 19;
-            this.btnSortedName.Text = "Name";
-            this.btnSortedName.UseVisualStyleBackColor = true;
-            this.btnSortedName.Click += new System.EventHandler(this.btnSortedName_Click);
-            // 
-            // btnSortedAdmArea
-            // 
-            this.btnSortedAdmArea.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSortedAdmArea.Location = new System.Drawing.Point(1346, 555);
-            this.btnSortedAdmArea.Name = "btnSortedAdmArea";
-            this.btnSortedAdmArea.Size = new System.Drawing.Size(90, 30);
-            this.btnSortedAdmArea.TabIndex = 20;
-            this.btnSortedAdmArea.Text = "AdmArea";
-            this.btnSortedAdmArea.UseVisualStyleBackColor = true;
-            this.btnSortedAdmArea.Click += new System.EventHandler(this.btnSortedAdmArea_Click);
+            this.labelInfoDelete.Text = "Index of the deleted row: ";
             // 
             // textBoxCoordX
             // 
             this.textBoxCoordX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCoordX.Location = new System.Drawing.Point(1209, 130);
+            this.textBoxCoordX.Location = new System.Drawing.Point(57, 115);
             this.textBoxCoordX.Name = "textBoxCoordX";
             this.textBoxCoordX.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCoordX.Size = new System.Drawing.Size(118, 22);
@@ -286,7 +206,7 @@
             // textBoxCoordY
             // 
             this.textBoxCoordY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCoordY.Location = new System.Drawing.Point(1352, 130);
+            this.textBoxCoordY.Location = new System.Drawing.Point(200, 115);
             this.textBoxCoordY.Name = "textBoxCoordY";
             this.textBoxCoordY.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxCoordY.Size = new System.Drawing.Size(118, 22);
@@ -297,37 +217,141 @@
             this.lblCoordX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCoordX.AutoSize = true;
             this.lblCoordX.BackColor = System.Drawing.SystemColors.Info;
-            this.lblCoordX.Location = new System.Drawing.Point(1212, 110);
+            this.lblCoordX.Location = new System.Drawing.Point(61, 86);
             this.lblCoordX.Name = "lblCoordX";
-            this.lblCoordX.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordX.Size = new System.Drawing.Size(94, 17);
             this.lblCoordX.TabIndex = 23;
-            this.lblCoordX.Text = "Координата Х:";
+            this.lblCoordX.Text = "Coordinate X:";
             // 
             // lblCoordY
             // 
             this.lblCoordY.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.lblCoordY.AutoSize = true;
             this.lblCoordY.BackColor = System.Drawing.SystemColors.Info;
-            this.lblCoordY.Location = new System.Drawing.Point(1349, 110);
+            this.lblCoordY.Location = new System.Drawing.Point(213, 86);
             this.lblCoordY.Name = "lblCoordY";
-            this.lblCoordY.Size = new System.Drawing.Size(105, 17);
+            this.lblCoordY.Size = new System.Drawing.Size(94, 17);
             this.lblCoordY.TabIndex = 24;
-            this.lblCoordY.Text = "Координата Y:";
+            this.lblCoordY.Text = "Coordinate Y:";
             // 
             // btnGetNearHead
             // 
             this.btnGetNearHead.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnGetNearHead.Location = new System.Drawing.Point(1251, 157);
+            this.btnGetNearHead.Location = new System.Drawing.Point(90, 143);
             this.btnGetNearHead.Name = "btnGetNearHead";
             this.btnGetNearHead.Size = new System.Drawing.Size(198, 42);
             this.btnGetNearHead.TabIndex = 25;
-            this.btnGetNearHead.Text = "Найти ближайший штаб";
+            this.btnGetNearHead.Text = "Search the nearest headquarter";
             this.btnGetNearHead.UseVisualStyleBackColor = true;
             this.btnGetNearHead.Click += new System.EventHandler(this.btnGetNearHead_Click);
             // 
-            // tableHeaderBindingSource
+            // toolStrip
             // 
-            this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolBtnDownload,
+            this.toolStripSeparator1,
+            this.toolStripLabel,
+            this.toolComboBoxDistrict});
+            this.toolStrip.Location = new System.Drawing.Point(0, 28);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(1531, 28);
+            this.toolStrip.TabIndex = 27;
+            this.toolStrip.Text = "toolStrip1";
+            // 
+            // toolBtnDownload
+            // 
+            this.toolBtnDownload.Image = ((System.Drawing.Image)(resources.GetObject("toolBtnDownload.Image")));
+            this.toolBtnDownload.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolBtnDownload.Name = "toolBtnDownload";
+            this.toolBtnDownload.Size = new System.Drawing.Size(102, 25);
+            this.toolBtnDownload.Text = "Download";
+            this.toolBtnDownload.Click += new System.EventHandler(this.toolBtnDownload_Click);
+            // 
+            // menuStrip
+            // 
+            this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.saveToolStripMenuItem,
+            this.sortedByColumnToolStripMenuItem});
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(1531, 28);
+            this.menuStrip.TabIndex = 28;
+            this.menuStrip.Text = "menuStrip1";
+            // 
+            // saveToolStripMenuItem
+            // 
+            this.saveToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newFileToolStripMenuItem,
+            this.addToExistingFileToolStripMenuItem,
+            this.overwriteFileToolStripMenuItem});
+            this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(52, 24);
+            this.saveToolStripMenuItem.Text = "Save";
+            // 
+            // newFileToolStripMenuItem
+            // 
+            this.newFileToolStripMenuItem.Name = "newFileToolStripMenuItem";
+            this.newFileToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            this.newFileToolStripMenuItem.Text = "New File";
+            this.newFileToolStripMenuItem.Click += new System.EventHandler(this.newFileToolStripMenuItem_Click);
+            // 
+            // addToExistingFileToolStripMenuItem
+            // 
+            this.addToExistingFileToolStripMenuItem.Name = "addToExistingFileToolStripMenuItem";
+            this.addToExistingFileToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            this.addToExistingFileToolStripMenuItem.Text = "Add to Existing File";
+            this.addToExistingFileToolStripMenuItem.Click += new System.EventHandler(this.addToExistingFileToolStripMenuItem_Click);
+            // 
+            // overwriteFileToolStripMenuItem
+            // 
+            this.overwriteFileToolStripMenuItem.Name = "overwriteFileToolStripMenuItem";
+            this.overwriteFileToolStripMenuItem.Size = new System.Drawing.Size(212, 26);
+            this.overwriteFileToolStripMenuItem.Text = "Overwrite File";
+            this.overwriteFileToolStripMenuItem.Click += new System.EventHandler(this.overwriteFileToolStripMenuItem_Click);
+            // 
+            // toolComboBoxDistrict
+            // 
+            this.toolComboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolComboBoxDistrict.Name = "toolComboBoxDistrict";
+            this.toolComboBoxDistrict.Size = new System.Drawing.Size(180, 28);
+            this.toolComboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxDistrict_SelectedIndexChanged);
+            this.toolComboBoxDistrict.Click += new System.EventHandler(this.toolComboBoxDistrict_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripLabel
+            // 
+            this.toolStripLabel.Name = "toolStripLabel";
+            this.toolStripLabel.Size = new System.Drawing.Size(176, 25);
+            this.toolStripLabel.Text = "Coordinates of one area: ";
+            // 
+            // sortedByColumnToolStripMenuItem
+            // 
+            this.sortedByColumnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nameToolStripMenuItem,
+            this.admAreaToolStripMenuItem});
+            this.sortedByColumnToolStripMenuItem.Name = "sortedByColumnToolStripMenuItem";
+            this.sortedByColumnToolStripMenuItem.Size = new System.Drawing.Size(140, 24);
+            this.sortedByColumnToolStripMenuItem.Text = "Sorted by Column";
+            // 
+            // nameToolStripMenuItem
+            // 
+            this.nameToolStripMenuItem.Name = "nameToolStripMenuItem";
+            this.nameToolStripMenuItem.Size = new System.Drawing.Size(147, 26);
+            this.nameToolStripMenuItem.Text = "Name";
+            this.nameToolStripMenuItem.Click += new System.EventHandler(this.nameToolStripMenuItem_Click);
+            // 
+            // admAreaToolStripMenuItem
+            // 
+            this.admAreaToolStripMenuItem.Name = "admAreaToolStripMenuItem";
+            this.admAreaToolStripMenuItem.Size = new System.Drawing.Size(147, 26);
+            this.admAreaToolStripMenuItem.Text = "AdmArea";
+            this.admAreaToolStripMenuItem.Click += new System.EventHandler(this.admAreaToolStripMenuItem_Click);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -401,38 +425,42 @@
             this.gLOBALIDDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.gLOBALIDDataGridViewTextBoxColumn.Width = 106;
             // 
-            // Form1
+            // tableHeaderBindingSource
+            // 
+            this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
+            // 
+            // Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1492, 610);
+            this.ClientSize = new System.Drawing.Size(1531, 575);
+            this.Controls.Add(this.toolStrip);
+            this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.btnGetNearHead);
             this.Controls.Add(this.lblCoordY);
             this.Controls.Add(this.lblCoordX);
             this.Controls.Add(this.textBoxCoordY);
             this.Controls.Add(this.textBoxCoordX);
-            this.Controls.Add(this.btnSortedAdmArea);
-            this.Controls.Add(this.btnSortedName);
-            this.Controls.Add(this.lblInfoColumnSort);
             this.Controls.Add(this.labelInfoDelete);
             this.Controls.Add(this.textBoxIndexDeleteRow);
-            this.Controls.Add(this.btnRewrite);
             this.Controls.Add(this.textBoxCountSelectedRows);
             this.Controls.Add(this.labelInfoSelected);
-            this.Controls.Add(this.comboBoxDistrict);
             this.Controls.Add(this.lblCountRows);
             this.Controls.Add(this.lblInfoRows);
             this.Controls.Add(this.textBoxCoord);
-            this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnShow);
             this.Controls.Add(this.btnDeleteStr);
             this.Controls.Add(this.dataGridView);
-            this.Controls.Add(this.btnOpen);
-            this.Controls.Add(this.btnWrite);
-            this.Name = "Form1";
+            this.MainMenuStrip = this.menuStrip;
+            this.Name = "Form";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Работа с csv-файлом";
+            this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.tableHeaderBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -440,26 +468,17 @@
         }
 
         #endregion
-        private System.Windows.Forms.Button btnWrite;
-        private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button btnDeleteStr;
-        private System.Windows.Forms.DataGridViewTextBoxColumn rOWNUMDataGridViewTextBoxColumn;
         private System.Windows.Forms.BindingSource tableHeaderBindingSource;
         private System.Windows.Forms.Button btnShow;
-        private System.Windows.Forms.Button btnEdit;
         private System.Windows.Forms.TextBox textBoxCoord;
         private System.Windows.Forms.Label lblInfoRows;
         private System.Windows.Forms.Label lblCountRows;
-        private System.Windows.Forms.ComboBox comboBoxDistrict;
         private System.Windows.Forms.Label labelInfoSelected;
         private System.Windows.Forms.TextBox textBoxCountSelectedRows;
-        private System.Windows.Forms.Button btnRewrite;
         private System.Windows.Forms.TextBox textBoxIndexDeleteRow;
         private System.Windows.Forms.Label labelInfoDelete;
-        private System.Windows.Forms.Label lblInfoColumnSort;
-        private System.Windows.Forms.Button btnSortedName;
-        private System.Windows.Forms.Button btnSortedAdmArea;
         private System.Windows.Forms.TextBox textBoxCoordX;
         private System.Windows.Forms.TextBox textBoxCoordY;
         private System.Windows.Forms.Label lblCoordX;
@@ -474,6 +493,20 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn xWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn yWGSDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn gLOBALIDDataGridViewTextBoxColumn;
+        private System.Windows.Forms.ToolStrip toolStrip;
+        private System.Windows.Forms.MenuStrip menuStrip;
+        private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem newFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem addToExistingFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem overwriteFileToolStripMenuItem;
+        private System.Windows.Forms.ToolStripButton toolBtnDownload;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripComboBox toolComboBoxDistrict;
+        private System.Windows.Forms.ToolStripLabel toolStripLabel;
+        private System.Windows.Forms.ToolStripMenuItem sortedByColumnToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nameToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem admAreaToolStripMenuItem;
+        private System.Windows.Forms.ToolTip toolTip;
     }
 }
 

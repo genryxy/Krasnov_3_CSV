@@ -17,7 +17,6 @@ namespace Krasnov_3
         {
             if (args.Length != 11)
                 throw new ArgumentException("Должно быть 11 столбцов!");
-            //ROWNUM = int.Parse(args[0]);
             Name = args[1];
             Address = args[4];
             PublicPhone = args[5];
@@ -32,17 +31,13 @@ namespace Krasnov_3
             {
                 switch(index)
                 {
-                    //case 0: return ROWNUM.ToString();
                     case 1: return Name;
                     case 2: return GeoLocation.AdmArea;
-                    //case 3: return GeoLocation.listCoord[0].District;
                     case 3: return GeoLocation.District;
                     case 4: return Address;
                     case 5: return PublicPhone;
                     case 6: return ExtraInfo;
-                    //case 7: return GeoLocation.listCoord[0].X_WGS;
                     case 7: return GeoLocation.X_WGS;
-                    //case 8: return GeoLocation.listCoord[0].Y_WGS;
                     case 8: return GeoLocation.Y_WGS;
                     case 9: return GLOBALID;
                     default: return "-1";
