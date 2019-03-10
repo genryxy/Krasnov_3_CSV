@@ -47,18 +47,21 @@
             this.btnGetNearHead = new System.Windows.Forms.Button();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolBtnDownload = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelFilterAdmArea = new System.Windows.Forms.ToolStripLabel();
+            this.toolComboBoxDistrict = new System.Windows.Forms.ToolStripComboBox();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addToExistingFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.overwriteFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolComboBoxDistrict = new System.Windows.Forms.ToolStripComboBox();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripLabel = new System.Windows.Forms.ToolStripLabel();
             this.sortedByColumnToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.admAreaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelCoords = new System.Windows.Forms.ToolStripLabel();
+            this.toolComboBoxAdmArea = new System.Windows.Forms.ToolStripComboBox();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -251,8 +254,11 @@
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolBtnDownload,
             this.toolStripSeparator1,
-            this.toolStripLabel,
-            this.toolComboBoxDistrict});
+            this.toolStripLabelCoords,
+            this.toolComboBoxDistrict,
+            this.toolStripSeparator2,
+            this.toolStripLabelFilterAdmArea,
+            this.toolComboBoxAdmArea});
             this.toolStrip.Location = new System.Drawing.Point(0, 28);
             this.toolStrip.Name = "toolStrip";
             this.toolStrip.Size = new System.Drawing.Size(1531, 28);
@@ -267,6 +273,25 @@
             this.toolBtnDownload.Size = new System.Drawing.Size(102, 25);
             this.toolBtnDownload.Text = "Download";
             this.toolBtnDownload.Click += new System.EventHandler(this.toolBtnDownload_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripLabelFilterAdmArea
+            // 
+            this.toolStripLabelFilterAdmArea.Name = "toolStripLabelFilterAdmArea";
+            this.toolStripLabelFilterAdmArea.Size = new System.Drawing.Size(132, 25);
+            this.toolStripLabelFilterAdmArea.Text = "Filter by AdmArea:";
+            // 
+            // toolComboBoxDistrict
+            // 
+            this.toolComboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolComboBoxDistrict.Name = "toolComboBoxDistrict";
+            this.toolComboBoxDistrict.Size = new System.Drawing.Size(210, 28);
+            this.toolComboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxDistrict_SelectedIndexChanged);
+            this.toolComboBoxDistrict.Click += new System.EventHandler(this.toolComboBoxDistrict_Click);
             // 
             // menuStrip
             // 
@@ -311,25 +336,6 @@
             this.overwriteFileToolStripMenuItem.Text = "Overwrite File";
             this.overwriteFileToolStripMenuItem.Click += new System.EventHandler(this.overwriteFileToolStripMenuItem_Click);
             // 
-            // toolComboBoxDistrict
-            // 
-            this.toolComboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.toolComboBoxDistrict.Name = "toolComboBoxDistrict";
-            this.toolComboBoxDistrict.Size = new System.Drawing.Size(180, 28);
-            this.toolComboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxDistrict_SelectedIndexChanged);
-            this.toolComboBoxDistrict.Click += new System.EventHandler(this.toolComboBoxDistrict_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(6, 28);
-            // 
-            // toolStripLabel
-            // 
-            this.toolStripLabel.Name = "toolStripLabel";
-            this.toolStripLabel.Size = new System.Drawing.Size(176, 25);
-            this.toolStripLabel.Text = "Coordinates of one area: ";
-            // 
             // sortedByColumnToolStripMenuItem
             // 
             this.sortedByColumnToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -352,6 +358,25 @@
             this.admAreaToolStripMenuItem.Size = new System.Drawing.Size(147, 26);
             this.admAreaToolStripMenuItem.Text = "AdmArea";
             this.admAreaToolStripMenuItem.Click += new System.EventHandler(this.admAreaToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator2
+            // 
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripLabelCoords
+            // 
+            this.toolStripLabelCoords.Name = "toolStripLabelCoords";
+            this.toolStripLabelCoords.Size = new System.Drawing.Size(176, 25);
+            this.toolStripLabelCoords.Text = "Coordinates of one area: ";
+            // 
+            // toolComboBoxAdmArea
+            // 
+            this.toolComboBoxAdmArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.toolComboBoxAdmArea.Name = "toolComboBoxAdmArea";
+            this.toolComboBoxAdmArea.Size = new System.Drawing.Size(280, 28);
+            this.toolComboBoxAdmArea.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxAdmArea_SelectedIndexChanged);
+            this.toolComboBoxAdmArea.Click += new System.EventHandler(this.toolComboBoxAdmArea_Click);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -502,11 +527,14 @@
         private System.Windows.Forms.ToolStripButton toolBtnDownload;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripComboBox toolComboBoxDistrict;
-        private System.Windows.Forms.ToolStripLabel toolStripLabel;
+        private System.Windows.Forms.ToolStripLabel toolStripLabelFilterAdmArea;
         private System.Windows.Forms.ToolStripMenuItem sortedByColumnToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nameToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem admAreaToolStripMenuItem;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolStripLabel toolStripLabelCoords;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
+        private System.Windows.Forms.ToolStripComboBox toolComboBoxAdmArea;
     }
 }
 
