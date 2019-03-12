@@ -6,15 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
-/*
- * Важно!
- * При добавлении новой строки в исходный список lstHeadquarters добавляется созданная 
- * строка. Но удаляется строка только из списка активных штабов lstActiveHeads (тех, что
- * выведены в таблице). Таким образом, всегда можно получить информацию о штабах 
- * изначально загруженных и добавленных. Изменения, внесенные пользователем, видны только
- * в таблице, то есть, если нажать на кнопку "Вывести нужное количество строк", то будут
- * выведены исходные строки с начальными значениями + добавленные строки.
- * */
 namespace Krasnov_3
 {
     public partial class Form : System.Windows.Forms.Form
@@ -49,11 +40,28 @@ namespace Krasnov_3
             districtsItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
             {
-                districtsItemsCombo.Add(head.GeoLocation.District);
+                if (!districtsItemsCombo.Contains(head.GeoLocation.District))
+                    districtsItemsCombo.Add(head.GeoLocation.District);
             }
             toolComboBoxDistrict.Items.AddRange(districtsItemsCombo.ToArray());
             // заодно меняем label о количестве строк в таблице
             lblCountRows.Text = dt.Rows.Count.ToString();
+        }
+
+        /// <summary> 
+        /// Устанавливает значения элементов comboBoxAdmArea.
+        /// </summary>
+        private void SetItemsComboBoxAdmArea()
+        {
+            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
+            toolComboBoxAdmArea.Items.Clear();
+            admAreaItemsCombo.Clear();
+            foreach (var head in lstActiveHeads)
+            {
+                if (!admAreaItemsCombo.Contains(head.GeoLocation.AdmArea))
+                    admAreaItemsCombo.Add(head.GeoLocation.AdmArea);
+            }
+            toolComboBoxAdmArea.Items.AddRange(admAreaItemsCombo.ToArray());
         }
 
         /// <summary>
@@ -63,7 +71,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnDeleteStr_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             if (!int.TryParse(textBoxIndexDeleteRow.Text, out indexDeleteRow)
                || indexDeleteRow < 1 || indexDeleteRow > lstActiveHeads.Count)
             {
@@ -75,13 +82,11 @@ namespace Krasnov_3
                 if (dt.Rows.Count > 1)
                 {
                     checkChanges = true;
-                    // из первоначального списка ничего не удаляем
-                    // если удалять, то нужно и сортировать
-                    //lstHeadquarters.RemoveAt(indexDeleteRow - 1);
                     lstActiveHeads.RemoveAt(indexDeleteRow - 1);
                     dt.Rows.RemoveAt(indexDeleteRow - 1);
                     dataGrid.DataSource = dt;
-                    SetItemsComboBoxDistrict();
+                    // заодно меняем label о количестве строк в таблице
+                    lblCountRows.Text = dt.Rows.Count.ToString();
                 }
                 else { Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads); }
             }
@@ -97,22 +102,28 @@ namespace Krasnov_3
             const int countFieldsInHeadquarter = 10;
 
             Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
-            CheckUserAddedRows();
 
             // проверка числа на корректность (положительное число не должно превышать 
             // количество элементов в списке)
+            int totalNumber = lstHeadquarters.Count + lstActiveHeads.Count;
             if (!int.TryParse(textBoxCountSelectedRows.Text, out countSelectedRows)
-                || countSelectedRows < 2 || countSelectedRows > lstHeadquarters.Count)
+                || countSelectedRows < 2 || countSelectedRows > totalNumber)
             {
-                if ((countSelectedRows == 1) || (lstHeadquarters != null && lstHeadquarters.Count > 1))
-                { Messages.PrintMessBox(Messages.ModePrint.CountError, lstHeadquarters); }
-                else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
+                if ((countSelectedRows == 1) || (totalNumber > 1))
+                {
+                    List<Headquarter> tempHeads = new List<Headquarter>(lstActiveHeads);
+                    tempHeads.AddRange(lstHeadquarters);
+                    Messages.PrintMessBox(Messages.ModePrint.CountError, tempHeads);
+                }
+                else
+                { Messages.PrintMessBox(Messages.ModePrint.CountError); }
                 textBoxCountSelectedRows.Focus();
             }
             else
             {
                 DataRow row;
                 dt.Clear();
+                lstHeadquarters.AddRange(lstActiveHeads);
                 lstActiveHeads.Clear();
                 dataGrid.DataSource = dt;
 
@@ -125,10 +136,15 @@ namespace Krasnov_3
                         row[j - 1] = lstHeadquarters[i][j];
                     }
                     lstActiveHeads.Add(lstHeadquarters[i]);
+                    // удаляем из списка неактивных штабов, чтобы можно было фиксировать изменения
+                    lstHeadquarters.RemoveAt(i);
+                    countSelectedRows--;
+                    i--;
+
                     dt.Rows.Add(row);
                 }
                 dataGrid.DataSource = dt;
-                SetItemsComboBoxDistrict();
+                lblCountRows.Text = dt.Rows.Count.ToString();
             }
         }
 
@@ -160,7 +176,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void newFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             using (SaveFileDialog sfd = new SaveFileDialog()
             {
                 Filter = "CSV|*.csv",
@@ -188,7 +203,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void addToExistingFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             using (SaveFileDialog sfd = new SaveFileDialog()
             {
                 Filter = "CSV|*.csv",
@@ -218,7 +232,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void overwriteFileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             using (SaveFileDialog sfd = new SaveFileDialog()
             {
                 Filter = "CSV|*.csv",
@@ -300,14 +313,12 @@ namespace Krasnov_3
                                         row[j - 1] = Fields[j];
                                 }
                             }
-                            lstHeadquarters.Add(new Headquarter(Fields));
-                            lstActiveHeads.Add(lstHeadquarters[i - 1]);
+                            lstActiveHeads.Add(new Headquarter(Fields));
                             dt.Rows.Add(row);
                             dataGridView.DataSource = dt;
                         }
                         SetItemsComboBoxDistrict();
                         toolComboBoxDistrict.SelectedItem = toolComboBoxDistrict.Items[0];
-                        //MessageBox.Show($"Columns: {dt.Columns.Count} Rows: {dt.Rows.Count} Info: {dt.Rows[1].ItemArray[0]}");
 
                         // добавляем элементы в comboBox
                         toolComboBoxAdmArea.Items.Clear();
@@ -368,7 +379,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void nameToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             if (lstActiveHeads.Count > 0)
             {
                 List<string> lstName = new List<string>();
@@ -414,6 +424,7 @@ namespace Krasnov_3
             toolTip.SetToolTip(btnGetNearHead, "If you click, you'll get the nearest head.");
             toolTip.SetToolTip(textBoxCoordX, "Please, enter X_WGS.");
             toolTip.SetToolTip(textBoxCoordY, "Please, enter Y_WGS.");
+            toolTip.SetToolTip(textBoxCoord, "Here you'll see the result.");
         }
 
         /// <summary>
@@ -426,35 +437,50 @@ namespace Krasnov_3
         {
             if (toolComboBoxAdmArea.SelectedIndex >= 0)
             {
+                // если нужно выбирать их всех штабов
+                lstHeadquarters.AddRange(lstActiveHeads);
                 // выводим в таблицу подходящие строки
                 List<Headquarter> tempHeads = new List<Headquarter>();
                 for (int i = 0; i < lstHeadquarters.Count; i++)
                 {
                     if (lstHeadquarters[i].GeoLocation.AdmArea == toolComboBoxAdmArea.SelectedItem.ToString())
+                    {
                         tempHeads.Add(lstHeadquarters[i]);
+                        lstHeadquarters.RemoveAt(i);
+                        i--;
+                    }
                 }
                 lstActiveHeads.Clear();
                 lstActiveHeads = new List<Headquarter>(tempHeads);
+                
                 Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
+                // чтобы индексы совпадали выводимых строк совпадали
+                //lstHeadquarters.InsertRange(0, lstActiveHeads);
                 // заодно меняем label о количестве строк в таблице
                 lblCountRows.Text = dt.Rows.Count.ToString();
             }
         }
 
+        /// <summary>
+        /// Обновляем предлагаемый список элементов перед открытием списка
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void toolComboBoxAdmArea_Click(object sender, EventArgs e)
         {
-            // проверяем не добавил ли пользователь в таблицу новые строки
-            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
-            CheckUserAddedRows();  
+            SetItemsComboBoxAdmArea();
+            CheckUserAddedRows();
         }
 
+        /// <summary>
+        /// Проверяет добавил ли пользователь новые строки.
+        /// </summary>
         private void CheckUserAddedRows()
         {
-            if (countAddedRows > 0 && lstActiveHeads != null && lstHeadquarters != null)
+            if (countAddedRows > 0 && lstActiveHeads != null)
             {
                 for (int i = lstActiveHeads.Count - countAddedRows; i < lstActiveHeads.Count; i++)
                 {
-                    lstHeadquarters.Add(lstActiveHeads[i]);
                     if (!admAreaItemsCombo.Contains(lstActiveHeads[i].GeoLocation.AdmArea))
                         admAreaItemsCombo.Add(lstActiveHeads[i].GeoLocation.AdmArea);
                 }
@@ -472,7 +498,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void btnGetNearHead_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
             if (!double.TryParse(textBoxCoordX.Text, out coordX) ||
                 !double.TryParse(textBoxCoordY.Text, out coordY) ||
