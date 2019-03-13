@@ -8,9 +8,9 @@ using System.Windows.Forms;
 
 namespace Krasnov_3
 {
-    public partial class Form : System.Windows.Forms.Form
+    public partial class MainForm : Form
     {
-        public Form()
+        public MainForm()
         {
             InitializeComponent();
         }
@@ -123,7 +123,7 @@ namespace Krasnov_3
             {
                 DataRow row;
                 dt.Clear();
-                lstHeadquarters.AddRange(lstActiveHeads);
+                lstHeadquarters.InsertRange(0, lstActiveHeads);
                 lstActiveHeads.Clear();
                 dataGrid.DataSource = dt;
 
@@ -438,7 +438,7 @@ namespace Krasnov_3
             if (toolComboBoxAdmArea.SelectedIndex >= 0)
             {
                 // если нужно выбирать их всех штабов
-                lstHeadquarters.AddRange(lstActiveHeads);
+                lstHeadquarters.InsertRange(0, lstActiveHeads);
                 // выводим в таблицу подходящие строки
                 List<Headquarter> tempHeads = new List<Headquarter>();
                 for (int i = 0; i < lstHeadquarters.Count; i++)
@@ -488,6 +488,19 @@ namespace Krasnov_3
                 toolComboBoxAdmArea.Items.AddRange(admAreaItemsCombo.ToArray());
                 countAddedRows = 0;
             }
+        }
+
+        private void toolStripAddHead_Click(object sender, EventArgs e)
+        {
+            //MessageBox.Show(dt.Rows[0].ItemArray[0].ToString());
+            var newForm = new CreateOrChangeForm(null, lstActiveHeads);
+            newForm.ShowDialog();
+            var tmp = newForm.CurrentHeadInfo;
+            if (tmp == null)
+                return;
+            lstActiveHeads.Insert(newForm.RowNum, tmp);
+            Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
+            MessageBox.Show("Test");
         }
 
         /// <summary>

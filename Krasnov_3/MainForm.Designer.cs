@@ -1,6 +1,6 @@
 ﻿namespace Krasnov_3
 {
-    partial class Form
+    partial class MainForm
     {
         /// <summary>
         /// Обязательная переменная конструктора.
@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -57,6 +57,8 @@
             this.btnGetNearHead = new System.Windows.Forms.Button();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolBtnDownload = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripAddHead = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelCoords = new System.Windows.Forms.ToolStripLabel();
             this.toolComboBoxDistrict = new System.Windows.Forms.ToolStripComboBox();
@@ -80,6 +82,7 @@
             // 
             // dataGridView
             // 
+            this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -96,6 +99,7 @@
             this.dataGridView.DataSource = this.tableHeaderBindingSource;
             this.dataGridView.Location = new System.Drawing.Point(415, 69);
             this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 24;
             this.dataGridView.Size = new System.Drawing.Size(1104, 478);
             this.dataGridView.TabIndex = 4;
@@ -107,6 +111,7 @@
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
             this.nameDataGridViewTextBoxColumn.HeaderText = "Name";
             this.nameDataGridViewTextBoxColumn.Name = "nameDataGridViewTextBoxColumn";
+            this.nameDataGridViewTextBoxColumn.ReadOnly = true;
             this.nameDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.nameDataGridViewTextBoxColumn.Width = 74;
             // 
@@ -115,6 +120,7 @@
             this.admAreaDataGridViewTextBoxColumn.DataPropertyName = "AdmArea";
             this.admAreaDataGridViewTextBoxColumn.HeaderText = "AdmArea";
             this.admAreaDataGridViewTextBoxColumn.Name = "admAreaDataGridViewTextBoxColumn";
+            this.admAreaDataGridViewTextBoxColumn.ReadOnly = true;
             this.admAreaDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.admAreaDataGridViewTextBoxColumn.Width = 95;
             // 
@@ -123,6 +129,7 @@
             this.districtDataGridViewTextBoxColumn.DataPropertyName = "District";
             this.districtDataGridViewTextBoxColumn.HeaderText = "District";
             this.districtDataGridViewTextBoxColumn.Name = "districtDataGridViewTextBoxColumn";
+            this.districtDataGridViewTextBoxColumn.ReadOnly = true;
             this.districtDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.districtDataGridViewTextBoxColumn.Width = 80;
             // 
@@ -131,6 +138,7 @@
             this.addressDataGridViewTextBoxColumn.DataPropertyName = "Address";
             this.addressDataGridViewTextBoxColumn.HeaderText = "Address";
             this.addressDataGridViewTextBoxColumn.Name = "addressDataGridViewTextBoxColumn";
+            this.addressDataGridViewTextBoxColumn.ReadOnly = true;
             this.addressDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.addressDataGridViewTextBoxColumn.Width = 89;
             // 
@@ -139,6 +147,7 @@
             this.publicPhoneDataGridViewTextBoxColumn.DataPropertyName = "PublicPhone";
             this.publicPhoneDataGridViewTextBoxColumn.HeaderText = "PublicPhone";
             this.publicPhoneDataGridViewTextBoxColumn.Name = "publicPhoneDataGridViewTextBoxColumn";
+            this.publicPhoneDataGridViewTextBoxColumn.ReadOnly = true;
             this.publicPhoneDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.publicPhoneDataGridViewTextBoxColumn.Width = 116;
             // 
@@ -147,6 +156,7 @@
             this.extraInfoDataGridViewTextBoxColumn.DataPropertyName = "ExtraInfo";
             this.extraInfoDataGridViewTextBoxColumn.HeaderText = "ExtraInfo";
             this.extraInfoDataGridViewTextBoxColumn.Name = "extraInfoDataGridViewTextBoxColumn";
+            this.extraInfoDataGridViewTextBoxColumn.ReadOnly = true;
             this.extraInfoDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.extraInfoDataGridViewTextBoxColumn.Width = 92;
             // 
@@ -155,6 +165,7 @@
             this.xWGSDataGridViewTextBoxColumn.DataPropertyName = "X_WGS";
             this.xWGSDataGridViewTextBoxColumn.HeaderText = "X_WGS";
             this.xWGSDataGridViewTextBoxColumn.Name = "xWGSDataGridViewTextBoxColumn";
+            this.xWGSDataGridViewTextBoxColumn.ReadOnly = true;
             this.xWGSDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.xWGSDataGridViewTextBoxColumn.Width = 87;
             // 
@@ -163,6 +174,7 @@
             this.yWGSDataGridViewTextBoxColumn.DataPropertyName = "Y_WGS";
             this.yWGSDataGridViewTextBoxColumn.HeaderText = "Y_WGS";
             this.yWGSDataGridViewTextBoxColumn.Name = "yWGSDataGridViewTextBoxColumn";
+            this.yWGSDataGridViewTextBoxColumn.ReadOnly = true;
             this.yWGSDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.yWGSDataGridViewTextBoxColumn.Width = 87;
             // 
@@ -171,6 +183,7 @@
             this.gLOBALIDDataGridViewTextBoxColumn.DataPropertyName = "GLOBALID";
             this.gLOBALIDDataGridViewTextBoxColumn.HeaderText = "GLOBALID";
             this.gLOBALIDDataGridViewTextBoxColumn.Name = "gLOBALIDDataGridViewTextBoxColumn";
+            this.gLOBALIDDataGridViewTextBoxColumn.ReadOnly = true;
             this.gLOBALIDDataGridViewTextBoxColumn.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.gLOBALIDDataGridViewTextBoxColumn.Width = 106;
             // 
@@ -329,6 +342,8 @@
             this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolBtnDownload,
+            this.toolStripSeparator3,
+            this.toolStripAddHead,
             this.toolStripSeparator1,
             this.toolStripLabelCoords,
             this.toolComboBoxDistrict,
@@ -349,6 +364,20 @@
             this.toolBtnDownload.Size = new System.Drawing.Size(102, 25);
             this.toolBtnDownload.Text = "Download";
             this.toolBtnDownload.Click += new System.EventHandler(this.toolBtnDownload_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripAddHead
+            // 
+            this.toolStripAddHead.Image = ((System.Drawing.Image)(resources.GetObject("toolStripAddHead.Image")));
+            this.toolStripAddHead.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripAddHead.Name = "toolStripAddHead";
+            this.toolStripAddHead.Size = new System.Drawing.Size(101, 25);
+            this.toolStripAddHead.Text = "Add Head";
+            this.toolStripAddHead.Click += new System.EventHandler(this.toolStripAddHead_Click);
             // 
             // toolStripSeparator1
             // 
@@ -454,7 +483,7 @@
             this.admAreaToolStripMenuItem.Text = "AdmArea";
             this.admAreaToolStripMenuItem.Click += new System.EventHandler(this.admAreaToolStripMenuItem_Click);
             // 
-            // Form
+            // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -477,7 +506,7 @@
             this.Controls.Add(this.btnDeleteStr);
             this.Controls.Add(this.dataGridView);
             this.MainMenuStrip = this.menuStrip;
-            this.Name = "Form";
+            this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Headquarters";
             this.Load += new System.EventHandler(this.Form_Load);
@@ -535,6 +564,8 @@
         private System.Windows.Forms.ToolStripLabel toolStripLabelCoords;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripComboBox toolComboBoxAdmArea;
+        private System.Windows.Forms.ToolStripButton toolStripAddHead;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }
 

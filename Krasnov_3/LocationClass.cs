@@ -8,11 +8,13 @@ namespace Krasnov_3
 {
     public class LocationClass
     {
-        public string AdmArea { get; private set; }
-        public string District { get; private set; }
-        public string X_WGS { get; private set; }
-        public string Y_WGS { get; private set; }
+        public string AdmArea { get; set; }
+        public string District { get; set; }
+        public string X_WGS { get; set; }
+        public string Y_WGS { get; set; }
         public static List<Coordinates> listCoord = new List<Coordinates>();
+
+        public LocationClass() { }
 
         public LocationClass(string admArea, string district, string x_WGS, string y_WGS)
         {

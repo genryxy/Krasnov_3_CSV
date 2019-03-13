@@ -12,6 +12,8 @@ namespace Krasnov_3
         public string GLOBALID { get; set; }
         public LocationClass GeoLocation { get; set; }
 
+        public Headquarter() { }
+
         // в отношении композиции с классом Location
         public Headquarter(params string[] args)
         {
