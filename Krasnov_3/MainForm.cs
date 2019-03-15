@@ -17,11 +17,9 @@ namespace Krasnov_3
 
         const int indexDistr = 2;
 
-        bool checkChanges = false; // произошли ли изменения в таблице
         int countSelectedRows = 2;
         int indexDeleteRow = 0;
-        double coordX, coordY;
-        int countAddedRows = 0;
+        int indexSearchNearHead = 0;
 
         DataGridView dataGrid = new DataGridView();
         DataTable dt = new DataTable();
@@ -35,7 +33,6 @@ namespace Krasnov_3
         /// </summary>
         private void SetItemsComboBoxDistrict()
         {
-            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
             toolComboBoxDistrict.Items.Clear();
             districtsItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
@@ -53,7 +50,6 @@ namespace Krasnov_3
         /// </summary>
         private void SetItemsComboBoxAdmArea()
         {
-            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
             toolComboBoxAdmArea.Items.Clear();
             admAreaItemsCombo.Clear();
             foreach (var head in lstActiveHeads)
@@ -62,113 +58,8 @@ namespace Krasnov_3
                     admAreaItemsCombo.Add(head.GeoLocation.AdmArea);
             }
             toolComboBoxAdmArea.Items.AddRange(admAreaItemsCombo.ToArray());
-        }
-
-        /// <summary>
-        /// Удаляет строку с индексом N из datagridview.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnDeleteStr_Click(object sender, EventArgs e)
-        {
-            if (!int.TryParse(textBoxIndexDeleteRow.Text, out indexDeleteRow)
-               || indexDeleteRow < 1 || indexDeleteRow > lstActiveHeads.Count)
-            {
-                Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads);
-                textBoxIndexDeleteRow.Focus();
-            }
-            else
-            {
-                if (dt.Rows.Count > 1)
-                {
-                    checkChanges = true;
-                    lstActiveHeads.RemoveAt(indexDeleteRow - 1);
-                    dt.Rows.RemoveAt(indexDeleteRow - 1);
-                    dataGrid.DataSource = dt;
-                    // заодно меняем label о количестве строк в таблице
-                    lblCountRows.Text = dt.Rows.Count.ToString();
-                }
-                else { Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads); }
-            }
-        }
-
-        /// <summary>
-        /// Показывает первые N столбцов. 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnShow_Click(object sender, EventArgs e)
-        {
-            const int countFieldsInHeadquarter = 10;
-
-            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
-
-            // проверка числа на корректность (положительное число не должно превышать 
-            // количество элементов в списке)
-            int totalNumber = lstHeadquarters.Count + lstActiveHeads.Count;
-            if (!int.TryParse(textBoxCountSelectedRows.Text, out countSelectedRows)
-                || countSelectedRows < 2 || countSelectedRows > totalNumber)
-            {
-                if ((countSelectedRows == 1) || (totalNumber > 1))
-                {
-                    List<Headquarter> tempHeads = new List<Headquarter>(lstActiveHeads);
-                    tempHeads.AddRange(lstHeadquarters);
-                    Messages.PrintMessBox(Messages.ModePrint.CountError, tempHeads);
-                }
-                else
-                { Messages.PrintMessBox(Messages.ModePrint.CountError); }
-                textBoxCountSelectedRows.Focus();
-            }
-            else
-            {
-                DataRow row;
-                dt.Clear();
-                lstHeadquarters.InsertRange(0, lstActiveHeads);
-                lstActiveHeads.Clear();
-                dataGrid.DataSource = dt;
-
-                for (int i = 0; i < countSelectedRows; i++)
-                {
-                    row = dt.NewRow();
-                    for (int j = 1; j < countFieldsInHeadquarter; j++)
-                    {
-                        // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
-                        row[j - 1] = lstHeadquarters[i][j];
-                    }
-                    lstActiveHeads.Add(lstHeadquarters[i]);
-                    // удаляем из списка неактивных штабов, чтобы можно было фиксировать изменения
-                    lstHeadquarters.RemoveAt(i);
-                    countSelectedRows--;
-                    i--;
-
-                    dt.Rows.Add(row);
-                }
-                dataGrid.DataSource = dt;
-                lblCountRows.Text = dt.Rows.Count.ToString();
-            }
-        }
-
-        /// <summary>
-        /// Фиксируются изменения, происходящие при добавлении пользователем строки
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView_UserAddedRow(object sender, DataGridViewRowEventArgs e)
-        {
-            countAddedRows++;
-            lblCountRows.Text = $"{dt.Rows.Count + 1}";
-        }
-
-        /// <summary>
-        /// Позволяет следить за изменениями в ячейках
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dataGridView_CellEndEdit(object sender, DataGridViewCellEventArgs e)
-        {
-            checkChanges = true;
-        }
-
+        }     
+       
         /// <summary>
         /// Записывает содержимое таблицы из datagridview в новый файл.
         /// </summary>
@@ -274,6 +165,7 @@ namespace Krasnov_3
                         // для обновления всех строк в таблице после каждого нажатия на кнопку
                         LocationClass.listCoord.Clear();
                         dt = new DataTable();
+                        lstActiveHeads = new List<Headquarter>();
                         lstHeadquarters = new List<Headquarter>();
                         DataRow row;
                         string[] Lines = File.ReadAllLines(ofd.FileName, Encoding.GetEncoding(1251));
@@ -289,8 +181,7 @@ namespace Krasnov_3
                                 dt.Columns.Add(Fields[i]);
                             }
                         }
-
-
+                        
                         // считываем все строки, кроме первой, так как в ней находятся названия столбцов
                         for (int i = 1; i < Lines.GetLength(0); i++)
                         {
@@ -318,7 +209,6 @@ namespace Krasnov_3
                             dataGridView.DataSource = dt;
                         }
                         SetItemsComboBoxDistrict();
-                        toolComboBoxDistrict.SelectedItem = toolComboBoxDistrict.Items[0];
 
                         // добавляем элементы в comboBox
                         toolComboBoxAdmArea.Items.Clear();
@@ -342,8 +232,13 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void toolComboBoxDistrict_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             SetItemsComboBoxDistrict();
+            LocationClass.listCoord.Clear();
+            foreach (var head in lstActiveHeads)
+            {
+                LocationClass.listCoord.Add(new Coordinates(head.GeoLocation.District,
+                    head.GeoLocation.X_WGS, head.GeoLocation.Y_WGS));
+            }
         }
 
         /// <summary>
@@ -361,13 +256,13 @@ namespace Krasnov_3
                 var arr = coords.ToArray();
                 if (coords.Count > 0)
                 {
-                    string[] res = new string[coords.Count + 1];
-                    res[0] = $"{coords[0].District} ";
+                    string res = string.Empty;
+                    res = $"{coords[0].District} ";
                     for (int i = 0; i < coords.Count; i++)
                     {
-                        res[i + 1] = $"X:{coords[i].X_WGS} Y:{coords[i].Y_WGS}\n";
+                        res += $"\nX:{coords[i].X_WGS} Y:{coords[i].Y_WGS}";
                     }
-                    textBoxCoord.Lines = res;
+                    MessageBox.Show(res);
                 }
             }
         }
@@ -401,7 +296,6 @@ namespace Krasnov_3
         /// <param name="e"></param>
         private void admAreaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CheckUserAddedRows();
             if (lstActiveHeads.Count > 0)
             {
                 List<string> lstAdmArea = new List<string>();
@@ -419,12 +313,6 @@ namespace Krasnov_3
 
         private void Form_Load(object sender, EventArgs e)
         {
-            toolTip.SetToolTip(btnDeleteStr, "If you click, the row with the entered index will be deleted.");
-            toolTip.SetToolTip(btnShow, "If you click, the entered number of the rows will be shown.");
-            toolTip.SetToolTip(btnGetNearHead, "If you click, you'll get the nearest head.");
-            toolTip.SetToolTip(textBoxCoordX, "Please, enter X_WGS.");
-            toolTip.SetToolTip(textBoxCoordY, "Please, enter Y_WGS.");
-            toolTip.SetToolTip(textBoxCoord, "Here you'll see the result.");
         }
 
         /// <summary>
@@ -454,8 +342,6 @@ namespace Krasnov_3
                 lstActiveHeads = new List<Headquarter>(tempHeads);
                 
                 Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
-                // чтобы индексы совпадали выводимых строк совпадали
-                //lstHeadquarters.InsertRange(0, lstActiveHeads);
                 // заодно меняем label о количестве строк в таблице
                 lblCountRows.Text = dt.Rows.Count.ToString();
             }
@@ -469,26 +355,7 @@ namespace Krasnov_3
         private void toolComboBoxAdmArea_Click(object sender, EventArgs e)
         {
             SetItemsComboBoxAdmArea();
-            CheckUserAddedRows();
-        }
-
-        /// <summary>
-        /// Проверяет добавил ли пользователь новые строки.
-        /// </summary>
-        private void CheckUserAddedRows()
-        {
-            if (countAddedRows > 0 && lstActiveHeads != null)
-            {
-                for (int i = lstActiveHeads.Count - countAddedRows; i < lstActiveHeads.Count; i++)
-                {
-                    if (!admAreaItemsCombo.Contains(lstActiveHeads[i].GeoLocation.AdmArea))
-                        admAreaItemsCombo.Add(lstActiveHeads[i].GeoLocation.AdmArea);
-                }
-                toolComboBoxAdmArea.Items.Clear();
-                toolComboBoxAdmArea.Items.AddRange(admAreaItemsCombo.ToArray());
-                countAddedRows = 0;
-            }
-        }
+        }               
 
         private void toolStripAddHead_Click(object sender, EventArgs e)
         {
@@ -499,27 +366,108 @@ namespace Krasnov_3
             if (tmp == null)
                 return;
             lstActiveHeads.Insert(newForm.RowNum, tmp);
+            lblCountRows.Text = lstActiveHeads.Count.ToString();
             Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
             MessageBox.Show("Test");
         }
 
         /// <summary>
-        /// Возвращает ближайший к пользователю штаб на основе
-        /// координат, введенных пользователем.
+        /// Удаляет строку с индексом N из datagridview.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnGetNearHead_Click(object sender, EventArgs e)
+        private void toolStripBtnDelete_Click(object sender, EventArgs e)
         {
-            Methods.CheckArraySize(dt, lstActiveHeads, ref checkChanges);
-            if (!double.TryParse(textBoxCoordX.Text, out coordX) ||
-                !double.TryParse(textBoxCoordY.Text, out coordY) ||
-                coordX < -180 || coordY < -90 || coordY > 90 || coordX > 180)
-            { Messages.PrintMessBox(Messages.ModePrint.CoordError); }
+            if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexDeleteRow)
+              || indexDeleteRow < 0 || indexDeleteRow > lstActiveHeads.Count)
+            {
+                Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads);
+                toolStripTextBoxIndexOfRow.Focus();
+            }
             else
             {
-                textBoxCoord.Text = Methods.GetNearHead(coordX, coordY, lstActiveHeads);
-                //MessageBox.Show($"{coordX:f3}, {coordY:f3}");
+                if (dt.Rows.Count > 1)
+                {
+                    lstActiveHeads.RemoveAt(indexDeleteRow);
+                    dt.Rows.RemoveAt(indexDeleteRow);
+                    dataGrid.DataSource = dt;
+                    // заодно меняем label о количестве строк в таблице
+                    lblCountRows.Text = dt.Rows.Count.ToString();
+                }
+                else { Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads); }
+            }
+        }
+
+        /// <summary>
+        /// Показывает первые N столбцов
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripButtonShow_Click(object sender, EventArgs e)
+        {
+            const int countFieldsInHeadquarter = 10;
+
+            // проверка числа на корректность (положительное число не должно превышать 
+            // количество элементов в списке)
+            int totalNumber = lstHeadquarters.Count + lstActiveHeads.Count;
+            if (!int.TryParse(toolStripTextBoxCount.Text, out countSelectedRows)
+                || countSelectedRows < 2 || countSelectedRows > totalNumber)
+            {
+                if ((countSelectedRows == 1) || (totalNumber > 1))
+                {
+                    List<Headquarter> tempHeads = new List<Headquarter>(lstActiveHeads);
+                    tempHeads.AddRange(lstHeadquarters);
+                    Messages.PrintMessBox(Messages.ModePrint.CountError, tempHeads);
+                }
+                else
+                { Messages.PrintMessBox(Messages.ModePrint.CountError); }
+                toolStripTextBoxCount.Focus();
+            }
+            else
+            {
+                DataRow row;
+                dt.Clear();
+                lstHeadquarters.InsertRange(0, lstActiveHeads);
+                lstActiveHeads.Clear();
+                dataGrid.DataSource = dt;
+
+                for (int i = 0; i < countSelectedRows; i++)
+                {
+                    row = dt.NewRow();
+                    for (int j = 1; j < countFieldsInHeadquarter; j++)
+                    {
+                        // (j-1), так как индекс в таблице начинается с 0, но мы не должны учитывать ROWNUM
+                        row[j - 1] = lstHeadquarters[i][j];
+                    }
+                    lstActiveHeads.Add(lstHeadquarters[i]);
+                    // удаляем из списка неактивных штабов, чтобы можно было фиксировать изменения
+                    lstHeadquarters.RemoveAt(i);
+                    countSelectedRows--;
+                    i--;
+
+                    dt.Rows.Add(row);
+                }
+                dataGrid.DataSource = dt;
+                lblCountRows.Text = dt.Rows.Count.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Возвращает ближайший к пользователю штаб на основе выбранного штаба.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripBtnGetNear_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexSearchNearHead)
+             || indexSearchNearHead < 0 || indexSearchNearHead > lstActiveHeads.Count)
+            {
+                Messages.PrintMessBox(Messages.ModePrint.CountError, lstActiveHeads);
+                toolStripTextBoxIndexOfRow.Focus();
+            }
+            else
+            {
+                MessageBox.Show(Methods.GetNearHead(indexSearchNearHead, lstActiveHeads));
             }
         }
     }

@@ -22,11 +22,6 @@ namespace Krasnov_3
         private readonly HashSet<Component> _errorComponents = new HashSet<Component>();
 
         /// <summary>
-        /// Корректность данных.
-        /// </summary>
-        private bool _isCorrect;
-
-        /// <summary>
         /// Текущий объект информации о штабе.
         /// </summary>
         private Headquarter _currentHeadInfo;
@@ -58,7 +53,8 @@ namespace Krasnov_3
         /// </summary>
         public Headquarter CurrentHeadInfo
         {
-            get => _isCorrect ? _currentHeadInfo : null;
+            // может присвоиться null при закрытии формы, если не всё было правильно заполнено
+            get => _currentHeadInfo;
             private set => _currentHeadInfo = value;
         }
 
@@ -140,7 +136,7 @@ namespace Krasnov_3
             }
             else
             {
-                MessageBox.Show("Введите корректные значения!", "Некорректные значения", MessageBoxButtons.OK,
+                MessageBox.Show("Enter the correct values!", "Invalid values", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
         }
@@ -341,7 +337,6 @@ namespace Krasnov_3
         /// <param name="e">Аргументы события</param>
         private void CreateOrChangeForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            _isCorrect = _errorComponents.Count == 0;
             if (_errorComponents.Count != 0)
                 CurrentHeadInfo = null;
         }

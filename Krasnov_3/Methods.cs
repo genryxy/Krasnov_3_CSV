@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -68,63 +69,30 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Отслеживает соответствие размеров списка штабов lstActiveHeads и таблицы dt.
+        /// Возвращает ближайший к пользователю штаб на основе индекса выбранного штаба.
         /// </summary>
-        /// <param name="dt">таблица, отображаемая в DataGridView</param>
-        /// <param name="lstActiveHeads">список активных штабов</param>
-        /// <param name="checkChanges">наличие измененений, внесенных пользователем</param>
-        public static void CheckArraySize(DataTable dt, List<Headquarter> lstActiveHeads, ref bool checkChanges)
-        {
-            if (dt.Rows.Count != lstActiveHeads.Count || checkChanges)
-            {
-                lstActiveHeads.Clear();
-                LocationClass.listCoord.Clear();
-                string[] tempArr = new string[dt.Columns.Count + 2];
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    tempArr[0] = (dt.Rows.Count + i).ToString();
-                    for (int j = 0; j < dt.Columns.Count; j++)
-                    {
-                        if (dt.Rows[i].ItemArray[j] == null)
-                        { tempArr[j + 1] = string.Empty; }
-                        else
-                        { tempArr[j + 1] = dt.Rows[i].ItemArray[j].ToString(); }
-                    }
-                    tempArr[dt.Columns.Count + 1] = null;
-                    lstActiveHeads.Add(new Headquarter(tempArr));
-                }
-                checkChanges = false;
-            }
-        }
-
-        /// <summary>
-        /// Возвращает ближайший к пользователю штаб на основе введенных
-        /// координат.
-        /// </summary>
-        /// <param name="coordX">координата X</param>
-        /// <param name="coordY">координата  Y</param>
+        /// <param name="indexSelectedHead">индекс выбранного штаба</param>
         /// <param name="lstActiveHeads">список отображаемых штабов</param>
         /// <returns></returns>
-        public static string GetNearHead(double coordX, double coordY, List<Headquarter> lstActiveHeads)
+        public static string GetNearHead(int indexSelectedHead, List<Headquarter> lstActiveHeads)
         {
-            if (LocationClass.listCoord.Count == 0)
-            {
-                Messages.PrintMessBox(Messages.ModePrint.CountError);
-                return null;
-            }
-            double x, y;
-            double minDistance = double.MaxValue;
             int indexRow = 0;
-            for (int i = 0; i < LocationClass.listCoord.Count; i++)
+            double x = 0, y = 0, curX = 0, curY = 0;
+            double minDistance = double.MaxValue;
+
+            if (CheckDoubleNumber(lstActiveHeads, indexSelectedHead, ref x, ref y))
             {
-                if (double.TryParse(LocationClass.listCoord[i].X_WGS.Replace(".",","), out x) &&
-                    double.TryParse(LocationClass.listCoord[i].Y_WGS.Replace(".", ","), out y))
+                for (int i = 0; i < lstActiveHeads.Count; i++)
                 {
-                    double temp = Math.Sqrt(Math.Pow(x - coordX, 2) + Math.Pow(y - coordY, 2));
-                    if (minDistance > temp)
+                    if (CheckDoubleNumber(lstActiveHeads, i, ref curX, ref curY)
+                        && curX != x && curY != y)
                     {
-                        minDistance = temp;
-                        indexRow = i;
+                        double temp = Math.Sqrt(Math.Pow(x - curX, 2) + Math.Pow(y - curY, 2));
+                        if (minDistance > temp)
+                        {
+                            minDistance = temp;
+                            indexRow = i;
+                        }
                     }
                 }
             }
@@ -197,6 +165,22 @@ namespace Krasnov_3
                     File.WriteAllText($"{name}.csv", strBuild.ToString(), Encoding.GetEncoding(1251));
                 }
             }
+        }
+
+        /// <summary>
+        /// Проверяет значение TextBox на принадлежность типу double.
+        /// </summary>
+        /// <param name="lstActiveHeads">Список активных штабов</param>
+        /// <param name="indexSelectedHead">индекс выбранного штаба</param>
+        /// <param name="x">координата х</param>
+        /// <param name="y">координата y</param>
+        /// <returns></returns>
+        private static bool CheckDoubleNumber(List<Headquarter> lstActiveHeads, int indexSelectedHead, ref double x, ref double y)
+        {
+            return double.TryParse(lstActiveHeads[indexSelectedHead].GeoLocation.X_WGS,
+                NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out x) && 
+                double.TryParse(lstActiveHeads[indexSelectedHead].GeoLocation.Y_WGS,
+                NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out y);
         }
     }
 }

@@ -16,7 +16,7 @@ namespace Krasnov_3
             Delete,
             CountError,
             IndexError,
-            CoordError
+            //CoordError
         }
 
         /// <summary>
@@ -77,16 +77,16 @@ namespace Krasnov_3
                 }
                 else
                 {
-                    MessageBox.Show($"Необходимо ввести целое число > 0 и меньшее {lst.Count}",
+                    MessageBox.Show($"Необходимо ввести целое число >= 0 и < {lst.Count}",
                        "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
-            if (ModePrint.CoordError == mode)
+           /* if (ModePrint.CoordError == mode)
             {
                 MessageBox.Show($"Необходимо ввести x из [-180, 180], y из [-90, 90]. " +
                     $"Разделителем является запятая.",
                     "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
+            }*/
         }
 
         /// <summary>
