@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -53,7 +52,7 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Текущий объект информации о штабе.
+        /// Информация о текущем объекте.
         /// </summary>
         public Headquarter CurrentHeadInfo
         {
@@ -70,13 +69,13 @@ namespace Krasnov_3
         {            
             if (headInfo == null)
             {
-                Text = "Новая запись";
+                Text = "New Record";
                 CurrentHeadInfo = new Headquarter();
                 textBoxRowNum.Text = RowNum.ToString();
             }
             else
             {
-                Text = "Изменить запись";
+                Text = "Edit record";
                 CurrentHeadInfo = headInfo;
 
                 textBoxRowNum.Text = RowNum.ToString();
@@ -186,7 +185,7 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Проверяет значение TextBox на принадлежность типу long(больше 0) и на не пустоту. 
+        /// Проверяет значение TextBox на принадлежность типу long(> 0) и на не пустоту. 
         /// Если результат неправильный, то добавляет ToolTip и меняет цвет текста или фона на красный.
         /// </summary>
         /// <param name="sender">Объект TextBox</param>
@@ -228,7 +227,7 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Проверяет значение TextBox на принадлежность типу int(больше 0).
+        /// Проверяет значение TextBox на принадлежность типу int(> 0).
         ///  Если результат неправильный, то добавляет ToolTip и меняет цвет текста на красный.
         /// </summary>
         /// <param name="sender">Объект TextBox</param>
@@ -354,6 +353,5 @@ namespace Krasnov_3
             if (_errorComponents.Count != 0)
                 CurrentHeadInfo = null;
         }
-
     }
 }

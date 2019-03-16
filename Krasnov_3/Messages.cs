@@ -6,9 +6,9 @@ namespace Krasnov_3
 {
     public static class Messages
     {
-        private static string uploadFile = "You need to download CSV-file";
-        private static string intNumber = "You need a number";
-        private static string oneString = "You have only one string. ";
+        private static string _uploadFile = "You need to download CSV-file";
+        private static string _intNumber = "You need a number";
+        private static string _oneString = "You have only one string. ";
 
         /// <summary>
         /// Режим вывода сообщения
@@ -47,31 +47,31 @@ namespace Krasnov_3
             if (ModePrint.CountError == mode)
             {
                 if (lst == null || lst.Count == 0)
-                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show(_uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else if (lst.Count == 1)
-                { MessageBox.Show(oneString + uploadFile,  "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show(_oneString + _uploadFile,  "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{_intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
 
             if (ModePrint.ShowError == mode)
             {
                 if (lst == null || lst.Count == 0)
-                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show(_uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else if (lst.Count == 1)
-                { MessageBox.Show(oneString + uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show(_oneString + _uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} > 1 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{_intNumber} > 1 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
 
             if (ModePrint.IndexError == mode)
             {
                 if (lst == null || lst.Count == 0)
-                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show(_uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else if (lst.Count == 1)
-                { MessageBox.Show($"{oneString} Removal is impossible", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{_oneString} Removal is impossible", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{_intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }         
         }
 

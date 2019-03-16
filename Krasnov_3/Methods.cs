@@ -11,7 +11,6 @@ namespace Krasnov_3
 {
     public static class Methods
     {
-
         /// <summary>
         /// Режим записи в csv-файл.
         /// </summary>

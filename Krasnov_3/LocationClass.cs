@@ -28,6 +28,11 @@ namespace Krasnov_3
                 listCoord.Add(temp);
         }
         
+        /// <summary>
+        /// Возвращает список координат (x, y), принадлежащих одному району.
+        /// </summary>
+        /// <param name="nameDistrict">имя района</param>
+        /// <returns></returns>
         public static List<Coordinates> GetCoodinatesFromOneArea(string nameDistrict)
         {
             List<Coordinates> coordFromArea = new List<Coordinates>();
