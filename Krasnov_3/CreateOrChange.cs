@@ -19,7 +19,7 @@ namespace Krasnov_3
         /// <summary>
         /// Множество ошибок.
         /// </summary>
-        private readonly HashSet<Component> _errorComponents = new HashSet<Component>();
+        private HashSet<Component> _errorComponents = new HashSet<Component>();
 
         /// <summary>
         /// Текущий объект информации о штабе.
@@ -29,22 +29,26 @@ namespace Krasnov_3
         /// <summary>
         /// Таблица из DataGridview
         /// </summary>
-        private List<Headquarter> LstHead { get; set; }
+        private List<Headquarter> LstHeads { get; set; }
 
         /// <summary>
         /// Подсказки об ошибках.
         /// </summary>
-        private readonly Dictionary<TextBox, ToolTip> _errorToolTips = new Dictionary<TextBox, ToolTip>();
+        private Dictionary<TextBox, ToolTip> _errorToolTips = new Dictionary<TextBox, ToolTip>();
 
         /// <summary>
         /// Конструктор
         /// </summary>
-        /// <param name="headInfo">изменяемый объект</param>
-        public CreateOrChangeForm(Headquarter headInfo, List<Headquarter> lstActiveHeads)
+        /// <param name="headInfo">информация о текущем штабе</param>
+        /// <param name="lstActiveHeads">список активных штабов</param>
+        /// <param name="isChange">можно ли вводить индекс строки</param>
+        public CreateOrChangeForm(Headquarter headInfo, List<Headquarter> lstActiveHeads, int indexRow, bool isChange)
         {
             InitializeComponent();
             ShowIcon = false;
-            LstHead = lstActiveHeads;
+            LstHeads = lstActiveHeads;
+            textBoxRowNum.ReadOnly = isChange;
+            RowNum = indexRow;
             InitElementsByHead(headInfo);
         }
 
@@ -69,7 +73,6 @@ namespace Krasnov_3
                 Text = "Новая запись";
                 CurrentHeadInfo = new Headquarter();
                 textBoxRowNum.Text = RowNum.ToString();
-
             }
             else
             {
@@ -87,7 +90,14 @@ namespace Krasnov_3
                 textBoxY_WGS.Text = _currentHeadInfo.GeoLocation.Y_WGS;
                 textBoxGLOBALID.Text = _currentHeadInfo.GLOBALID;
             }
-            
+            CheckAllValues();
+        }
+
+        /// <summary>
+        /// Производит необходимые проверки введенных данных.
+        /// </summary>
+        private void CheckAllValues()
+        {
             RowNumIntTextBoxCheck(textBoxRowNum, EventArgs.Empty);
             NotNullTextBoxCheck(textBoxName, EventArgs.Empty);
             NotNullTextBoxCheck(textBoxAdmArea, EventArgs.Empty);
@@ -100,21 +110,13 @@ namespace Krasnov_3
 
         /// <summary>
         /// Обработчик события нажатия на кнопку ОК. Если все поля заполнены правильно,
-        /// то выходит. В противном случае выводит сообщение об ошибке
+        /// то выходит. В противном случае выводит сообщение об ошибке.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnOK_Click(object sender, EventArgs e)
         {
-            RowNumIntTextBoxCheck(textBoxRowNum, EventArgs.Empty);
-            NotNullTextBoxCheck(textBoxName, EventArgs.Empty);
-            NotNullTextBoxCheck(textBoxAdmArea, EventArgs.Empty);
-            NotNullTextBoxCheck(textBoxDistrict, EventArgs.Empty);
-            NotNullTextBoxCheck(textBoxAddress, EventArgs.Empty);
-            DoubleLongtitudeTextBoxCheck(textBoxX_WGS, EventArgs.Empty);
-            DoubleLatitudeTextBoxCheck(textBoxY_WGS, EventArgs.Empty);
-            LongNotNullTextBoxCheck(textBoxGLOBALID, EventArgs.Empty);
-
+            CheckAllValues();
             if (_errorComponents.Count == 0)
             {
                 RowNum = int.Parse(textBoxRowNum.Text);
@@ -139,6 +141,18 @@ namespace Krasnov_3
                 MessageBox.Show("Enter the correct values!", "Invalid values", MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
             }
+        }
+
+        /// <summary>
+        /// Обработчик события нажатия на кнопку CANCEL. Закрывает форму, если пользователь захотел 
+        /// отменить редактирование или добавление штаба.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            CurrentHeadInfo = null;
+            Close();
         }
 
         /// <summary>
@@ -223,9 +237,9 @@ namespace Krasnov_3
         {
             var currentTextBox = (TextBox)sender;
             var count = 0;
-            if (LstHead != null)
+            if (LstHeads != null)
             {
-                count = LstHead.Count;
+                count = LstHeads.Count;
             }
 
             if (!int.TryParse(currentTextBox.Text, out var val) || val < 0 || val >= count)
@@ -340,5 +354,6 @@ namespace Krasnov_3
             if (_errorComponents.Count != 0)
                 CurrentHeadInfo = null;
         }
+
     }
 }

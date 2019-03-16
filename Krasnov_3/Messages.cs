@@ -6,6 +6,10 @@ namespace Krasnov_3
 {
     public static class Messages
     {
+        private static string uploadFile = "You need to download CSV-file";
+        private static string intNumber = "You need a positive integer >= 0 and <";
+        private static string oneString = "You have only one string. ";
+
         /// <summary>
         /// Режим вывода сообщения
         /// </summary>
@@ -16,7 +20,7 @@ namespace Krasnov_3
             Delete,
             CountError,
             IndexError,
-            //CoordError
+            ShowError
         }
 
         /// <summary>
@@ -26,67 +30,49 @@ namespace Krasnov_3
         /// <param name="lst">список штабов</param>
         /// <param name="exception">иформация о возникшем исключении</param>
         public static void PrintMessBox(ModePrint mode, List<Headquarter> lst, Exception exception)
-        {
+        {            
+
             if (ModePrint.Success == mode)
-            {
-                MessageBox.Show("Запись прошла успешно", "Сообщение",
-                                  MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+            { MessageBox.Show("Successful record", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information); }
 
             if (ModePrint.Error == mode)
-            { MessageBox.Show(exception.ToString(), "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+            { MessageBox.Show(exception.ToString(), "Error!", MessageBoxButtons.OK, MessageBoxIcon.Error); }
 
             if (ModePrint.Delete == mode)
             {
-                MessageBox.Show("В ячейке были удалены вхождения символа \";\"", "Удаление",
+                MessageBox.Show("Symbol occurrences of \";\" have been deleted in the cell ", "Warning!",
                                  MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
-
-
 
             if (ModePrint.CountError == mode)
             {
                 if (lst == null || lst.Count == 0)
-                {
-                    MessageBox.Show($"Необходимо загрузить csv-файл",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else if (lst.Count == 1)
-                {
-                    MessageBox.Show($"Осталась всего одна строка. Необходимо снова загрузить csv-файл.",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                { MessageBox.Show(oneString + uploadFile,  "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                {
-                    MessageBox.Show($"Необходимо ввести целое число > 1 и < {lst.Count + 1}",
-                            "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            }
+
+            if (ModePrint.ShowError == mode)
+            {
+                if (lst == null || lst.Count == 0)
+                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                else if (lst.Count == 1)
+                { MessageBox.Show(oneString + uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                else
+                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
 
             if (ModePrint.IndexError == mode)
             {
                 if (lst == null || lst.Count == 0)
-                {
-                    MessageBox.Show($"Необходимо загрузить csv-файл",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                { MessageBox.Show(uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else if (lst.Count == 1)
-                {
-                    MessageBox.Show($"Удаление невозможно, так как в таблице осталась только 1 строка.",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
+                { MessageBox.Show($"{oneString} Removal is impossible", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                {
-                    MessageBox.Show($"Необходимо ввести целое число >= 0 и < {lst.Count}",
-                       "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-            }
-           /* if (ModePrint.CoordError == mode)
-            {
-                MessageBox.Show($"Необходимо ввести x из [-180, 180], y из [-90, 90]. " +
-                    $"Разделителем является запятая.",
-                    "Предупреждение!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }*/
+                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+            }         
         }
 
         /// <summary>

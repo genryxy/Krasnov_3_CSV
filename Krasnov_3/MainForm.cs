@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace Krasnov_3
         const int indexDistr = 2;
 
         int countSelectedRows = 2;
-        int indexDeleteRow = 0;
+        int indexDeleteRow = 0, indexEditRow = 0;
         int indexSearchNearHead = 0;
 
         DataGridView dataGrid = new DataGridView();
@@ -58,8 +59,25 @@ namespace Krasnov_3
                     admAreaItemsCombo.Add(head.GeoLocation.AdmArea);
             }
             toolComboBoxAdmArea.Items.AddRange(admAreaItemsCombo.ToArray());
-        }     
-       
+        }
+
+        /// <summary> 
+        /// Устанавливает значения элементов comboBoxFiltDistrict.
+        /// </summary>
+        private void SetItemsComboBoxFiltDistrict()
+        {
+            toolComboBoxFiltDistrict.Items.Clear();
+            districtsItemsCombo.Clear();
+            foreach (var head in lstActiveHeads)
+            {
+                if (!districtsItemsCombo.Contains(head.GeoLocation.District))
+                    districtsItemsCombo.Add(head.GeoLocation.District);
+            }
+            toolComboBoxFiltDistrict.Items.AddRange(districtsItemsCombo.ToArray());
+            // заодно меняем label о количестве строк в таблице
+            lblCountRows.Text = dt.Rows.Count.ToString();
+        }
+
         /// <summary>
         /// Записывает содержимое таблицы из datagridview в новый файл.
         /// </summary>
@@ -311,13 +329,9 @@ namespace Krasnov_3
             else { Messages.PrintMessBox(Messages.ModePrint.CountError); }
         }
 
-        private void Form_Load(object sender, EventArgs e)
-        {
-        }
-
         /// <summary>
         /// Выводит в таблицу строки, AdmArea которых соответствует выбранному
-        /// элементу в comboBox
+        /// элементу в comboBox.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -325,9 +339,9 @@ namespace Krasnov_3
         {
             if (toolComboBoxAdmArea.SelectedIndex >= 0)
             {
-                // если нужно выбирать их всех штабов
+                // чтобы поддерживать информацию о всех штабах
                 lstHeadquarters.InsertRange(0, lstActiveHeads);
-                // выводим в таблицу подходящие строки
+                // формируем подходящие строки
                 List<Headquarter> tempHeads = new List<Headquarter>();
                 for (int i = 0; i < lstHeadquarters.Count; i++)
                 {
@@ -355,12 +369,18 @@ namespace Krasnov_3
         private void toolComboBoxAdmArea_Click(object sender, EventArgs e)
         {
             SetItemsComboBoxAdmArea();
-        }               
+        }
 
+        /// <summary>
+        /// Загружает форму для создания новой записи о штабе. Запись будет
+        /// вставлена в строку с индексом, который ввёл пользователь.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void toolStripAddHead_Click(object sender, EventArgs e)
         {
             //MessageBox.Show(dt.Rows[0].ItemArray[0].ToString());
-            var newForm = new CreateOrChangeForm(null, lstActiveHeads);
+            var newForm = new CreateOrChangeForm(null, lstActiveHeads, 0, false);
             newForm.ShowDialog();
             var tmp = newForm.CurrentHeadInfo;
             if (tmp == null)
@@ -368,7 +388,6 @@ namespace Krasnov_3
             lstActiveHeads.Insert(newForm.RowNum, tmp);
             lblCountRows.Text = lstActiveHeads.Count.ToString();
             Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
-            MessageBox.Show("Test");
         }
 
         /// <summary>
@@ -379,7 +398,7 @@ namespace Krasnov_3
         private void toolStripBtnDelete_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexDeleteRow)
-              || indexDeleteRow < 0 || indexDeleteRow > lstActiveHeads.Count)
+              || indexDeleteRow < 0 || indexDeleteRow >= lstActiveHeads.Count)
             {
                 Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads);
                 toolStripTextBoxIndexOfRow.Focus();
@@ -399,11 +418,30 @@ namespace Krasnov_3
         }
 
         /// <summary>
+        /// Возвращает ближайший к пользователю штаб на основе выбранного штаба.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripBtnGetNear_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexSearchNearHead)
+             || indexSearchNearHead < 0 || indexSearchNearHead >= lstActiveHeads.Count)
+            {
+                Messages.PrintMessBox(Messages.ModePrint.CountError, lstActiveHeads);
+                toolStripTextBoxIndexOfRow.Focus();
+            }
+            else
+            {
+                MessageBox.Show(Methods.GetNearHead(indexSearchNearHead, lstActiveHeads));
+            }
+        }
+
+        /// <summary>
         /// Показывает первые N столбцов
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void toolStripButtonShow_Click(object sender, EventArgs e)
+        private void toolStripBtnShow_Click(object sender, EventArgs e)
         {
             const int countFieldsInHeadquarter = 10;
 
@@ -453,21 +491,70 @@ namespace Krasnov_3
         }
 
         /// <summary>
-        /// Возвращает ближайший к пользователю штаб на основе выбранного штаба.
+        /// Обновляем предлагаемый список элементов перед открытием списка
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void toolStripBtnGetNear_Click(object sender, EventArgs e)
+        private void toolComboBoxFiltDistrict_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexSearchNearHead)
-             || indexSearchNearHead < 0 || indexSearchNearHead > lstActiveHeads.Count)
+            SetItemsComboBoxFiltDistrict();
+        }
+
+        /// <summary>
+        /// Выводит в таблицу строки, District которых соответствует выбранному
+        /// элементу в comboBox.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolComboBoxFiltDistrict_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (toolComboBoxFiltDistrict.SelectedIndex >= 0)
             {
-                Messages.PrintMessBox(Messages.ModePrint.CountError, lstActiveHeads);
+                // чтобы поддерживать информацию о всех штабах
+                lstHeadquarters.InsertRange(0, lstActiveHeads);
+                // формируем подходящие строки
+                List<Headquarter> tempHeads = new List<Headquarter>();
+                for (int i = 0; i < lstHeadquarters.Count; i++)
+                {
+                    if (lstHeadquarters[i].GeoLocation.District == toolComboBoxAdmArea.SelectedItem.ToString())
+                    {
+                        tempHeads.Add(lstHeadquarters[i]);
+                        lstHeadquarters.RemoveAt(i);
+                        i--;
+                    }
+                }
+                lstActiveHeads.Clear();
+                lstActiveHeads = new List<Headquarter>(tempHeads);
+
+                Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
+                // заодно меняем label о количестве строк в таблице
+                lblCountRows.Text = dt.Rows.Count.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Загружает форму для редактирования штаба с индексом, который ввел пользователь.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void toolStripBtnEdit_Click(object sender, EventArgs e)
+        {
+            if (!int.TryParse(toolStripTextBoxIndexOfRow.Text, out indexEditRow)
+              || indexEditRow < 0 || indexEditRow >= lstActiveHeads.Count)
+            {
+                Messages.PrintMessBox(Messages.ModePrint.IndexError, lstActiveHeads);
                 toolStripTextBoxIndexOfRow.Focus();
             }
             else
             {
-                MessageBox.Show(Methods.GetNearHead(indexSearchNearHead, lstActiveHeads));
+                var newForm = new CreateOrChangeForm(lstActiveHeads[indexEditRow], lstActiveHeads, indexEditRow, true);
+                newForm.ShowDialog();
+                var tmp = newForm.CurrentHeadInfo;
+                if (tmp == null)
+                    return;
+                lstActiveHeads.RemoveAt(indexEditRow);
+                lstActiveHeads.Insert(indexEditRow, tmp);
+                Methods.UpdateDataTable(dt, lstActiveHeads, dataGrid);
             }
         }
     }

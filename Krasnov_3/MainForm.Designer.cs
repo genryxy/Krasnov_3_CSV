@@ -52,7 +52,7 @@
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelCount = new System.Windows.Forms.ToolStripLabel();
             this.toolStripTextBoxCount = new System.Windows.Forms.ToolStripTextBox();
-            this.toolStripButtonShow = new System.Windows.Forms.ToolStripButton();
+            this.toolStripBtnShow = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripLabelCoords = new System.Windows.Forms.ToolStripLabel();
             this.toolComboBoxDistrict = new System.Windows.Forms.ToolStripComboBox();
@@ -61,6 +61,8 @@
             this.toolComboBoxAdmArea = new System.Windows.Forms.ToolStripComboBox();
             this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripBtnEdit = new System.Windows.Forms.ToolStripButton();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -71,6 +73,8 @@
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.toolStripLabelFilterDistrict = new System.Windows.Forms.ToolStripLabel();
+            this.toolComboBoxFiltDistrict = new System.Windows.Forms.ToolStripComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -94,11 +98,11 @@
             this.yWGSDataGridViewTextBoxColumn,
             this.gLOBALIDDataGridViewTextBoxColumn});
             this.dataGridView.DataSource = this.tableHeaderBindingSource;
-            this.dataGridView.Location = new System.Drawing.Point(100, 90);
+            this.dataGridView.Location = new System.Drawing.Point(50, 90);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(1166, 502);
+            this.dataGridView.Size = new System.Drawing.Size(1194, 502);
             this.dataGridView.TabIndex = 4;
             // 
             // lblInfoRows
@@ -129,7 +133,7 @@
             this.sortedByColumnToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
-            this.menuStrip.Size = new System.Drawing.Size(1501, 28);
+            this.menuStrip.Size = new System.Drawing.Size(1570, 28);
             this.menuStrip.TabIndex = 28;
             this.menuStrip.Text = "menuStrip1";
             // 
@@ -264,15 +268,15 @@
             this.toolStripTextBoxCount.Name = "toolStripTextBoxCount";
             this.toolStripTextBoxCount.Size = new System.Drawing.Size(50, 28);
             // 
-            // toolStripButtonShow
+            // toolStripBtnShow
             // 
-            this.toolStripButtonShow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonShow.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonShow.Image")));
-            this.toolStripButtonShow.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonShow.Name = "toolStripButtonShow";
-            this.toolStripButtonShow.Size = new System.Drawing.Size(24, 25);
-            this.toolStripButtonShow.Text = "Show";
-            this.toolStripButtonShow.Click += new System.EventHandler(this.toolStripButtonShow_Click);
+            this.toolStripBtnShow.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripBtnShow.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnShow.Image")));
+            this.toolStripBtnShow.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripBtnShow.Name = "toolStripBtnShow";
+            this.toolStripBtnShow.Size = new System.Drawing.Size(24, 25);
+            this.toolStripBtnShow.Text = "Show";
+            this.toolStripBtnShow.Click += new System.EventHandler(this.toolStripBtnShow_Click);
             // 
             // toolStripSeparator1
             // 
@@ -289,7 +293,7 @@
             // 
             this.toolComboBoxDistrict.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolComboBoxDistrict.Name = "toolComboBoxDistrict";
-            this.toolComboBoxDistrict.Size = new System.Drawing.Size(200, 28);
+            this.toolComboBoxDistrict.Size = new System.Drawing.Size(170, 28);
             this.toolComboBoxDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxDistrict_SelectedIndexChanged);
             this.toolComboBoxDistrict.Click += new System.EventHandler(this.toolComboBoxDistrict_Click);
             // 
@@ -308,7 +312,7 @@
             // 
             this.toolComboBoxAdmArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.toolComboBoxAdmArea.Name = "toolComboBoxAdmArea";
-            this.toolComboBoxAdmArea.Size = new System.Drawing.Size(260, 28);
+            this.toolComboBoxAdmArea.Size = new System.Drawing.Size(220, 28);
             this.toolComboBoxAdmArea.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxAdmArea_SelectedIndexChanged);
             this.toolComboBoxAdmArea.Click += new System.EventHandler(this.toolComboBoxAdmArea_Click);
             // 
@@ -325,19 +329,23 @@
             this.toolStripBtnDelete,
             this.toolStripSeparator6,
             this.toolStripBtnGetNear,
+            this.toolStripSeparator7,
+            this.toolStripBtnEdit,
             this.toolStripSeparator5,
             this.toolStripLabelCount,
             this.toolStripTextBoxCount,
-            this.toolStripButtonShow,
+            this.toolStripBtnShow,
             this.toolStripSeparator1,
             this.toolStripLabelCoords,
             this.toolComboBoxDistrict,
             this.toolStripSeparator2,
             this.toolStripLabelFilterAdmArea,
-            this.toolComboBoxAdmArea});
+            this.toolComboBoxAdmArea,
+            this.toolStripLabelFilterDistrict,
+            this.toolComboBoxFiltDistrict});
             this.toolStrip.Location = new System.Drawing.Point(0, 28);
             this.toolStrip.Name = "toolStrip";
-            this.toolStrip.Size = new System.Drawing.Size(1501, 28);
+            this.toolStrip.Size = new System.Drawing.Size(1570, 28);
             this.toolStrip.TabIndex = 27;
             this.toolStrip.Text = "toolStrip1";
             // 
@@ -345,6 +353,21 @@
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripSeparator7
+            // 
+            this.toolStripSeparator7.Name = "toolStripSeparator7";
+            this.toolStripSeparator7.Size = new System.Drawing.Size(6, 28);
+            // 
+            // toolStripBtnEdit
+            // 
+            this.toolStripBtnEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripBtnEdit.Image = ((System.Drawing.Image)(resources.GetObject("toolStripBtnEdit.Image")));
+            this.toolStripBtnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripBtnEdit.Name = "toolStripBtnEdit";
+            this.toolStripBtnEdit.Size = new System.Drawing.Size(24, 25);
+            this.toolStripBtnEdit.Text = "Edit";
+            this.toolStripBtnEdit.Click += new System.EventHandler(this.toolStripBtnEdit_Click);
             // 
             // nameDataGridViewTextBoxColumn
             // 
@@ -431,22 +454,34 @@
             // 
             this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
             // 
+            // toolStripLabelFilterDistrict
+            // 
+            this.toolStripLabelFilterDistrict.Name = "toolStripLabelFilterDistrict";
+            this.toolStripLabelFilterDistrict.Size = new System.Drawing.Size(116, 25);
+            this.toolStripLabelFilterDistrict.Text = "Filter by District:";
+            // 
+            // toolComboBoxFiltDistrict
+            // 
+            this.toolComboBoxFiltDistrict.Name = "toolComboBoxFiltDistrict";
+            this.toolComboBoxFiltDistrict.Size = new System.Drawing.Size(170, 28);
+            this.toolComboBoxFiltDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxFiltDistrict_SelectedIndexChanged);
+            this.toolComboBoxFiltDistrict.Click += new System.EventHandler(this.toolComboBoxFiltDistrict_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1501, 599);
+            this.ClientSize = new System.Drawing.Size(1570, 599);
             this.Controls.Add(this.toolStrip);
             this.Controls.Add(this.menuStrip);
             this.Controls.Add(this.lblCountRows);
             this.Controls.Add(this.lblInfoRows);
             this.Controls.Add(this.dataGridView);
             this.MainMenuStrip = this.menuStrip;
-            this.MinimumSize = new System.Drawing.Size(1200, 600);
+            this.MinimumSize = new System.Drawing.Size(1500, 640);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Headquarters";
-            this.Load += new System.EventHandler(this.Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
@@ -491,7 +526,7 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripLabel toolStripLabelCount;
         private System.Windows.Forms.ToolStripTextBox toolStripTextBoxCount;
-        private System.Windows.Forms.ToolStripButton toolStripButtonShow;
+        private System.Windows.Forms.ToolStripButton toolStripBtnShow;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripLabel toolStripLabelCoords;
         private System.Windows.Forms.ToolStripComboBox toolComboBoxDistrict;
@@ -500,6 +535,10 @@
         private System.Windows.Forms.ToolStripComboBox toolComboBoxAdmArea;
         private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
+        private System.Windows.Forms.ToolStripButton toolStripBtnEdit;
+        private System.Windows.Forms.ToolStripLabel toolStripLabelFilterDistrict;
+        private System.Windows.Forms.ToolStripComboBox toolComboBoxFiltDistrict;
     }
 }
 
