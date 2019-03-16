@@ -7,7 +7,7 @@ namespace Krasnov_3
     public static class Messages
     {
         private static string uploadFile = "You need to download CSV-file";
-        private static string intNumber = "You need a positive integer >= 0 and <";
+        private static string intNumber = "You need a number";
         private static string oneString = "You have only one string. ";
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Krasnov_3
                 else if (lst.Count == 1)
                 { MessageBox.Show(oneString + uploadFile,  "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
 
             if (ModePrint.ShowError == mode)
@@ -61,7 +61,7 @@ namespace Krasnov_3
                 else if (lst.Count == 1)
                 { MessageBox.Show(oneString + uploadFile, "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{intNumber} > 1 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }
 
             if (ModePrint.IndexError == mode)
@@ -71,7 +71,7 @@ namespace Krasnov_3
                 else if (lst.Count == 1)
                 { MessageBox.Show($"{oneString} Removal is impossible", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
                 else
-                { MessageBox.Show($"{intNumber} {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
+                { MessageBox.Show($"{intNumber} >= 0 and < {lst.Count}", "Warning!", MessageBoxButtons.OK, MessageBoxIcon.Warning); }
             }         
         }
 

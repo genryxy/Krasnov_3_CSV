@@ -343,13 +343,12 @@ namespace Krasnov_3
                 lstHeadquarters.InsertRange(0, lstActiveHeads);
                 // формируем подходящие строки
                 List<Headquarter> tempHeads = new List<Headquarter>();
-                for (int i = 0; i < lstHeadquarters.Count; i++)
+                for (int i = 0; i < lstActiveHeads.Count; i++)
                 {
-                    if (lstHeadquarters[i].GeoLocation.AdmArea == toolComboBoxAdmArea.SelectedItem.ToString())
+                    if (lstActiveHeads[i].GeoLocation.AdmArea == toolComboBoxAdmArea.SelectedItem.ToString())
                     {
-                        tempHeads.Add(lstHeadquarters[i]);
-                        lstHeadquarters.RemoveAt(i);
-                        i--;
+                        tempHeads.Add(lstActiveHeads[i]);
+                        lstHeadquarters.RemoveAt(i);                        
                     }
                 }
                 lstActiveHeads.Clear();
@@ -455,10 +454,10 @@ namespace Krasnov_3
                 {
                     List<Headquarter> tempHeads = new List<Headquarter>(lstActiveHeads);
                     tempHeads.AddRange(lstHeadquarters);
-                    Messages.PrintMessBox(Messages.ModePrint.CountError, tempHeads);
+                    Messages.PrintMessBox(Messages.ModePrint.ShowError, tempHeads);
                 }
                 else
-                { Messages.PrintMessBox(Messages.ModePrint.CountError); }
+                { Messages.PrintMessBox(Messages.ModePrint.ShowError); }
                 toolStripTextBoxCount.Focus();
             }
             else
@@ -514,13 +513,12 @@ namespace Krasnov_3
                 lstHeadquarters.InsertRange(0, lstActiveHeads);
                 // формируем подходящие строки
                 List<Headquarter> tempHeads = new List<Headquarter>();
-                for (int i = 0; i < lstHeadquarters.Count; i++)
+                for (int i = 0; i < lstActiveHeads.Count; i++)
                 {
-                    if (lstHeadquarters[i].GeoLocation.District == toolComboBoxAdmArea.SelectedItem.ToString())
+                    if (lstActiveHeads[i].GeoLocation.District == toolComboBoxFiltDistrict.SelectedItem.ToString())
                     {
-                        tempHeads.Add(lstHeadquarters[i]);
+                        tempHeads.Add(lstActiveHeads[i]);
                         lstHeadquarters.RemoveAt(i);
-                        i--;
                     }
                 }
                 lstActiveHeads.Clear();
