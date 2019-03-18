@@ -63,6 +63,8 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripBtnEdit = new System.Windows.Forms.ToolStripButton();
+            this.toolStripLabelFilterDistrict = new System.Windows.Forms.ToolStripLabel();
+            this.toolComboBoxFiltDistrict = new System.Windows.Forms.ToolStripComboBox();
             this.nameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.admAreaDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.districtDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -73,8 +75,6 @@
             this.yWGSDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.gLOBALIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableHeaderBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.toolStripLabelFilterDistrict = new System.Windows.Forms.ToolStripLabel();
-            this.toolComboBoxFiltDistrict = new System.Windows.Forms.ToolStripComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -85,6 +85,8 @@
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -369,6 +371,19 @@
             this.toolStripBtnEdit.Text = "Edit";
             this.toolStripBtnEdit.Click += new System.EventHandler(this.toolStripBtnEdit_Click);
             // 
+            // toolStripLabelFilterDistrict
+            // 
+            this.toolStripLabelFilterDistrict.Name = "toolStripLabelFilterDistrict";
+            this.toolStripLabelFilterDistrict.Size = new System.Drawing.Size(116, 25);
+            this.toolStripLabelFilterDistrict.Text = "Filter by District:";
+            // 
+            // toolComboBoxFiltDistrict
+            // 
+            this.toolComboBoxFiltDistrict.Name = "toolComboBoxFiltDistrict";
+            this.toolComboBoxFiltDistrict.Size = new System.Drawing.Size(170, 28);
+            this.toolComboBoxFiltDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxFiltDistrict_SelectedIndexChanged);
+            this.toolComboBoxFiltDistrict.Click += new System.EventHandler(this.toolComboBoxFiltDistrict_Click);
+            // 
             // nameDataGridViewTextBoxColumn
             // 
             this.nameDataGridViewTextBoxColumn.DataPropertyName = "Name";
@@ -454,19 +469,6 @@
             // 
             this.tableHeaderBindingSource.DataSource = typeof(Krasnov_3.TableHeader);
             // 
-            // toolStripLabelFilterDistrict
-            // 
-            this.toolStripLabelFilterDistrict.Name = "toolStripLabelFilterDistrict";
-            this.toolStripLabelFilterDistrict.Size = new System.Drawing.Size(116, 25);
-            this.toolStripLabelFilterDistrict.Text = "Filter by District:";
-            // 
-            // toolComboBoxFiltDistrict
-            // 
-            this.toolComboBoxFiltDistrict.Name = "toolComboBoxFiltDistrict";
-            this.toolComboBoxFiltDistrict.Size = new System.Drawing.Size(170, 28);
-            this.toolComboBoxFiltDistrict.SelectedIndexChanged += new System.EventHandler(this.toolComboBoxFiltDistrict_SelectedIndexChanged);
-            this.toolComboBoxFiltDistrict.Click += new System.EventHandler(this.toolComboBoxFiltDistrict_Click);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -478,7 +480,7 @@
             this.Controls.Add(this.lblInfoRows);
             this.Controls.Add(this.dataGridView);
             this.MainMenuStrip = this.menuStrip;
-            this.MinimumSize = new System.Drawing.Size(1500, 640);
+            this.MinimumSize = new System.Drawing.Size(1500, 600);
             this.Name = "MainForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Headquarters";

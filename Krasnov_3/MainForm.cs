@@ -214,7 +214,10 @@ namespace Krasnov_3
                                                            //но в datatable нужно записывать с первого столбца, индекс которого 0
                                     else if (Fields[j].Contains("\""))
                                     {
-                                        Fields[j] = Fields[j].Replace("\"", "");
+                                        if (Fields[j][0] == '"')
+                                            Fields[j] = Fields[j].Remove(0, 1);
+                                        if (Fields[j][Fields[j].Length - 1] == '"')
+                                            Fields[j] = Fields[j].Remove(Fields[j].Length - 1, 1);
                                         row[j - 1] = Fields[j];
                                     }
                                     else

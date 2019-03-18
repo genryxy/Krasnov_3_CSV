@@ -166,14 +166,18 @@ namespace Krasnov_3
             }
         }
 
-        /// <summary>
-        /// Проверяет значение TextBox на принадлежность типу double.
-        /// </summary>
-        /// <param name="lstActiveHeads">Список активных штабов</param>
-        /// <param name="indexSelectedHead">индекс выбранного штаба</param>
-        /// <param name="x">координата х</param>
-        /// <param name="y">координата y</param>
-        /// <returns></returns>
+
+
+
+
+
+        
+        
+        
+        
+        
+        
+     
         private static bool CheckDoubleNumber(List<Headquarter> lstActiveHeads, int indexSelectedHead, ref double x, ref double y)
         {
             return double.TryParse(lstActiveHeads[indexSelectedHead].GeoLocation.X_WGS,
